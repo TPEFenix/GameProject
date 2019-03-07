@@ -231,9 +231,9 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 	YEEY += YEEAY;
 	YEEXT = (int)YEEX;
 	YEEYT = (int)YEEY;
-	YEE.SetTopLeft(YEEXT, YEEYT);
+	YEE.SetTopLeft(0, 320);
 	YEEAX += 0;
-	YEEAY -= 2;
+	YEEAY -= 0;
 	//
 	// 如果希望修改cursor的樣式，則將下面程式的commment取消即可
 	//
