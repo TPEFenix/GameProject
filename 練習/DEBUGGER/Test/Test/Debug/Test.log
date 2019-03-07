@@ -1,0 +1,4 @@
+﻿  Test.cpp
+  AssemblyInfo.obj : Managed 程式碼存在時不支援 /DEBUG:FASTLINK; 正在以 /DEBUG:FULL 重新啟動連結
+  Test.vcxproj -> S:\GitClone\練習\DEBUGGER\Test\Debug\Test.exe
+  Test.vcxproj -> S:\GitClone\練習\DEBUGGER\Test\Debug\Test.pdb (Partial PDB)

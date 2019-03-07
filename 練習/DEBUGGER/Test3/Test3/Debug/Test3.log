@@ -1,0 +1,8 @@
+﻿  stdafx.cpp
+  AssemblyInfo.cpp
+  Test3.cpp
+  正在產生程式碼...
+  .NETFramework,Version=v4.5.1.AssemblyAttributes.cpp
+  AssemblyInfo.obj : Managed 程式碼存在時不支援 /DEBUG:FASTLINK; 正在以 /DEBUG:FULL 重新啟動連結
+  Test3.vcxproj -> S:\GitClone\練習\DEBUGGER\Test3\Debug\Test3.exe
+  Test3.vcxproj -> S:\GitClone\練習\DEBUGGER\Test3\Debug\Test3.pdb (Partial PDB)
