@@ -9,10 +9,10 @@ bool Guess(int number) {
 		target = r.Next() % 100 + 1;
 	}
 	if (number == target)return true;
-	return false;
 }
 int main(array<System::String ^> ^args)
 {
+	int §À³Í;
 	int guess;
 	do {
 		std::cout << "Choose a number between 1 - 100 :";
