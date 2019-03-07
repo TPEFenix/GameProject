@@ -96,6 +96,13 @@ namespace game_framework {
 		const int		NUMBALLS;	// 球的總數
 		CMovingBitmap	background;	// 背景圖
 		CMovingBitmap	help;		// 說明圖
+		CMovingBitmap	YEE;		// 說明圖
+		double YEEX = 0;
+		double YEEY = 0;
+		double YEEAX = 5;
+		double YEEAY = 30;
+		int YEEXT = 0;
+		int YEEYT = 0;
 		CBall			*ball;		// 球的陣列
 		CMovingBitmap	corner;		// 角落圖
 		CEraser			eraser;		// 拍子

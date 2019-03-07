@@ -227,6 +227,13 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
 {
+	YEEX += YEEAX;
+	YEEY += YEEAY;
+	YEEXT = (int)YEEX;
+	YEEYT = (int)YEEY;
+	YEE.SetTopLeft(YEEXT, YEEYT);
+	YEEAX += 0;
+	YEEAY -= 2;
 	//
 	// 如果希望修改cursor的樣式，則將下面程式的commment取消即可
 	//
@@ -280,6 +287,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	//
 	// 開始載入資料
 	//
+	YEE.LoadBitmap("res\\knife.bmp",RGB(255,255,255));
 	int i;
 	for (i = 0; i < NUMBALLS; i++)	
 		ball[i].LoadBitmap();								// 載入第i個球的圖形
@@ -387,5 +395,6 @@ void CGameStateRun::OnShow()
 	corner.ShowBitmap();
 	corner.SetTopLeft(SIZE_X-corner.Width(), SIZE_Y-corner.Height());
 	corner.ShowBitmap();
+	YEE.ShowBitmap();
 }
 }
