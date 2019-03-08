@@ -1,4 +1,8 @@
-﻿  Test.cpp
+﻿  stdafx.cpp
+  AssemblyInfo.cpp
+  Test.cpp
+  正在產生程式碼...
+  .NETFramework,Version=v4.5.1.AssemblyAttributes.cpp
   AssemblyInfo.obj : Managed 程式碼存在時不支援 /DEBUG:FASTLINK; 正在以 /DEBUG:FULL 重新啟動連結
-  Test.vcxproj -> S:\GitClone\練習\DEBUGGER\Test\Debug\Test.exe
-  Test.vcxproj -> S:\GitClone\練習\DEBUGGER\Test\Debug\Test.pdb (Partial PDB)
+  Test.vcxproj -> C:\Users\NTUTCSIE\Documents\GameProject\練習\DEBUGGER\Test\Debug\Test.exe
+  Test.vcxproj -> C:\Users\NTUTCSIE\Documents\GameProject\練習\DEBUGGER\Test\Debug\Test.pdb (Partial PDB)

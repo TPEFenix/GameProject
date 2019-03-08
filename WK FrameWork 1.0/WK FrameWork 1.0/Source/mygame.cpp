@@ -52,6 +52,7 @@
 *      1. Demo MP3 support: use lake.mp3 to replace lake.wav.
 */
 #pragma endregion 
+
 #pragma region LibraryImport
 #include "stdafx.h"
 #include "Resource.h"
@@ -93,19 +94,12 @@ namespace game_framework
 	{
 		//讀取開始
 		ShowInitProgress(0);	// 一開始的loading進度為0%
-		logo.LoadBitmap(IDB_BACKGROUND);
+		logo.LoadBitmap("res\\ntutcsie.bmp");
 		// 進入CGameStaterRun::OnInit()
 	}
 	void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	{
-		//
-		// 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
-		//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
-		//
 		ShowInitProgress(33);	// 接個前一個狀態的進度，此處進度視為33%
-								//
-								// 開始載入資料
-								//
 		int i;
 		for (i = 0; i < NUMBALLS; i++)
 			ball[i].LoadBitmap();								// 載入第i個球的圖形
@@ -161,6 +155,7 @@ namespace game_framework
 
 			}
 		*/
+		
 		if (nChar == Keys.Space)
 			GotoGameState(GAME_STATE_RUN);						// 切換至GAME_STATE_RUN
 		else if (nChar == Keys.ESC)								// Demo 關閉遊戲的方法
@@ -196,21 +191,19 @@ namespace game_framework
 	}
 	#pragma endregion 
 	
-	/////////////////////////////////////////////////////////////////////////////
-	// 這個class為遊戲的遊戲執行物件，主要的遊戲程式都在這裡
-	/////////////////////////////////////////////////////////////////////////////
+	//本遊戲全域變數部分
+	int GameAction = 0;
 
-	CGameStateRun::CGameStateRun(CGame *g)
-		: CGameState(g), NUMBALLS(28)
+	#pragma region GameRunning
+	//除了開頭以外的遊戲主體(將以GameAction切換遊戲視窗)
+	CGameStateRun::CGameStateRun(CGame *g): CGameState(g), NUMBALLS(28)
 	{
 		ball = new CBall[NUMBALLS];
 	}
-
 	CGameStateRun::~CGameStateRun()
 	{
 		delete[] ball;
 	}
-
 	void CGameStateRun::OnBeginState()
 	{
 		const int BALL_GAP = 90;
@@ -237,7 +230,10 @@ namespace game_framework
 		CAudio::Instance()->Play(AUDIO_DING, false);		// 撥放 WAVE
 		CAudio::Instance()->Play(AUDIO_NTUT, true);			// 撥放 MIDI
 	}
+	
 
+	//GameState LogicUpdate
+	//這裡處理遊戲邏輯判斷
 	void CGameStateRun::OnMove()							// 移動遊戲元素
 	{
 		//
@@ -283,6 +279,8 @@ namespace game_framework
 		bball.OnMove();
 	}
 
+
+
 	void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		const char KEY_LEFT = 0x25; // keyboard左箭頭
@@ -298,7 +296,6 @@ namespace game_framework
 		if (nChar == KEY_DOWN)
 			eraser.SetMovingDown(true);
 	}
-
 	void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		const char KEY_LEFT = 0x25; // keyboard左箭頭
@@ -315,31 +312,33 @@ namespace game_framework
 			eraser.SetMovingDown(false);
 	}
 
+	//滑鼠處理事件
+	#pragma region MouseState
 	void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 	{
-		eraser.SetMovingLeft(true);
-	}
 
+	}
 	void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 	{
-		eraser.SetMovingLeft(false);
-	}
 
+	}
 	void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 	{
 		// 沒事。如果需要處理滑鼠移動的話，寫code在這裡
 	}
-
 	void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 	{
-		eraser.SetMovingRight(true);
-	}
 
+	}
 	void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 	{
-		eraser.SetMovingRight(false);
-	}
 
+	}
+	#pragma endregion 
+
+
+	//GameState LogicUpdate
+	//這裡處理圖片貼圖
 	void CGameStateRun::OnShow()
 	{
 		//
@@ -365,8 +364,11 @@ namespace game_framework
 		corner.SetTopLeft(SIZE_X - corner.Width(), SIZE_Y - corner.Height());
 		corner.ShowBitmap();
 	}
+	#pragma endregion 
 
-	//Game End
+
+	//Game End-遊戲結束畫面--顯示後退回開頭畫面
+	#pragma region GameOverState
 	CGameStateOver::CGameStateOver(CGame *g): CGameState(g)
 	{
 
@@ -395,6 +397,8 @@ namespace game_framework
 		pDC->SelectObject(fp);						// 放掉 font f (千萬不要漏了放掉)
 		CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
 	}
+	#pragma endregion 
+
 
 
 }
