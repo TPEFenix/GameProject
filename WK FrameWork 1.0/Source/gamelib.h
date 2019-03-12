@@ -71,7 +71,7 @@
 #define OPEN_AS_FULLSCREEN	 false		// 是否以全螢幕方式開啟遊戲
 #define SHOW_LOAD_PROGRESS   true		// 是否顯示loading(OnInit)的進度
 #define DEFAULT_BG_COLOR	 RGB(0,0,0)	// 遊戲畫面預設的背景顏色(黑色)
-#define GAME_CYCLE_TIME		 33		    // 每33ms跑一次Move及Show(每秒30次)
+#define GAME_CYCLE_TIME		 33	    // 每16ms跑一次Move及Show(每秒60次)
 #define SHOW_GAME_CYCLE_TIME false		// 是否在debug mode顯示cycle time
 #define ENABLE_GAME_PAUSE	 true		// 是否允許以 Ctrl-Q 暫停遊戲
 #define ENABLE_AUDIO		 true		// 啟動音效介面
@@ -141,6 +141,7 @@ private:
 
 class CDDraw {
 	friend class CMovingBitmap;
+    friend class BitmapPicture;
 public:
 	~CDDraw();
 	static void  BltBackColor(DWORD);		// 將Back plain全部著上指定的顏色
@@ -151,6 +152,7 @@ public:
 	static void  ReleaseBackCDC();			// 放掉Back Plain的DC (device context)
 	static bool  SetFullScreen(bool);		// 設定為全螢幕模式/視窗模式
 	static bool  IsFullScreen();			// 回答是否為全螢幕模式/視窗模式
+    static vector<COLORREF>		BitmapColorKey;
 private:
 	CDDraw();								// private constructor
 	static void  BltBitmapToBack(unsigned SurfaceID, int x, int y);
@@ -181,7 +183,6 @@ private:
 	static vector<int>			BitmapID;
 	static vector<string>		BitmapName;
 	static vector<CRect>		BitmapRect;
-	static vector<COLORREF>		BitmapColorKey;
 	static bool					fullscreen;
 	static CDDraw				ddraw;
 	static int					size_x, size_y;
@@ -193,6 +194,7 @@ private:
 /////////////////////////////////////////////////////////////////////////////
 
 class CMovingBitmap {
+    friend class CDDraw;
 public:
 	CMovingBitmap();
 	int   Height();						// 取得圖形的高度
@@ -205,6 +207,7 @@ public:
 	void  ShowBitmap(CMovingBitmap &);	// 將圖貼到到另一張圖上 (僅供特殊用途)
 	int   Top();						// 取得圖形的左上角的 y 座標
 	int   Width();						// 取得圖形的寬度
+    
 protected:
 	CRect    location;			// location of the bitmap
 	bool     isBitmapLoaded;	// whether a bitmap has been loaded

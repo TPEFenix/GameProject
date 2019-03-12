@@ -835,8 +835,8 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y)
 	CRect TargetRect;
 	TargetRect.left = x;
 	TargetRect.top = y;
-	TargetRect.right = x + BitmapRect[SurfaceID].right-BitmapRect[SurfaceID].left;
-	TargetRect.bottom = y + BitmapRect[SurfaceID].bottom-BitmapRect[SurfaceID].top;
+    TargetRect.right = x + (BitmapRect[SurfaceID].right - BitmapRect[SurfaceID].left);
+	TargetRect.bottom = y + (BitmapRect[SurfaceID].bottom-BitmapRect[SurfaceID].top);
 	int blt_flag;
 	if (BitmapColorKey[SurfaceID] != CLR_INVALID)
 		blt_flag = DDBLT_WAIT | DDBLT_KEYSRC;
@@ -1066,6 +1066,7 @@ void CDDraw::LoadBitmap(int i, int IDB_BITMAP)
 	CDC mDC;
 	mDC.CreateCompatibleDC(NULL);
 	CBitmap* pOldBitmap = mDC.SelectObject(&bitmap);
+    
 	BITMAP bitmapSize;
 	bitmap.GetBitmap(&bitmapSize);
 	DDSURFACEDESC ddsd;

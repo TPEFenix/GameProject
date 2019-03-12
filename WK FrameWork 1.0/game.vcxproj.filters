@@ -136,6 +136,9 @@
     <ClCompile Include="Source\KeyBoardState.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
+    <ClCompile Include="Source\BitmapPicture.cpp">
+      <Filter>MyGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h">
@@ -179,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="Source\KeyBoardState.h">
       <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BitmapPicture.h">
+      <Filter>MyGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
