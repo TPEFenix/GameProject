@@ -1,25 +1,19 @@
+#pragma once
 #include "stdafx.h"
-#include "game.h"
-#include "MainFrm.h"
-#include "Resource.h"
-#include <mmsystem.h>
 #include <ddraw.h>
-#include <direct.h>
-#include <string.h>
-#include "audio.h"
 #include "gamelib.h"
-#include "mygame.h"
 #include <windows.h>
+#include <stdio.h>
 #include "BitmapPicture.h"
-
+#include <sstream>
 
 using namespace std;
 
 namespace game_framework 
 {
-    BitmapPicture::BitmapPicture()
+    BitmapPicture::BitmapPicture(bool vis)
     {
-        visable = false;
+        visable = vis;
     }
     BitmapPicture::~BitmapPicture()
     {
@@ -84,7 +78,7 @@ namespace game_framework
     }
     void BitmapPicture::Draw(int CurrentLayer,int TargetLayer)
     {
-        if (CurrentLayer == TargetLayer&&visable)//直到他的圖片層級才可以顯示
+        if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
         {
             Rect.X_int = (int)Rect.X;
             Rect.Y_int = (int)Rect.Y;
@@ -94,13 +88,36 @@ namespace game_framework
     }
     void BitmapPicture::Draw(int CurrentLayer, int TargetLayer, CMovingBitmap & Mask)
     {
-        if (CurrentLayer == TargetLayer&&visable)//直到他的圖片層級才可以顯示
-        {
-            Rect.X_int = (int)Rect.X;
-            Rect.Y_int = (int)Rect.Y;
-            SetTopLeft(Rect.X_int, Rect.Y_int);
-            location.right = 10;
-            ShowBitmap(Mask);
-        }
+		if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
+		{
+			Rect.X_int = (int)Rect.X;
+			Rect.Y_int = (int)Rect.Y;
+			SetTopLeft(Rect.X_int, Rect.Y_int);
+			ShowBitmap(Mask);
+		}
     }
+	BitmapAnimation::BitmapAnimation(bool vis)
+	{
+		visable = vis;
+	}
+	BitmapAnimation::~BitmapAnimation()
+	{
+	}
+	void BitmapAnimation::AutoLoadBitmaps(string name,int Steps,COLORREF color)
+	{
+		std::stringstream SS;
+		SS << Steps;
+		string StepString;
+		SS >> StepString;
+		BitmapPictures = map<string, BitmapPicture>();
+		for (int i = 0; i < Steps + 1; i += 1)
+		{
+			BitmapPictures.insert(std::pair<string, BitmapPicture>(name+"_"+StepString, BitmapPicture(visable)));
+			string str = ("Content\\Bitmaps\\" + name + "\\" + name + "_" + StepString);
+
+		}
+	}
+
+
+
 }

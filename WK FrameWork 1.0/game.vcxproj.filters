@@ -137,7 +137,7 @@
       <Filter>GameLibrary</Filter>
     </ClCompile>
     <ClCompile Include="Source\BitmapPicture.cpp">
-      <Filter>MyGame</Filter>
+      <Filter>GameLibrary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,7 +184,7 @@
       <Filter>GameLibrary</Filter>
     </ClInclude>
     <ClInclude Include="Source\BitmapPicture.h">
-      <Filter>MyGame</Filter>
+      <Filter>GameLibrary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

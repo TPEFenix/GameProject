@@ -86,9 +86,9 @@ namespace game_framework
 
     //偵錯模式測試用
 #pragma region DebugValueable
-    BitmapPicture DebugPicture1;
-    BitmapPicture DebugPicture2;
-
+    BitmapPicture DebugPicture1 = BitmapPicture(true);
+    BitmapPicture DebugPicture2 = BitmapPicture(true);
+	BitmapAnimation DebugPicture3 = BitmapAnimation(true);
 #pragma endregion 
     //常數資源 如音訊編號等等
 #pragma region Const Resources
@@ -106,6 +106,7 @@ namespace game_framework
     {
         PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);
     }
+	//矩形碰撞判斷
     bool BitmapPicture_HitRectangle(BitmapPicture Bitmap1, BitmapPicture Bitmap2)
     {
         int x1 = Bitmap1.Rect.X_int;
@@ -131,62 +132,61 @@ namespace game_framework
         }
         return true;
     }
-
-
-
-    //神重要==>像素碰撞檢測
+    //像素碰撞檢測
     bool PixelCollision(BitmapPicture *Bitmap1, BitmapPicture *Bitmap2, int accuracy)
     {
-        if (BitmapPicture_HitRectangle(*Bitmap1, *Bitmap2) && Bitmap1->CanCollision&&Bitmap2->CanCollision&&accuracy > 0)
+        if (BitmapPicture_HitRectangle(*Bitmap1, *Bitmap2) == true)
         {
-            //決定碰撞四邊
-            int HitRight = 0;
-            int HitLeft = 0;
-            int HitTop = 0;
-            int Hitbottom = 0;
-            if (Bitmap1->Rect.X_int + Bitmap1->Rect.Width > Bitmap2->Rect.X_int + Bitmap2->Rect.Width)
-            {
-                HitRight = Bitmap2->Rect.X_int + Bitmap2->Rect.Width;
-            }
-            else
-            {
-                HitRight = Bitmap1->Rect.X_int + Bitmap1->Rect.Width;
-            }
-            if (Bitmap1->Rect.X_int < Bitmap2->Rect.X_int)
-            {
-                HitLeft = Bitmap2->Rect.X_int;
-            }
-            else
-            {
-                HitLeft = Bitmap1->Rect.X_int;
-            }
-            if (Bitmap1->Rect.Y_int + Bitmap1->Rect.Height > Bitmap2->Rect.Y_int + Bitmap2->Rect.Height)
-            {
-                Hitbottom = Bitmap2->Rect.Y_int + Bitmap2->Rect.Height;
-            }
-            else
-            {
-                Hitbottom = Bitmap1->Rect.Y_int + Bitmap1->Rect.Height;
-            }
-            if (Bitmap1->Rect.Y_int < Bitmap2->Rect.Y_int)
-            {
-                HitTop = Bitmap2->Rect.Y_int;
-            }
-            else
-            {
-                HitTop = Bitmap1->Rect.Y_int;
-            }
-            for (int i = 0; i < Hitbottom - HitTop; i += (accuracy))
-            {
-                for (int j = 0; j < HitRight - HitLeft; j += (accuracy))
-                {
-
-                    if (Bitmap1->EffectRect[i + HitTop - Bitmap1->Rect.Y_int][j + HitLeft - Bitmap1->Rect.X_int] == true && Bitmap2->EffectRect[i + HitTop - Bitmap2->Rect.Y_int][j + HitLeft - Bitmap2->Rect.X_int] == true)
-                    {
-                        return true;
-                    }
-                }
-            }
+			if (Bitmap1->CanCollision&&Bitmap2->CanCollision&& Bitmap1->visable &&Bitmap2->visable &&accuracy > 0)
+			{
+				//決定碰撞四邊
+				int HitRight = 0;
+				int HitLeft = 0;
+				int HitTop = 0;
+				int Hitbottom = 0;
+				if (Bitmap1->Rect.X_int + Bitmap1->Rect.Width > Bitmap2->Rect.X_int + Bitmap2->Rect.Width)
+				{
+					HitRight = Bitmap2->Rect.X_int + Bitmap2->Rect.Width;
+				}
+				else
+				{
+					HitRight = Bitmap1->Rect.X_int + Bitmap1->Rect.Width;
+				}
+				if (Bitmap1->Rect.X_int < Bitmap2->Rect.X_int)
+				{
+					HitLeft = Bitmap2->Rect.X_int;
+				}
+				else
+				{
+					HitLeft = Bitmap1->Rect.X_int;
+				}
+				if (Bitmap1->Rect.Y_int + Bitmap1->Rect.Height > Bitmap2->Rect.Y_int + Bitmap2->Rect.Height)
+				{
+					Hitbottom = Bitmap2->Rect.Y_int + Bitmap2->Rect.Height;
+				}
+				else
+				{
+					Hitbottom = Bitmap1->Rect.Y_int + Bitmap1->Rect.Height;
+				}
+				if (Bitmap1->Rect.Y_int < Bitmap2->Rect.Y_int)
+				{
+					HitTop = Bitmap2->Rect.Y_int;
+				}
+				else
+				{
+					HitTop = Bitmap1->Rect.Y_int;
+				}
+				for (int i = 0; i < Hitbottom - HitTop; i += (accuracy))
+				{
+					for (int j = 0; j < HitRight - HitLeft; j += (accuracy))
+					{
+						if (Bitmap1->EffectRect[i + HitTop - Bitmap1->Rect.Y_int][j + HitLeft - Bitmap1->Rect.X_int] == true && Bitmap2->EffectRect[i + HitTop - Bitmap2->Rect.Y_int][j + HitLeft - Bitmap2->Rect.X_int] == true)
+						{
+							return true;
+						}
+					}
+				}
+			}
             return false;
         }
         else
@@ -194,8 +194,6 @@ namespace game_framework
             return false;
         }
     }
-
-
     //載入音訊資源
     void LoadSounds(int ID, string path)
     {
@@ -224,9 +222,6 @@ namespace game_framework
             CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
         }
     }
-
-
-
 #pragma endregion 
 
     //程式開始
@@ -236,7 +231,7 @@ namespace game_framework
     }
     void CGameStateInit::OnBeginState()
     {
-
+		DebugPicture3.AutoLoadBitmaps("ball",4, TransparentColor);
     }
 #pragma endregion 
 
@@ -331,17 +326,15 @@ namespace game_framework
         {
             DebugPicture1.Rect.X += 0;
             DebugPicture1.Rect.Y += 0;
-            DebugPicture1.visable = true;
             DebugPicture2.Rect.X += 0;
             DebugPicture2.Rect.Y += 0;
-            DebugPicture2.visable = true;
             for (int i = 0; i < 10; i += 1)
             {
                 DebugPicture1.Draw(i, 3);
                 DebugPicture2.Draw(i, 5);
 
                 Showtext("DebugTesting...", 50, 200, 20, RGB(100, 120, 0), RGB(255, 255, 255), i, 2);
-                if (PixelCollision(&DebugPicture1, &DebugPicture2, 5))
+                if (PixelCollision(&DebugPicture1, &DebugPicture2, 3))
                 {
                     Showtext("LAYERTesting...True", 50, 200, 40, RGB(0, 50, 0), RGB(255, 255, 255), i, 1);
                 }
@@ -388,19 +381,19 @@ namespace game_framework
             bool fuck = false;
             if (KeyState_now.Right == true)
             {
-                DebugPicture1.Rect.X += 10;
+                DebugPicture1.Rect.X += 3;
             }
             if (KeyState_now.Left == true)
             {
-                DebugPicture1.Rect.X -= 10;
+                DebugPicture1.Rect.X -= 3;
             }
             if (KeyState_now.Up == true)
             {
-                DebugPicture1.Rect.Y -= 10;
+                DebugPicture1.Rect.Y -= 3;
             }
             if (KeyState_now.Down == true)
             {
-                DebugPicture1.Rect.Y += 10;
+                DebugPicture1.Rect.Y += 3;
             }
 
 
