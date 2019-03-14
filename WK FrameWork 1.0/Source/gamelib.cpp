@@ -480,8 +480,8 @@ void CGameState::OnDraw() // Template Method
 
 void CGameState::OnCycle() // Template Method
 {
-	OnMove();
-	OnShow();
+    OnMove();
+    OnShow();
 }
 
 /////////////////////////////////////////////////////////////////////////////

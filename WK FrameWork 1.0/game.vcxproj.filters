@@ -136,7 +136,16 @@
     <ClCompile Include="Source\KeyBoardState.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BitmapPicture.cpp">
+    <ClCompile Include="Source\WKBitmap.cpp">
+      <Filter>GameLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BatllePlayer.cpp">
+      <Filter>GameLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollisionSensor.cpp">
+      <Filter>GameLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TypeConverter.cpp">
       <Filter>GameLibrary</Filter>
     </ClCompile>
   </ItemGroup>
@@ -183,7 +192,16 @@
     <ClInclude Include="Source\KeyBoardState.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BitmapPicture.h">
+    <ClInclude Include="Source\WKBitmap.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BatllePlayer.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CollisionSensor.h">
+      <Filter>GameLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TypeConverter.h">
       <Filter>GameLibrary</Filter>
     </ClInclude>
   </ItemGroup>
