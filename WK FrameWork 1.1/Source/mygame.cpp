@@ -73,52 +73,44 @@
 #include "BatllePlayer.h"
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
+#include  "WKAudio.h"
 #pragma endregion 
 
+//命名空間引入
+#pragma region NamespaceImport
 using namespace std;
 using namespace CollisionSensor_namespace;
 using namespace TypeConverter_namespace;
-
+using namespace WKAudio_namespace;
+#pragma endregion 
 
 namespace game_framework
 {
     //本遊戲全域變數
-    int GameAction = 0;
-    int LoadingPercentage = 0;
-    bool DebugMode = false;
-    CameraPosition Camera;
-    Keycode Keys;
+
+    //邏輯
+    int GameAction = 0;//遊戲場景
+    bool DebugMode = false;//是否啟用Debug模式
+
+    //顯示
+    CameraPosition Camera;//遊戲鏡頭
     const COLORREF TransparentColor = RGB(100, 120, 0);//透明色設定
+
+    //聲音
+    const Audio_ID Sounds;//音效資源編碼
+
+    //鍵盤
+    const Keycode Keys;//鍵盤字典物件
     KeyBoardState KeyState_now;//當前的鍵盤狀態
     KeyBoardState KeyState_last;//前一瞬間的鍵盤狀態
-
-    //常數資源 如音訊編號等等
-#pragma region Const Resources
-                                // 定義各種音效的編號
-    struct Audio_ID
-    {
-        const int Ding = 0;
-    } Sound;
-#pragma endregion 
+ 
     //這些函式拿來優化程式編寫※(效率並不會因此提升)
 #pragma region RENEWAL Fuction And Objects
     void ExitGame()
     {
         PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);
     }
-    //載入音訊資源
-    void LoadSounds(int ID, string path)
-    {
-        //範例
-        //CAudio::Instance()->Load(0, "sounds\\ding.wav");
-        CAudio::Instance()->Load(ID, &path[0]);	// 載入編號0的聲音ding.wav
-    }
-    //播放聲音(ID,是否重複撥放)
-    void PlaySounds(int soundID, bool replay)
-    {
-        CAudio::Instance()->Play(soundID, replay);
-    }
-    //顯示文字(效率極差，盡量不要使用)
+    //效率很差盡量不要使用
     void Showtext(char *mes, int X, int Y, int fontsize, COLORREF BK, COLORREF FC, int WorkingLayer, int TargetLayer)
     {
         if (WorkingLayer == TargetLayer)
@@ -135,9 +127,6 @@ namespace game_framework
         }
     }
 #pragma endregion 
-
-
-
 
     //程式開始
 #pragma region Program Initialize
@@ -184,7 +173,7 @@ namespace game_framework
             Sleep(1);
         }
         //讀取所有音效--Begin
-        LoadSounds(Sound.Ding, "Content\\Sounds\\ding.wav");
+        LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -204,7 +193,7 @@ namespace game_framework
             Sleep(1);
         }
         ShowInitProgress(100);
-        PlaySounds(Sound.Ding, false);
+        PlaySounds(Sounds.Ding, false);
         Sleep(500);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
     }
 #pragma endregion 
@@ -321,7 +310,6 @@ namespace game_framework
 
     }
 #pragma endregion 
-
 
     //偵錯模式測試用
 #pragma region DebugValueable

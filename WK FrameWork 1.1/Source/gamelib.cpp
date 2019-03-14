@@ -25,7 +25,7 @@
  *         Work around: I have added MOUSEMOVE handlers by using VC++6.0. Other
  *           event handlers are likely unnecessary.
  *      2. When ENABLE_GAME_PAUSE is false, it is possible for a minimized
- *           game to continue playing sounds.
+ *           game to continue playing .
  *         
  *
  * History:

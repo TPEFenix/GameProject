@@ -19,8 +19,6 @@ namespace game_framework
         int X = 0;
         int Y = 0;
     };
-
-
     class BitmapPicture : CMovingBitmap
     {
         friend class CDDraw;
@@ -52,7 +50,6 @@ namespace game_framework
     private:
         string ResourcePath;//更改名字後建議重讀圖檔
     };
-
     class BitmapAnimation
     {
     public:
@@ -85,6 +82,5 @@ namespace game_framework
             string Name;//此可動圖檔的名稱[資源命名規則:放在Content\\Bitmaps\\Name\\Name_Step.bmp]
 
     };
-
 }
 

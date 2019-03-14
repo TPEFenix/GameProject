@@ -14,6 +14,21 @@
     <Filter Include="MyGame">
       <UniqueIdentifier>{0c798913-b7d2-4e26-8241-0f83266cd626}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameLibrary\Audio">
+      <UniqueIdentifier>{c4a3c5ed-03b0-42f5-8668-3fe3e0fd0055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameLibrary\Method">
+      <UniqueIdentifier>{f19546ae-cca5-4953-8616-cdc4162dc7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameLibrary\KeyClass">
+      <UniqueIdentifier>{ed783c58-08fa-4f5b-86aa-a9278b340343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameLibrary\Display">
+      <UniqueIdentifier>{7d39f731-fc42-4858-90fa-c6d131ede2be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameLibrary\GameSprite">
+      <UniqueIdentifier>{1234e3e3-6935-482b-9aa5-a9171fcbeb6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\ball.bmp">
@@ -97,9 +112,6 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\audio.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
     <ClCompile Include="Source\game.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
@@ -121,29 +133,32 @@
     <ClCompile Include="Source\mygame.cpp">
       <Filter>MyGame</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Keycode.cpp">
-      <Filter>GameLibrary</Filter>
+    <ClCompile Include="Source\audio.cpp">
+      <Filter>GameLibrary\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Source\KeyBoardState.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\WKBitmap.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BatllePlayer.cpp">
-      <Filter>GameLibrary</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CollisionSensor.cpp">
-      <Filter>GameLibrary</Filter>
+    <ClCompile Include="Source\WKAudio.cpp">
+      <Filter>GameLibrary\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\TypeConverter.cpp">
-      <Filter>GameLibrary</Filter>
+      <Filter>GameLibrary\Method</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\KeyBoardState.cpp">
+      <Filter>GameLibrary\KeyClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Keycode.cpp">
+      <Filter>GameLibrary\KeyClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WKBitmap.cpp">
+      <Filter>GameLibrary\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BatllePlayer.cpp">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollisionSensor.cpp">
+      <Filter>GameLibrary\Method</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\audio.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
     <ClInclude Include="Source\game.h">
       <Filter>MFC</Filter>
     </ClInclude>
@@ -168,23 +183,29 @@
     <ClInclude Include="Source\mygame.h">
       <Filter>MyGame</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Keycode.h">
-      <Filter>GameLibrary</Filter>
+    <ClInclude Include="Source\audio.h">
+      <Filter>GameLibrary\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Source\KeyBoardState.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\WKBitmap.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BatllePlayer.h">
-      <Filter>GameLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CollisionSensor.h">
-      <Filter>GameLibrary</Filter>
+    <ClInclude Include="Source\WKAudio.h">
+      <Filter>GameLibrary\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\TypeConverter.h">
-      <Filter>GameLibrary</Filter>
+      <Filter>GameLibrary\Method</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\KeyBoardState.h">
+      <Filter>GameLibrary\KeyClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Keycode.h">
+      <Filter>GameLibrary\KeyClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WKBitmap.h">
+      <Filter>GameLibrary\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BatllePlayer.h">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CollisionSensor.h">
+      <Filter>GameLibrary\Method</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

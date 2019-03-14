@@ -303,6 +303,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="Source\TypeConverter.cpp" />
+    <ClCompile Include="Source\WKAudio.cpp" />
     <ClCompile Include="Source\WKBitmap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +321,7 @@
     <ClInclude Include="Source\gamelib.h" />
     <ClInclude Include="Source\mygame.h" />
     <ClInclude Include="Source\TypeConverter.h" />
+    <ClInclude Include="Source\WKAudio.h" />
     <ClInclude Include="Source\WKBitmap.h" />
   </ItemGroup>
   <ItemGroup>
