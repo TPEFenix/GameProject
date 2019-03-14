@@ -211,6 +211,7 @@ namespace game_framework
 					if (DebugPicture3.Rect.X_int > (540 - DebugPicture3.Rect.Width))
 					{
 						Camera.X += 5;
+                        DebugPicture3.DisplayBitmap->Rect.X_int -= 5;
 					}
 					else
 					{
@@ -231,13 +232,14 @@ namespace game_framework
 					if (DebugPicture3.Rect.X_int < 100)
 					{
 						Camera.X -= 5;
+                        DebugPicture3.DisplayBitmap->Rect.X_int += 5;
 					}
 					else
 					{
 						DebugPicture3.Rect.X -= 5;
 					}
 				}
-				DebugPicture3.DisplayBitmap->Rect.Y_int += 5;
+				DebugPicture3.DisplayBitmap->Rect.X_int += 5;
 			}
 			if (KeyState_now.Up == true)
 			{
@@ -251,6 +253,7 @@ namespace game_framework
 					if (DebugPicture3.Rect.Y_int < 100)
 					{
 						Camera.Y -= 5;
+                        DebugPicture3.DisplayBitmap->Rect.Y_int += 5;
 					}
 					else
 					{
@@ -271,6 +274,7 @@ namespace game_framework
 					if (DebugPicture3.Rect.Y_int > 380 - DebugPicture3.Rect.Height)
 					{
 						Camera.Y += 5;
+                        DebugPicture3.DisplayBitmap->Rect.Y_int -= 5;
 					}
 					else
 					{
