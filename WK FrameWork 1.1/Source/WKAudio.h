@@ -7,7 +7,8 @@ namespace WKAudio_namespace
     struct Audio_ID
     {
         const int Ding = 0;
-    } ;
+    };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);
+	void StopSounds(int soundID);
 }
