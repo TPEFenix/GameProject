@@ -90,7 +90,7 @@ namespace game_framework
 
     //邏輯
     int GameAction = 0;//遊戲場景
-    bool DebugMode = false;//是否啟用Debug模式
+    bool DebugMode = true;//是否啟用Debug模式
 
     //顯示
     CameraPosition Camera;//遊戲鏡頭
@@ -317,11 +317,14 @@ namespace game_framework
     BitmapPicture DebugPicture2 = BitmapPicture(true);
     BitmapAnimation DebugPicture3 = BitmapAnimation("ball", true);
     BitmapPicture DebugPicture4 = BitmapPicture("RES\\level1.bmp", true);
+	BitmapPicture* DebugPicture5[20];
 
     void CGameStateInit::DebugmodeLoading()
     {
         if (DebugMode)
         {
+			int xy[20][2] = { {100, 100}, {100, 200}, {100, 300}, {100, 400}, {100, 500}, {100, 600}, {100, 700}, {100, 800}, {200, 850}, {300, 850}, 
+			{400, 850}, {500, 850}, {600, 850}, {700, 850}, {800, 850}, {900, 850}, {1000, 850}, {1100, 850}, {1150, 800}, {1150, 700} };
             DebugPicture1.LoadTexture(true, TransparentColor);
             DebugPicture1.Rect.X = 300;
             DebugPicture1.Rect.Y = 300;
@@ -330,6 +333,14 @@ namespace game_framework
             DebugPicture4.LoadTexture(true, TransparentColor);
             DebugPicture3.Rect.X = 200;
             DebugPicture3.Rect.Y = 100;
+			for (int i = 0; i < 20; i++)
+			{
+				DebugPicture5[i] = new BitmapPicture("RES\\ball.bmp", true);
+				DebugPicture5[i]->LoadTexture(true, TransparentColor);
+				(*DebugPicture5[i]).Rect.X = xy[i][0];
+				(*DebugPicture5[i]).Rect.Y = xy[i][1];
+			}
+	
         }
     }
     void CGameStateInit::DebugmodeOnShow()
@@ -338,12 +349,15 @@ namespace game_framework
         {
             for (int i = 0; i < 10; i += 1)
             {
-
+				DebugPicture1.visable = false;
+				DebugPicture2.visable = false;
                 DebugPicture3.DisplayBitmap->Draw(i, 4);
                 DebugPicture3.AutoPlay(1000);
                 DebugPicture1.Draw(i, 3);
                 DebugPicture2.Draw(i, 5);
                 DebugPicture4.Draw(i, 0);
+				for (int j = 0; j < 20; j++)
+					(*DebugPicture5[j]).Draw(i, 5);
 
                 //Showtext("DebugTesting...", 50, 200, 20, RGB(100, 120, 0), RGB(255, 255, 255), i, 2);
 
@@ -368,8 +382,16 @@ namespace game_framework
             DebugPicture3.OnUpdate(Camera);
             DebugPicture2.OnUpdate(Camera);
             DebugPicture4.OnUpdate(Camera);
+			for (int i = 0; i < 20; i++)
+				(*DebugPicture5[i]).OnUpdate(Camera);
 
             bool fuck = false;
+			for (int i = 0; i < 20; i++)
+				if (BitmapPicture_HitRectangle(*DebugPicture3.DisplayBitmap, (*DebugPicture5[i])))
+				{
+					(*DebugPicture5[i]).visable = false;
+					
+				}
             if (KeyState_now.Right == true)
             {
                 DebugPicture3.DisplayBitmap->Rect.X_int += 5;
@@ -379,7 +401,7 @@ namespace game_framework
                 }
                 else
                 {
-                    if (DebugPicture3.Rect.X_int > (540 - DebugPicture3.Rect.Width))
+                    if (DebugPicture3.Rect.X_int > (SIZE_X-100 - DebugPicture3.Rect.Width))
                     {
                         Camera.X += 5;
                         DebugPicture3.DisplayBitmap->Rect.X_int -= 5;
@@ -442,7 +464,7 @@ namespace game_framework
                 }
                 else
                 {
-                    if (DebugPicture3.Rect.Y_int > 380 - DebugPicture3.Rect.Height)
+                    if (DebugPicture3.Rect.Y_int > SIZE_Y - 100 - DebugPicture3.Rect.Height)
                     {
                         Camera.Y += 5;
                         DebugPicture3.DisplayBitmap->Rect.Y_int -= 5;

@@ -165,7 +165,6 @@ namespace game_framework
     {
         Rect.X_int = (int)(Rect.X - Camera.X);
         Rect.Y_int = (int)(Rect.Y - Camera.Y);
-        SetTopLeft(Rect.X_int, Rect.Y_int);
     }
     void BitmapPicture::Draw(int CurrentLayer,int TargetLayer)
     {
