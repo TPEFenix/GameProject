@@ -60,7 +60,8 @@ namespace game_framework
             const int ny = 0;
             GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
             HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-            if (hbitmap == NULL) {
+            if (hbitmap == NULL) 
+			{
                 char error_msg[300];
                 sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", filename);
                 GAME_ASSERT(false, error_msg);

@@ -20,5 +20,9 @@ namespace WKAudio_namespace
     {
         CAudio::Instance()->Play(soundID, replay);
     }
+	void StopSounds(int soundID)
+	{
+		CAudio::Instance()->Stop(soundID);
+	}
 
 }
