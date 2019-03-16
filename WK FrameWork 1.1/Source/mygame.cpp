@@ -317,7 +317,7 @@ namespace game_framework
     BitmapPicture DebugPicture2 = BitmapPicture(true);
     BitmapAnimation DebugPicture3 = BitmapAnimation("ball", true);
     BitmapPicture DebugPicture4 = BitmapPicture("RES\\level1.bmp", true);
-	BitmapPicture* DebugPicture5[20];
+	BitmapPicture **DebugPicture5 = new BitmapPicture *[20];
 
     void CGameStateInit::DebugmodeLoading()
     {
