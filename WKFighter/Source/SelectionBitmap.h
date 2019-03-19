@@ -9,7 +9,8 @@ namespace game_framework
     public:
         SelectionBitmap();
         ~SelectionBitmap();
-        virtual void AutoLoadBitmaps(string, int, bool, COLORREF);//依照Name自動讀取檔名
+        virtual void OnUpdate(int,int);
+        virtual void AutoLoadBitmaps(string, COLORREF);//依照Name自動讀取檔名
 
     };
 }

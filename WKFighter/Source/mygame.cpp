@@ -109,10 +109,14 @@ namespace game_framework
 
  //開頭畫面變數
 #pragma region GameAction_Title
-    BitmapPicture BackGroung_Title;
+    BitmapPicture BackGround_Title;
     BitmapPicture Title_Bitmap;
+#pragma endregion 
 
-
+    //主選單變數
+#pragma region GameAction_Menu
+    BitmapPicture BackGround_Menu;
+    int TitleSelection = 0;
 #pragma endregion 
 
 
@@ -178,10 +182,12 @@ namespace game_framework
     void CGameStateRun::OnInit()// 讀取檔案
     {
         //讀取所有圖檔--Begin
-        BackGroung_Title = BitmapPicture("Content\\Bitmaps\\BackGround_Title.bmp", 0, 0, true, false, false);
-        BackGroung_Title.LoadTexture(TransparentColor);
+        BackGround_Title = BitmapPicture("Content\\Bitmaps\\BackGround_Title.bmp", 0, 0, true, false, false);
+        BackGround_Title.LoadTexture(TransparentColor);
         Title_Bitmap = BitmapPicture("Content\\Bitmaps\\Title.bmp", 100, 0, true, false, false);
         Title_Bitmap.LoadTexture(TransparentColor);
+        BackGround_Menu = BitmapPicture("Content\\Bitmaps\\BackGround_Menu.bmp", 0, 0, true, false, false);
+        BackGround_Menu.LoadTexture(TransparentColor);
         //讀取所有圖檔--End
 #pragma region Loadding Effect
         ShowInitProgress(40);
@@ -253,16 +259,18 @@ namespace game_framework
         DebugmodeOnShow();
         for (int i = 0; i < 5; i++)
         {
-            BackGroung_Title.Draw(i, 1);
+            BackGround_Title.Draw(i, 1);
             Title_Bitmap.Draw(i, 3);
+            Showtext("Press [SPACE] to start the game", 100, 450, 35, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
         }
     }
     void CGameStateInit::OnMove()
     {
-        BackGroung_Title.OnUpdate();
+        BackGround_Title.OnUpdate();
         Title_Bitmap.OnUpdate();
         if (KeyState_now.Space == true && KeyState_last.Space == false)
         {
+            GameAction = 0;
             GotoGameState(GAME_STATE_RUN);
         }
         DebugmodeOnMove();
@@ -283,7 +291,7 @@ namespace game_framework
     }
     void CGameStateRun::OnBeginState()
     {
-
+        PlaySounds(Sounds.Ding, false);
     }
 
     //GameState LogicUpdate
@@ -291,7 +299,10 @@ namespace game_framework
     {
         // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
         // SetCursor(AfxGetApp()->LoadCursor(IDC_GAMECURSOR));
-
+        if (GameAction == 0)
+        {
+            BackGround_Menu.OnUpdate();
+        }
 
     }
     //GameState ShowBitmaps
@@ -300,7 +311,13 @@ namespace game_framework
         //  注意：Show裡面千萬不要移動任何物件的座標，移動座標的工作應由Move做才對，
         //        否則當視窗重新繪圖時(OnDraw)，物件就會移動，看起來會很怪。換個術語
         //        說，Move負責MVC中的Model，Show負責View，而View不應更動Model。
-
+        for (int i = 0; i < 5; i++)
+        {
+            if (GameAction == 0)
+            {
+                BackGround_Menu.Draw(i, 1);
+            }
+        }
     }
 
 

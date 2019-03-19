@@ -6,6 +6,7 @@
 #include <sstream>
 #include "gamelib.h"
 #include "WKBitmap.h"
+#include "KeyBoardState.h"
 #include "BatllePlayer.h"
 
 using namespace std;
