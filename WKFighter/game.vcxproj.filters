@@ -151,9 +151,6 @@
     <ClCompile Include="Source\WKBitmap.cpp">
       <Filter>GameLibrary\Display</Filter>
     </ClCompile>
-    <ClCompile Include="Source\BatllePlayer.cpp">
-      <Filter>GameLibrary\GameSprite</Filter>
-    </ClCompile>
     <ClCompile Include="Source\CollisionSensor.cpp">
       <Filter>GameLibrary\Method</Filter>
     </ClCompile>
@@ -161,6 +158,9 @@
       <Filter>GameLibrary\GameSprite</Filter>
     </ClCompile>
     <ClCompile Include="Source\Bar.cpp">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BattlePlayer.cpp">
       <Filter>GameLibrary\GameSprite</Filter>
     </ClCompile>
   </ItemGroup>
@@ -207,9 +207,6 @@
     <ClInclude Include="Source\WKBitmap.h">
       <Filter>GameLibrary\Display</Filter>
     </ClInclude>
-    <ClInclude Include="Source\BatllePlayer.h">
-      <Filter>GameLibrary\GameSprite</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CollisionSensor.h">
       <Filter>GameLibrary\Method</Filter>
     </ClInclude>
@@ -217,6 +214,9 @@
       <Filter>GameLibrary\GameSprite</Filter>
     </ClInclude>
     <ClInclude Include="Source\Bar.h">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BattlePlayer.h">
       <Filter>GameLibrary\GameSprite</Filter>
     </ClInclude>
   </ItemGroup>
