@@ -73,7 +73,7 @@
 #define OPEN_AS_FULLSCREEN	 false		// 是否以全螢幕方式開啟遊戲
 #define SHOW_LOAD_PROGRESS   true		// 是否顯示loading(OnInit)的進度
 #define DEFAULT_BG_COLOR	 RGB(0,0,0)	// 遊戲畫面預設的背景顏色(黑色)
-#define GAME_CYCLE_TIME		 16			// 每33ms跑一次Move及Show(每秒30次)
+#define GAME_CYCLE_TIME		 16		// 每33ms跑一次Move及Show(每秒30次)
 #define GAME_TIMER_FIX		 0.5			// GAMECYCLETIME的校正參數，當不是每次更新都跑GAME_CYCLE_TIME毫秒的時候使用
 #define TIMER_TICK_MILLIDECOND		 GAME_CYCLE_TIME*	GAME_TIMER_FIX		// 使用到遊戲內計時器的時候，可使每次計時器增加此數可得到正確毫秒
 #define SHOW_GAME_CYCLE_TIME false		// 是否在debug mode顯示cycle time
