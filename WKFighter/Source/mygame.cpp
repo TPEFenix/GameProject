@@ -73,7 +73,8 @@
 #include "BatllePlayer.h"
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
-#include  "WKAudio.h"
+#include "WKAudio.h"
+#include "Bar.h"
 #pragma endregion 
 
 //命名空間引入
@@ -96,6 +97,8 @@ namespace game_framework
     //顯示
     CameraPosition Camera;//遊戲鏡頭
     const COLORREF TransparentColor = RGB(100, 120, 0);//透明色設定
+	const int left = 1;
+	const int right = 2;
 
     //聲音
     const Audio_ID Sounds;//音效資源編碼
@@ -382,6 +385,7 @@ namespace game_framework
     BitmapAnimation DebugPicture3 = BitmapAnimation("ball", true);
     BitmapPicture DebugPicture4 = BitmapPicture("RES\\level1.bmp", true);
     BitmapPicture* DebugPicture5[20];
+	Bar DebugPicture6 = Bar(200, left);
 
     void CGameStateInit::DebugmodeLoading()
     {
