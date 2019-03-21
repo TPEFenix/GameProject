@@ -74,6 +74,7 @@
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
 #include  "WKAudio.h"
+#include  "Bar.h"
 #pragma endregion 
 
 //命名空間引入
@@ -90,7 +91,7 @@ namespace game_framework
 #pragma region Global
     //邏輯
     int GameAction = 0;//遊戲場景
-    const bool DebugMode = false;//是否啟用Debug模式
+    const bool DebugMode = true;//是否啟用Debug模式
     const bool LoaddingBoost = true;
 
     //顯示
@@ -188,6 +189,7 @@ namespace game_framework
         Title_Bitmap.LoadTexture(TransparentColor);
         BackGround_Menu = BitmapPicture("Content\\Bitmaps\\BackGround_Menu.bmp", 0, 0, true, false, false);
         BackGround_Menu.LoadTexture(TransparentColor);
+
         //讀取所有圖檔--End
 #pragma region Loadding Effect
         ShowInitProgress(40);
@@ -256,12 +258,18 @@ namespace game_framework
     }
     void CGameStateInit::OnShow()
     {
-        DebugmodeOnShow();
-        for (int i = 0; i < 5; i++)
+        if (DebugMode)
         {
-            BackGround_Title.Draw(i, 1);
-            Title_Bitmap.Draw(i, 3);
-            Showtext("Press [SPACE] to start the game", 100, 450, 35, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
+            DebugmodeOnShow();
+        }
+        else
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                BackGround_Title.Draw(i, 1);
+                Title_Bitmap.Draw(i, 3);
+                Showtext("Press [SPACE] to start the game", 100, 450, 35, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
+            }
         }
     }
     void CGameStateInit::OnMove()
@@ -377,10 +385,12 @@ namespace game_framework
 
     //偵錯模式測試用
 #pragma region DebugValueable
-    BitmapPicture DebugPicture1 = BitmapPicture("Content\\Bitmaps\\BG.bmp", true);
+    BitmapPicture DebugPicture1 = BitmapPicture("Content\\Bitmaps\\BG.bmp",0,0,true, false,true);
     BitmapPicture DebugPicture2 = BitmapPicture(true);
     BitmapAnimation DebugPicture3 = BitmapAnimation("ball", true);
     BitmapPicture DebugPicture4 = BitmapPicture("RES\\level1.bmp", true);
+    Bar DebugPicturebar = Bar("RES\\hp.bmp",0,0,true,false ,false);
+    
     BitmapPicture* DebugPicture5[20];
 
     void CGameStateInit::DebugmodeLoading()
@@ -389,12 +399,12 @@ namespace game_framework
         {
             int xy[20][2] = { {100, 100}, {100, 200}, {100, 300}, {100, 400}, {100, 500}, {100, 600}, {100, 700}, {100, 800}, {200, 850}, {300, 850},
             {400, 850}, {500, 850}, {600, 850}, {700, 850}, {800, 850}, {900, 850}, {1000, 850}, {1100, 850}, {1150, 800}, {1150, 700} };
-            DebugPicture1.LoadTexture(true, TransparentColor);
+            DebugPicture1.LoadTexture( false,TransparentColor);
             DebugPicture1.Rect.X = 300;
             DebugPicture1.Rect.Y = 300;
             DebugPicture2.LoadTexture("Content\\Bitmaps\\火柴人_地面輕攻2_4.bmp", true, TransparentColor);
             DebugPicture3.AutoLoadBitmaps("ball", 4, true, TransparentColor);
-            DebugPicture4.LoadTexture(true, TransparentColor);
+            DebugPicture4.LoadTexture(false, TransparentColor);
             DebugPicture3.Rect.X = 200;
             DebugPicture3.Rect.Y = 100;
             for (int i = 0; i < 20; i++)
@@ -404,7 +414,7 @@ namespace game_framework
                 (*DebugPicture5[i]).Rect.X = xy[i][0];
                 (*DebugPicture5[i]).Rect.Y = xy[i][1];
             }
-
+            DebugPicturebar.LoadTexture(TransparentColor);
         }
     }
     void CGameStateInit::DebugmodeOnShow()
@@ -413,13 +423,23 @@ namespace game_framework
         {
             for (int i = 0; i < 10; i += 1)
             {
-                DebugPicture1.visable = false;
-                DebugPicture2.visable = false;
+                DebugPicture1.visable = true;
+                DebugPicture2.visable = true;
                 DebugPicture3.DisplayBitmap->Draw(i, 4);
                 DebugPicture3.AutoPlay(1000);
                 DebugPicture1.Draw(i, 3);
                 DebugPicture2.Draw(i, 5);
                 DebugPicture4.Draw(i, 0);
+                if (DebugPicturebar.Rect.Width > 1)
+                {
+                    DebugPicturebar.Rect.Width -= 1;
+                    DebugPicturebar.Draw(i, 5);
+                }
+                else
+                {
+                    DebugPicturebar.Rect.Width = 1;
+                }
+
                 for (int j = 0; j < 20; j++)
                     (*DebugPicture5[j]).Draw(i, 5);
 
