@@ -73,13 +73,9 @@
 #include "BatllePlayer.h"
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
-<<<<<<< HEAD
 #include "WKAudio.h"
 #include "Bar.h"
-=======
-#include  "WKAudio.h"
-#include  "Bar.h"
->>>>>>> f5ffc1c2fb2a9df7a1bd885a2cf36d45191b78e4
+
 #pragma endregion 
 
 //命名空間引入
@@ -396,7 +392,7 @@ namespace game_framework
     BitmapPicture DebugPicture2 = BitmapPicture(true);
     BitmapAnimation DebugPicture3 = BitmapAnimation("ball", true);
     BitmapPicture DebugPicture4 = BitmapPicture("RES\\level1.bmp", true);
-    Bar DebugPicturebar = Bar("RES\\hp.bmp",0,0,true,false ,false);
+
     
     BitmapPicture* DebugPicture5[20];
 	Bar DebugPicture6 = Bar(200, left);
@@ -422,7 +418,7 @@ namespace game_framework
                 (*DebugPicture5[i]).Rect.X = xy[i][0];
                 (*DebugPicture5[i]).Rect.Y = xy[i][1];
             }
-            DebugPicturebar.LoadTexture(TransparentColor);
+
         }
     }
     void CGameStateInit::DebugmodeOnShow()
@@ -438,15 +434,7 @@ namespace game_framework
                 DebugPicture1.Draw(i, 3);
                 DebugPicture2.Draw(i, 5);
                 DebugPicture4.Draw(i, 0);
-                if (DebugPicturebar.Rect.Width > 1)
-                {
-                    DebugPicturebar.Rect.Width -= 1;
-                    DebugPicturebar.Draw(i, 5);
-                }
-                else
-                {
-                    DebugPicturebar.Rect.Width = 1;
-                }
+
 
                 for (int j = 0; j < 20; j++)
                     (*DebugPicture5[j]).Draw(i, 5);

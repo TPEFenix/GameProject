@@ -11,23 +11,20 @@
 namespace game_framework
 {
 
-<<<<<<< HEAD
-	Bar::Bar() : BitmapPicture("RES\\hp.bmp", true, true)
+	Bar::Bar() : BitmapPicture()
 	{
 		init_hp = 200;
 		current_hp = init_hp;
 		position = 1;
-		isDead = false;
 		Rect.X = 50;
 		Rect.Y = 50;
 	}
 
-	Bar::Bar(int hp) : BitmapPicture("RES\\hp.bmp", true, true)
+	Bar::Bar(int hp) : BitmapPicture()
 	{
 		init_hp = hp;
 		current_hp = init_hp;
 		position = 1;
-		isDead = false;
 		Rect.X = 50;
 		Rect.Y = 50;
 	}
@@ -37,7 +34,6 @@ namespace game_framework
 		init_hp = hp;
 		current_hp = init_hp;
 		position = pos;
-		isDead = false;
 		if (position = 1)
 		{
 			Rect.X = 50;
@@ -56,7 +52,6 @@ namespace game_framework
 		if (current_hp < 0)
 		{
 			current_hp = 0;
-			isDead = true;
 		}
 	}
 	void Bar::AddHp(int add)
@@ -66,12 +61,6 @@ namespace game_framework
 			current_hp = init_hp;
 	}
 
-	bool Bar::IsDead()
-	{
-		if (current_hp <= 0)
-			isDead = true;
-		return isDead;
-	}
 
 	void Bar::SetPosition(int pos)
 	{
@@ -82,20 +71,7 @@ namespace game_framework
 	{
 		current_hp = hp;
 	}
-=======
->>>>>>> f5ffc1c2fb2a9df7a1bd885a2cf36d45191b78e4
 
-    Bar::Bar(string respath, int X_in, int Y_in, bool vis, bool canhit, bool inside)
-    {
-        Rect.X = X_in;
-        Rect.Y = Y_in;
-        Rect.X_int = X_in;
-        Rect.Y_int = Y_in;
-        visable = vis;
-        this->SetResourcePath(respath);
-        CanPixelCollision = canhit;
-        InSideCamera = inside;
-    }
 
     Bar::~Bar()
 	{
