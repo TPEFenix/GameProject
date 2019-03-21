@@ -160,6 +160,9 @@
     <ClCompile Include="Source\SelectionBitmap.cpp">
       <Filter>GameLibrary\GameSprite</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Bar.cpp">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\game.h">
@@ -211,6 +214,9 @@
       <Filter>GameLibrary\Method</Filter>
     </ClInclude>
     <ClInclude Include="Source\SelectionBitmap.h">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bar.h">
       <Filter>GameLibrary\GameSprite</Filter>
     </ClInclude>
   </ItemGroup>

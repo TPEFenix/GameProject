@@ -384,6 +384,12 @@ void CMovingBitmap::ShowBitmap()
 	CDDraw::BltBitmapToBack(SurfaceID,location.left,location.top);
 }
 
+void CMovingBitmap::ShowBitmap(int left,int top,int right,int bottom)
+{
+	GAME_ASSERT(isBitmapLoaded, "A bitmap must be loaded before ShowBitmap() is called !!!");
+	CDDraw::BltBitmapToBack(SurfaceID, location.left, location.top,left,top,right,bottom);
+}
+
 void CMovingBitmap::ShowBitmap(double factor)
 {
 	GAME_ASSERT(isBitmapLoaded,"A bitmap must be loaded before ShowBitmap() is called !!!");
@@ -847,6 +853,27 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y)
 	if (lpDDS[SurfaceID]->IsLost())
 		RestoreSurface();
 	ddrval = lpDDSBack->Blt(TargetRect, lpDDS[SurfaceID],NULL, blt_flag, NULL);
+	CheckDDFail("Blt Bitmap to Back Failed");
+}
+
+void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y,int left,int top,int right,int bottom)
+{
+	GAME_ASSERT(lpDDSBack && (SurfaceID < lpDDS.size()) && lpDDS[SurfaceID], "Internal Error: Incorrect SurfaceID in BltBitmapToBack");
+	CRect TargetRect;
+	TargetRect.left = left;
+	TargetRect.top = top;
+	TargetRect.right = right;
+	TargetRect.bottom = bottom;
+	int blt_flag;
+	if (BitmapColorKey[SurfaceID] != CLR_INVALID)
+		blt_flag = DDBLT_WAIT | DDBLT_KEYSRC;
+	else
+		blt_flag = DDBLT_WAIT;
+	if (lpDDSBack->IsLost())
+		RestoreSurface();
+	if (lpDDS[SurfaceID]->IsLost())
+		RestoreSurface();
+	ddrval = lpDDSBack->Blt(TargetRect, lpDDS[SurfaceID], NULL, blt_flag, NULL);
 	CheckDDFail("Blt Bitmap to Back Failed");
 }
 

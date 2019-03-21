@@ -40,8 +40,8 @@ namespace game_framework
         void LoadTexture(char *, bool, COLORREF);//讀取圖檔
         void OnUpdate();
         void OnUpdate(CameraPosition);
-        void Draw(int, int);//繪出圖型
-        void Draw(int, int, CMovingBitmap&);//繪出圖型
+        virtual void Draw(int, int);//繪出圖型
+		virtual void Draw(int, int, CMovingBitmap&);//繪出圖型
         void SetResourcePath(string);
         string GetResourcePath();//得到資源路徑連結位置
 

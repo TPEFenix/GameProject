@@ -258,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\audio.cpp" />
+    <ClCompile Include="Source\Bar.cpp" />
     <ClCompile Include="Source\BatllePlayer.cpp" />
     <ClCompile Include="Source\CollisionSensor.cpp" />
     <ClCompile Include="Source\game.cpp">
@@ -309,6 +310,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audio.h" />
+    <ClInclude Include="Source\Bar.h" />
     <ClInclude Include="Source\BatllePlayer.h" />
     <ClInclude Include="Source\CollisionSensor.h" />
     <ClInclude Include="Source\game.h" />
