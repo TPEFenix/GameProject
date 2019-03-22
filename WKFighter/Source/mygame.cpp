@@ -472,10 +472,10 @@ namespace game_framework
                 if (BitmapPicture_HitRectangle(*DebugPicture3.DisplayBitmap, (*DebugPicture5[i])))
                 {
                     (*DebugPicture5[i]).visable = false;
-					//DebugPicture6.AddHp(1);
-					DebugPicture6.ReduceHp(1);
-					//DebugPicture7.AddHp(1);
-					DebugPicture7.ReduceHp(1);
+					DebugPicture6.AddHp(1);
+					//DebugPicture6.ReduceHp(1);
+					DebugPicture7.AddHp(1);
+					//DebugPicture7.ReduceHp(1);
 
                 }
             if (KeyState_now.Right == true)
