@@ -25,11 +25,11 @@ namespace game_framework
     BattlePlayer::~BattlePlayer()
     {
     }
-    void BattlePlayer::AnimationUpdat(CameraPosition Camera)
+    void BattlePlayer::AnimationUpdate(CameraPosition Camera)
     {
 #pragma region 確定圖檔名稱
         //確定圖檔名稱
-        string Actionstring = "Content\\Bitmaps\\" + GetName() + "\\" + GetName() + "_" + IntToString(Step) + ".bmp";
+        string Actionstring = "Content\\Bitmaps\\" + GetName() + "\\" + Action + "_" + IntToString(Step) + ".bmp";
         static char cc[65535];
         strcpy(cc, Actionstring.c_str());
         DisplayBitmap = &BitmapPictures[cc];
@@ -56,8 +56,11 @@ namespace game_framework
     }
     void BattlePlayer::OnUpdate(BattlePlayer *Enemy,CameraPosition Camera,KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
-        AnimationUpdat(Camera);
+        AnimationUpdate(Camera);
     }
+	void BattlePlayer::PhysicalMovement(CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
+	{
+	}
     void BattlePlayer::Draw(int i,int j)
     {
         this->DisplayBitmap->Draw(i,j);
