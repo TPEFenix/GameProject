@@ -421,6 +421,8 @@ namespace game_framework
 			DebugPicture6.LoadTexture(false, TransparentColor);
 			DebugPicture6.SetPosition(2);
 			DebugPicture7.LoadTexture(false, TransparentColor);
+			DebugPicture6.SetHp(150);
+			DebugPicture7.SetHp(150);
         }
     }
     void CGameStateInit::DebugmodeOnShow()
@@ -472,10 +474,10 @@ namespace game_framework
                 if (BitmapPicture_HitRectangle(*DebugPicture3.DisplayBitmap, (*DebugPicture5[i])))
                 {
                     (*DebugPicture5[i]).visable = false;
-					DebugPicture6.AddHp(1);
-					//DebugPicture6.ReduceHp(1);
-					DebugPicture7.AddHp(1);
-					//DebugPicture7.ReduceHp(1);
+					DebugPicture6.AddHp(30);
+					//DebugPicture6.ReduceHp(20);
+					DebugPicture7.AddHp(30);
+					//DebugPicture7.ReduceHp(20);
 
                 }
             if (KeyState_now.Right == true)

@@ -18,6 +18,7 @@ namespace game_framework
 		position = 1;
 		Rect.X_int = 50;
 		Rect.Y_int = 50;
+		newWidth = 250;
 	}
 
 	Bar::Bar(int hp) : BitmapPicture()
@@ -27,6 +28,7 @@ namespace game_framework
 		position = 1;
 		Rect.X_int = 50;
 		Rect.Y_int = 50;
+		newWidth = 250;
 	}
 	
 	Bar::Bar(int hp, int pos) : BitmapPicture("RES\\hp.bmp", true, true)
@@ -34,6 +36,7 @@ namespace game_framework
 		init_hp = hp;
 		current_hp = init_hp;
 		position = pos;
+		newWidth = 250;
 		if (position == 1)
 		{
 			this->Rect.X_int = 50;
@@ -53,18 +56,24 @@ namespace game_framework
 		{
 			current_hp = 1;
 		}
+		OnUpdate((double)current_hp, (double)init_hp, Rect.X_int, Rect.Y_int);
 	}
 	void Bar::AddHp(int add)
 	{
 		current_hp = current_hp + add;
 		if (current_hp > init_hp)
 			current_hp = init_hp;
+		OnUpdate((double)current_hp, (double)init_hp, Rect.X_int, Rect.Y_int);
 	}
 
 
-	void Bar::OnUpdate(double now, double max)
+	void Bar::OnUpdate(double now, double max, int X, int Y)
 	{
 		this->newWidth = int((now / max)*this->Rect.Width);
+		if (newWidth == 0)
+			newWidth = 1;
+		Rect.X_int = X;
+		Rect.Y_int = Y;
 	}
 
 	void Bar::SetPosition(int pos)
@@ -85,6 +94,7 @@ namespace game_framework
 	void Bar::SetHp(int hp)
 	{
 		current_hp = hp;
+		OnUpdate((double)current_hp, (double)init_hp, Rect.X_int, Rect.Y_int);
 	}
 
 
