@@ -408,7 +408,7 @@ namespace game_framework
         if (DebugMode)
         {
 
-           
+
         }
     }
 #pragma endregion 
