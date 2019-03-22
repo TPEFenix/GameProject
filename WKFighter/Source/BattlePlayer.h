@@ -14,19 +14,32 @@ namespace game_framework
         BattlePlayer();
         ~BattlePlayer();
 
-        virtual void AnimationUpdat(CameraPosition);
-        virtual void OnUpdate(BattlePlayer *,CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);//更新函式，且隨著視角移動
+        virtual void AnimationUpdate(CameraPosition);
         virtual void Draw(int,int);//更新函式，且隨著視角移動
         virtual void AutoLoadBitmaps(string, int, bool, COLORREF, CameraPosition) = 0;//依照各自角色讀檔
-        virtual void InsertBitmapPicture(string,int,COLORREF);
+		virtual void OnUpdate(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID) = 0;//更新函式，且隨著視角移動
+		virtual void PhysicalMovement(CameraPosition, KeyBoardState, KeyBoardState);//物理移動，全角色共用，除非特例
+        virtual void InsertBitmapPicture(string,int,COLORREF);//使Bimap讀取圖檔
 
-        double HP_Max;
-        double SP_Max;
-        double HP;
-        double SP;
-        bool CanControl;
-        bool Invincible;
-        string Action;
+		int PlayerNumber;//玩家編號
+        double HP_Max;//最大生命值
+        double SP_Max;//最大氣力
+        double HP;//當前生命
+        double SP;//當前氣力
+        bool CanControl;//可以控制
+        bool Invincible;//無敵狀態
+        string Action;//動作狀態
+		int Step;//當前步驟數
+
+		double Velocity_X;//X速度
+		double Velocity_Y;//Y速度
+		double Acceleration_X;//X加速度
+		double Acceleration_Y;//Y加速度
+		const double Acceleration_gravity = 2;//重力加速度
+
+
+
+
 
 
         /*

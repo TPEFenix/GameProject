@@ -29,6 +29,9 @@
     <Filter Include="GameLibrary\GameSprite">
       <UniqueIdentifier>{1234e3e3-6935-482b-9aa5-a9171fcbeb6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameLibrary\GameSprite\Character">
+      <UniqueIdentifier>{de40783f-4f1a-4711-aecc-f2be0b160fd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\ball.bmp">
@@ -163,6 +166,9 @@
     <ClCompile Include="Source\BattlePlayer.cpp">
       <Filter>GameLibrary\GameSprite</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Characters.cpp">
+      <Filter>GameLibrary\GameSprite\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\game.h">
@@ -218,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="Source\BattlePlayer.h">
       <Filter>GameLibrary\GameSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Characters.h">
+      <Filter>GameLibrary\GameSprite\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
