@@ -395,8 +395,8 @@ namespace game_framework
 
     
     BitmapPicture* DebugPicture5[20];
-	Bar DebugPicture6 = Bar(200, left);
-
+	Bar DebugPicture6 = Bar(200, 2);
+	Bar DebugPicture7 = Bar(200, 1);
     void CGameStateInit::DebugmodeLoading()
     {
         if (DebugMode)
@@ -418,7 +418,9 @@ namespace game_framework
                 (*DebugPicture5[i]).Rect.X = xy[i][0];
                 (*DebugPicture5[i]).Rect.Y = xy[i][1];
             }
-
+			DebugPicture6.LoadTexture(false, TransparentColor);
+			DebugPicture6.SetPosition(2);
+			DebugPicture7.LoadTexture(false, TransparentColor);
         }
     }
     void CGameStateInit::DebugmodeOnShow()
@@ -434,8 +436,8 @@ namespace game_framework
                 DebugPicture1.Draw(i, 3);
                 DebugPicture2.Draw(i, 5);
                 DebugPicture4.Draw(i, 0);
-
-
+				DebugPicture6.Draw(i, 5);
+				DebugPicture7.Draw(i, 5);
                 for (int j = 0; j < 20; j++)
                     (*DebugPicture5[j]).Draw(i, 5);
 
@@ -470,6 +472,10 @@ namespace game_framework
                 if (BitmapPicture_HitRectangle(*DebugPicture3.DisplayBitmap, (*DebugPicture5[i])))
                 {
                     (*DebugPicture5[i]).visable = false;
+					//DebugPicture6.AddHp(1);
+					DebugPicture6.ReduceHp(1);
+					//DebugPicture7.AddHp(1);
+					DebugPicture7.ReduceHp(1);
 
                 }
             if (KeyState_now.Right == true)
