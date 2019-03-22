@@ -5,7 +5,7 @@
 #include <sstream>
 #include "gamelib.h"
 #include "WKBitmap.h"
-#include "BatllePlayer.h"
+#include "BattlePlayer.h"
 #include "CollisionSensor.h"
 
 using namespace std;

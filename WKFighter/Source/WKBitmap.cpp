@@ -252,14 +252,6 @@ namespace game_framework
             ShowBitmap();
         }
     }
-    void BitmapPicture::Draw(int CurrentLayer, int TargetLayer, CMovingBitmap & Mask)
-    {
-		if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
-		{
-            SetTopLeft(Rect.X_int, Rect.Y_int);
-			ShowBitmap(Mask);
-		}
-    }
     void BitmapPicture::SetResourcePath(string namein)
     {
         ResourcePath = namein;
@@ -313,7 +305,21 @@ namespace game_framework
         visable = vis;
         InSideCamera = inside;
     }
-	BitmapAnimation::~BitmapAnimation()
+    BitmapAnimation::BitmapAnimation(string namein, int X, int Y, bool vis, bool CanHit, bool inside)
+    {
+        Step = 0;
+        AutoMaxStep = 0;
+        AutoPlayTimer = 0;
+        CanPixelCollision = CanHit;
+        Name = namein;
+        visable = vis;
+        InSideCamera = inside;
+        Rect.X = X;
+        Rect.Y = Y;
+        Rect.X_int = X;
+        Rect.Y_int = Y;
+    }
+    BitmapAnimation::~BitmapAnimation()
 	{
 	}
     void BitmapAnimation::AutoPlay(int frequence)

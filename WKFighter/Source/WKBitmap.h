@@ -23,27 +23,35 @@ namespace game_framework
     {
         friend class CDDraw;
     public:
-        //建構子
+        //隨緣
         BitmapPicture();
+        //(是否可見)
         BitmapPicture(bool);
+        //(路徑,是否可見)
         BitmapPicture(string, bool);
         //(路徑,是否可見,是否受到鏡頭影響)
         BitmapPicture(string, bool,bool);
         //(路徑,X,Y,是否可見,是否可碰撞,是否受到鏡頭影響)
         BitmapPicture(string,int,int, bool,bool, bool);
-
+        //解構子
         ~BitmapPicture();
-
+        
         //方法函式
-        void LoadTexture(COLORREF);//讀取圖檔(只需輸入透明色)
-        void LoadTexture(bool, COLORREF);//讀取圖檔(使用ResourcePath)
-        void LoadTexture(char *, bool, COLORREF);//讀取圖檔
+        //讀取圖檔(只需輸入透明色)
+        void LoadTexture(COLORREF);
+        //讀取圖檔(使用ResourcePath,透明色)
+        void LoadTexture(bool, COLORREF);
+        //讀取圖檔(路徑,是否可像素碰撞,透明色)
+        void LoadTexture(char *, bool, COLORREF);
         void OnUpdate();
         void OnUpdate(CameraPosition);
-        virtual void Draw(int, int);//繪出圖型
-		virtual void Draw(int, int, CMovingBitmap&);//繪出圖型
+        //繪出圖型
+        virtual void Draw(int, int);
+
+        //設定資源路徑連結
         void SetResourcePath(string);
-        string GetResourcePath();//得到資源路徑連結位置
+        //得到資源路徑連結位置
+        string GetResourcePath();
 
         //屬性成員
         BitMapRectangle Rect;//圖片材質矩形 掌管座標跟長寬，會在讀取檔案時設定完成，並且可以在外部更動
@@ -60,9 +68,15 @@ namespace game_framework
     public:
         //建構子
         BitmapAnimation();
+        //(是否可見)
         BitmapAnimation(bool);
+        //(路徑,是否可見)
         BitmapAnimation(string, bool);
+        //(路徑,是否可見,是否受到鏡頭影響)
         BitmapAnimation(string, bool,bool);
+        //(路徑,X,Y,是否可見,是否可碰撞,是否受到鏡頭影響)
+        BitmapAnimation(string, int, int, bool, bool, bool);
+        //解構子
         ~BitmapAnimation();
 
         //方法函式

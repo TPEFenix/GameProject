@@ -70,7 +70,7 @@
 #include "Keycode.h"
 #include "KeyBoardState.h"
 #include "WKBitmap.h"
-#include "BatllePlayer.h"
+#include "BattlePlayer.h"
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
 #include "WKAudio.h"
