@@ -15,28 +15,35 @@ namespace CollisionSensor_namespace
 {
     bool BitmapPicture_HitRectangle(BitmapPicture Bitmap1, BitmapPicture Bitmap2)
     {
-        int x1 = Bitmap1.Rect.X_int;
-        int x2 = Bitmap2.Rect.X_int;
-        int y1 = Bitmap1.Rect.Y_int;
-        int y2 = Bitmap2.Rect.Y_int;
-        int w1 = Bitmap1.Rect.Width;
-        int w2 = Bitmap2.Rect.Width;
-        int h1 = Bitmap1.Rect.Height;
-        int h2 = Bitmap2.Rect.Height;
+		if (Bitmap1.visable && Bitmap2.visable)
+		{
+			int x1 = Bitmap1.Rect.X_int;
+			int x2 = Bitmap2.Rect.X_int;
+			int y1 = Bitmap1.Rect.Y_int;
+			int y2 = Bitmap2.Rect.Y_int;
+			int w1 = Bitmap1.Rect.Width;
+			int w2 = Bitmap2.Rect.Width;
+			int h1 = Bitmap1.Rect.Height;
+			int h2 = Bitmap2.Rect.Height;
 
-        if (x1 >= x2 && x1 >= x2 + w2) {
-            return false;
-        }
-        else if (x1 <= x2 && x1 + w1 <= x2) {
-            return false;
-        }
-        else if (y1 >= y2 && y1 >= y2 + h2) {
-            return false;
-        }
-        else if (y1 <= y2 && y1 + h1 <= y2) {
-            return false;
-        }
-        return true;
+			if (x1 >= x2 && x1 >= x2 + w2) {
+				return false;
+			}
+			else if (x1 <= x2 && x1 + w1 <= x2) {
+				return false;
+			}
+			else if (y1 >= y2 && y1 >= y2 + h2) {
+				return false;
+			}
+			else if (y1 <= y2 && y1 + h1 <= y2) {
+				return false;
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
     }
     bool PixelCollision(BitmapPicture * Bitmap1, BitmapPicture * Bitmap2, int accuracy)
     {

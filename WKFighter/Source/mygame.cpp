@@ -395,8 +395,8 @@ namespace game_framework
 
     
     BitmapPicture* DebugPicture5[20];
-	Bar DebugPicture6 = Bar(200, 2);
-	Bar DebugPicture7 = Bar(200, 1);
+	Bar DebugPicture6 = Bar(250, 2);
+	Bar DebugPicture7 = Bar(250, 1);
     void CGameStateInit::DebugmodeLoading()
     {
         if (DebugMode)
