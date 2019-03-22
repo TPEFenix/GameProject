@@ -16,12 +16,14 @@ namespace game_framework
 		void ReduceHp(int);			//扣血
 		void AddHp(int);			//回血
 		bool IsDead();				//GG
+		void OnUpdate(double,double);
 		void SetPosition(int);		//設定左方右方
 		void SetHp(int);			//設定current_hp
 		virtual void Draw(int, int);//繪出圖型
 		int init_hp;				//初始血量
 		int current_hp;				//即時血量
 		int position;				//左右方
+		int newWidth;
 
 	};
 }

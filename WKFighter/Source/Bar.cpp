@@ -13,7 +13,7 @@ namespace game_framework
 
 	Bar::Bar() : BitmapPicture()
 	{
-		init_hp = 200;
+		init_hp = 250;
 		current_hp = init_hp;
 		position = 1;
 		Rect.X_int = 50;
@@ -41,7 +41,7 @@ namespace game_framework
 		}
 		else
 		{
-			this->Rect.X_int = 600;// +(200 - init_hp);
+			this->Rect.X_int = 550;// +(200 - init_hp);
 			this->Rect.Y_int = 50;
 		}
 	}
@@ -61,6 +61,11 @@ namespace game_framework
 			current_hp = init_hp;
 	}
 
+
+	void Bar::OnUpdate(double now, double max)
+	{
+		this->newWidth = int((now / max)*this->Rect.Width);
+	}
 
 	void Bar::SetPosition(int pos)
 	{
@@ -94,12 +99,12 @@ namespace game_framework
 			if (position == 1)
 			{
 				SetTopLeft(Rect.X_int, Rect.Y_int);
-				ShowBitmap(this->Rect.X_int, this->Rect.Y_int, this->Rect.X_int + current_hp, this->Rect.Y_int + this->Rect.Height);
+				ShowBitmap(this->Rect.X_int, this->Rect.Y_int, this->Rect.X_int + newWidth, this->Rect.Y_int + this->Rect.Height);
 			}
 			else
 			{
 				SetTopLeft(Rect.X_int, Rect.Y_int);
-				ShowBitmap(this->Rect.X_int + init_hp - current_hp, this->Rect.Y_int, this->Rect.X_int + Rect.Width, this->Rect.Y_int + this->Rect.Height);
+				ShowBitmap(this->Rect.X_int + Rect.Width - newWidth, this->Rect.Y_int, this->Rect.X_int + Rect.Width, this->Rect.Y_int + this->Rect.Height);
 			}
 		}
 	}
