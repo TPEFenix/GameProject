@@ -77,19 +77,18 @@ namespace game_framework
     }
     void BitmapPicture::LoadTexture(COLORREF color)
     {
-        char cc[3000], *filename;
+        char *cc = new char[3000];
         strcpy(cc, ResourcePath.c_str());
-        filename = cc;
         if (this->isBitmapLoaded == false)
         {
             const int nx = 0;
             const int ny = 0;
             GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
-            HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+            HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, cc, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
             if (hbitmap == NULL)
             {
                 char error_msg[300];
-                sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", filename);
+                sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", cc);
                 GAME_ASSERT(false, error_msg);
             }
             CBitmap *bmp = CBitmap::FromHandle(hbitmap); // memory will be deleted automatically
@@ -98,7 +97,7 @@ namespace game_framework
             this->location.left = nx; this->location.top = ny;
             this->location.right = nx + bitmapSize.bmWidth;
             this->location.bottom = ny + bitmapSize.bmHeight;
-            this->SurfaceID = CDDraw::RegisterBitmap(filename, color);
+            this->SurfaceID = CDDraw::RegisterBitmap(cc, color);
             this->isBitmapLoaded = true;
             Rect.Width = Width();
             Rect.Height = Height();
@@ -107,7 +106,7 @@ namespace game_framework
                 CDC dc;
                 CDC* pDC = CDDraw::GetBackCDC();
                 dc.CreateCompatibleDC(pDC);
-                CBitmap* pOld = dc.SelectObject(bmp);
+
                 for (int y = 0; y <bitmapSize.bmHeight; y++)
                 {
                     EffectRect.push_back(vector<bool>());
@@ -124,23 +123,23 @@ namespace game_framework
                 CDDraw::ReleaseBackCDC();
             }
         }
+        delete[] cc;
     }
     void BitmapPicture::LoadTexture(bool CanHit, COLORREF color)
     {
-        char cc[3000],*filename;
+        char *cc = new char[3000];
         strcpy(cc, ResourcePath.c_str());
-        filename = cc;
         if (this->isBitmapLoaded == false)
         {
             CanPixelCollision = CanHit;
             const int nx = 0;
             const int ny = 0;
             GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
-            HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+            HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, cc, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
             if (hbitmap == NULL) 
 			{
                 char error_msg[300];
-                sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", filename);
+                sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", cc);
                 GAME_ASSERT(false, error_msg);
             }
             CBitmap *bmp = CBitmap::FromHandle(hbitmap); // memory will be deleted automatically
@@ -149,7 +148,7 @@ namespace game_framework
             this->location.left = nx; this->location.top = ny;
             this->location.right = nx + bitmapSize.bmWidth;
             this->location.bottom = ny + bitmapSize.bmHeight;
-            this->SurfaceID = CDDraw::RegisterBitmap(filename, color);
+            this->SurfaceID = CDDraw::RegisterBitmap(cc, color);
             this->isBitmapLoaded = true;
             Rect.Width = Width();
             Rect.Height = Height();
@@ -158,7 +157,7 @@ namespace game_framework
                 CDC dc;
                 CDC* pDC = CDDraw::GetBackCDC();
                 dc.CreateCompatibleDC(pDC);
-                CBitmap* pOld = dc.SelectObject(bmp);
+
                 for (int y = 0; y <bitmapSize.bmHeight; y++)
                 {
                     EffectRect.push_back(vector<bool>());
@@ -175,6 +174,7 @@ namespace game_framework
                 CDDraw::ReleaseBackCDC();
             }
         }
+        delete[] cc;
     }
     void BitmapPicture::LoadTexture(char *filename,bool CanHit, COLORREF color)
     {
@@ -205,7 +205,6 @@ namespace game_framework
                 CDC dc;
                 CDC* pDC = CDDraw::GetBackCDC();
                 dc.CreateCompatibleDC(pDC);
-                CBitmap* pOld = dc.SelectObject(bmp);
                 for (int y = 0; y <bitmapSize.bmHeight; y++)
                 {
                     EffectRect.push_back(vector<bool>());
@@ -321,6 +320,7 @@ namespace game_framework
     }
     BitmapAnimation::~BitmapAnimation()
 	{
+        
 	}
     void BitmapAnimation::AutoPlay(int frequence)
     {

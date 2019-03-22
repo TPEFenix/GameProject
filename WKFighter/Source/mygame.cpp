@@ -75,7 +75,7 @@
 #include "TypeConverter.h"
 #include "WKAudio.h"
 #include "Bar.h"
-
+#include "Characters.h"
 #pragma endregion 
 
 //命名空間引入
@@ -93,7 +93,8 @@ namespace game_framework
     //邏輯
     int GameAction = 0;//遊戲場景
     const bool DebugMode = true;//是否啟用Debug模式
-    const bool LoaddingBoost = true;
+    const bool LoaddingBoost = true;//使否啟用讀取加速
+    bool CloseingDebug = false;
 
     //顯示
     CameraPosition Camera;//遊戲鏡頭
@@ -122,7 +123,8 @@ namespace game_framework
     BitmapPicture BackGround_Menu;
     int TitleSelection = 0;
 #pragma endregion 
-
+    BattlePlayer *Player1;
+    BattlePlayer *Player2;
 
 
 
@@ -155,6 +157,11 @@ namespace game_framework
 #pragma region Program Initialize
     CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
     {
+    }
+    CGameStateInit::~CGameStateInit()
+    {
+        delete Player1;
+        delete Player2;
     }
     void CGameStateInit::OnBeginState()
     {
@@ -388,35 +395,75 @@ namespace game_framework
 
     //偵錯模式測試用
 #pragma region DebugValueable
-    BitmapPicture DebugPicture1 = BitmapPicture("Content\\Bitmaps\\BG.bmp",0,0,true, false,true);
-    BitmapPicture DebugPicture2 = BitmapPicture(true);
-    BitmapAnimation DebugPicture3 = BitmapAnimation("ball", true);
-    BitmapPicture DebugPicture4 = BitmapPicture("RES\\level1.bmp", true);
 
-    
-    BitmapPicture* DebugPicture5[20];
-	Bar DebugPicture6 = Bar(250, 2);
-	Bar DebugPicture7 = Bar(250, 1);
+	BitmapPicture BK;
+    Bar Bar_HP1;
+    Bar Bar_HP2;
+    Bar Bar_SP1;
+    Bar Bar_SP2;
+
     void CGameStateInit::DebugmodeLoading()
     {
         if (DebugMode)
         {
-           
+			Player1 = new Matchstick(1);
+			Player2 = new Matchstick(2);
+			BK = BitmapPicture("Content\\Bitmaps\\BackGround_Title.bmp",0,0,true,false,true);
+			BK.LoadTexture(TransparentColor);
+			Player1->AutoLoadBitmaps(Camera,TransparentColor);
+			Player2->AutoLoadBitmaps(Camera,TransparentColor);
+			Player1->Rect.X = 50;
+			Player1->Rect.Y = GroundPosition-200;
+			Player2->Rect.X = 630;
+			Player2->Rect.Y = GroundPosition-200;
+            Bar_HP1 = Bar("Content\\Bitmaps\\red_bar.bmp",1,25,25,true);
+            Bar_HP1.LoadTexture(TransparentColor);
+            Bar_HP2 = Bar("Content\\Bitmaps\\red_bar.bmp", 2, 525, 25, true);
+            Bar_HP2.LoadTexture(TransparentColor);
+            Bar_SP1 = Bar("Content\\Bitmaps\\orange_bar.bmp", 1, 175, 75, true);
+            Bar_SP1.LoadTexture(TransparentColor);
+            Bar_SP2 = Bar("Content\\Bitmaps\\orange_bar.bmp", 2, 525, 75, true);
+            Bar_SP2.LoadTexture(TransparentColor);
+            Player1->CanControl = true;
+            Player2->CanControl = true;
+
         }
     }
     void CGameStateInit::DebugmodeOnShow()
     {
-        if (DebugMode)
+        if (DebugMode&&CloseingDebug == false)
         {
-           
-           
+			for (int i = 0; i <= 5; i++)
+			{
+                
+				BK.Draw(i, 1);
+				Player1->Draw(i,3);
+				Player2->Draw(i,3);
+                Bar_HP1.Draw(i,4);
+                Bar_HP2.Draw(i, 4);
+                Bar_SP1.Draw(i, 4);
+                Bar_SP2.Draw(i, 4);
+                
+			}
         }
     }
     void CGameStateInit::DebugmodeOnMove()
     {
         if (DebugMode)
         {
-
+            
+			BK.OnUpdate(Camera);
+            Bar_HP1.OnUpdate(Player1->HP, Player1->HP_Max);
+            Bar_HP2.OnUpdate(Player2->HP, Player2->HP_Max);
+            Bar_SP1.OnUpdate(Player1->SP, Player1->SP_Max);
+            Bar_SP2.OnUpdate(Player2->SP, Player2->SP_Max);
+			Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds);
+			Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds);
+            if (KeyState_now.Space == true)
+            {
+                CloseingDebug = true;
+                ExitGame();
+            }
         }
     }
 #pragma endregion 

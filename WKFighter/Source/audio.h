@@ -55,7 +55,8 @@
  *      1. Add setup project for Visual studio 2005.
  *      2. Support bitmap scaling when ShowBitmap(scale) is called.
  *      3. Add namespace game_framework.
- *      4. Make the class CGame a singleton so that MFC can access it easily.
+ *      4. Make the class CGame a singleton so that MFC can a
+ ess it easily.
  *      5. Support loading of bitmap from bmp file.
  *      6. Support ShowInitProgress(percent) to display loading progress. 
  *   2010-03-23 V4.6
