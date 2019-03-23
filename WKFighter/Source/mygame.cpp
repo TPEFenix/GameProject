@@ -223,6 +223,7 @@ namespace game_framework
 #pragma endregion 
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
+        LoadSounds(Sounds.Rush, "Content\\Sounds\\rush.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -401,6 +402,14 @@ namespace game_framework
     Bar Bar_HP2;
     Bar Bar_SP1;
     Bar Bar_SP2;
+    BitmapPicture Bar_HP1_MaskTop;
+    BitmapPicture Bar_HP1_MaskBottom;
+    BitmapPicture Bar_SP1_MaskTop;
+    BitmapPicture Bar_SP1_MaskBottom;
+    BitmapPicture Bar_HP2_MaskTop;
+    BitmapPicture Bar_HP2_MaskBottom;
+    BitmapPicture Bar_SP2_MaskTop;
+    BitmapPicture Bar_SP2_MaskBottom;
 
     void CGameStateInit::DebugmodeLoading()
     {
@@ -420,13 +429,28 @@ namespace game_framework
             Bar_HP1.LoadTexture(TransparentColor);
             Bar_HP2 = Bar("Content\\Bitmaps\\red_bar.bmp", 2, 525, 25, true);
             Bar_HP2.LoadTexture(TransparentColor);
-            Bar_SP1 = Bar("Content\\Bitmaps\\orange_bar.bmp", 1, 175, 75, true);
+            Bar_SP1 = Bar("Content\\Bitmaps\\orange_bar.bmp", 1, 125, 50, true);
             Bar_SP1.LoadTexture(TransparentColor);
-            Bar_SP2 = Bar("Content\\Bitmaps\\orange_bar.bmp", 2, 525, 75, true);
+            Bar_SP2 = Bar("Content\\Bitmaps\\orange_bar.bmp", 2, 525, 50, true);
             Bar_SP2.LoadTexture(TransparentColor);
             Player1->CanControl = true;
             Player2->CanControl = true;
-
+            Bar_HP1_MaskTop = BitmapPicture("Content\\Bitmaps\\Red_BarMaskTop.bmp",20,25,true,false,false);
+            Bar_HP1_MaskTop.LoadTexture(TransparentColor);
+            Bar_HP1_MaskBottom = BitmapPicture("Content\\Bitmaps\\Red_BarMaskBottom.bmp", 20, 25, true, false, false);
+            Bar_HP1_MaskBottom.LoadTexture(TransparentColor);
+            Bar_SP1_MaskTop = BitmapPicture("Content\\Bitmaps\\Orange_BarMaskTop.bmp", 120, 50, true, false, false);
+            Bar_SP1_MaskTop.LoadTexture(TransparentColor);
+            Bar_SP1_MaskBottom = BitmapPicture("Content\\Bitmaps\\Orange_BarMaskBottom.bmp", 120, 50, true, false, false);
+            Bar_SP1_MaskBottom.LoadTexture(TransparentColor);
+            Bar_HP2_MaskTop = BitmapPicture("Content\\Bitmaps\\Red_BarMaskTop.bmp", 520, 25, true, false, false);
+            Bar_HP2_MaskTop.LoadTexture(TransparentColor);
+            Bar_HP2_MaskBottom = BitmapPicture("Content\\Bitmaps\\Red_BarMaskBottom.bmp", 520, 25, true, false, false);
+            Bar_HP2_MaskBottom.LoadTexture(TransparentColor);
+            Bar_SP2_MaskTop = BitmapPicture("Content\\Bitmaps\\Orange_BarMaskTop.bmp", 520, 50, true, false, false);
+            Bar_SP2_MaskTop.LoadTexture(TransparentColor);
+            Bar_SP2_MaskBottom = BitmapPicture("Content\\Bitmaps\\Orange_BarMaskBottom.bmp", 520, 50, true, false, false);
+            Bar_SP2_MaskBottom.LoadTexture(TransparentColor);
         }
     }
     void CGameStateInit::DebugmodeOnShow()
@@ -439,10 +463,18 @@ namespace game_framework
 				BK.Draw(i, 1);
 				Player1->Draw(i,3);
 				Player2->Draw(i,3);
-                Bar_HP1.Draw(i,4);
-                Bar_HP2.Draw(i, 4);
-                Bar_SP1.Draw(i, 4);
-                Bar_SP2.Draw(i, 4);
+                Bar_HP1.Draw(i,4, Player1->HP, Player1->HP_Max);
+                Bar_HP2.Draw(i, 4, Player2->HP, Player2->HP_Max);
+                Bar_SP1.Draw(i, 4, Player1->SP, Player1->SP_Max);
+                Bar_SP2.Draw(i, 4, Player2->SP, Player2->SP_Max);
+                Bar_HP1_MaskTop.Draw(i, 5);
+                Bar_HP1_MaskBottom.Draw(i,3);
+                Bar_SP1_MaskTop.Draw(i, 5);
+                Bar_SP1_MaskBottom.Draw(i, 3);
+                Bar_HP2_MaskTop.Draw(i, 5);
+                Bar_HP2_MaskBottom.Draw(i, 3);
+                Bar_SP2_MaskTop.Draw(i, 5);
+                Bar_SP2_MaskBottom.Draw(i, 3);
                 
 			}
         }
@@ -453,10 +485,14 @@ namespace game_framework
         {
             
 			BK.OnUpdate(Camera);
-            Bar_HP1.OnUpdate(Player1->HP, Player1->HP_Max);
-            Bar_HP2.OnUpdate(Player2->HP, Player2->HP_Max);
-            Bar_SP1.OnUpdate(Player1->SP, Player1->SP_Max);
-            Bar_SP2.OnUpdate(Player2->SP, Player2->SP_Max);
+            Bar_HP1_MaskTop.OnUpdate();
+            Bar_HP1_MaskBottom.OnUpdate();
+            Bar_SP1_MaskTop.OnUpdate();
+            Bar_SP1_MaskBottom.OnUpdate();
+            Bar_HP2_MaskTop.OnUpdate();
+            Bar_HP2_MaskBottom.OnUpdate();
+            Bar_SP2_MaskTop.OnUpdate();
+            Bar_SP2_MaskBottom.OnUpdate();
 			Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds);
 			Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds);
             if (KeyState_now.Space == true)

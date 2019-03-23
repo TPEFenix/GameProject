@@ -21,6 +21,7 @@ namespace game_framework
     }
     BattlePlayer::~BattlePlayer()
     {
+
     }
     void BattlePlayer::AnimationUpdate(CameraPosition Camera)
     {
@@ -73,11 +74,16 @@ namespace game_framework
 		Rect.Y += Velocity_Y;
 		Velocity_X += Acceleration_X;
 		Velocity_Y += Acceleration_Y + Acceleration_gravity;
-		if (Rect.Y > GroundPosition)
+		if (Rect.Y >= GroundPosition)
 		{
 			Rect.Y = GroundPosition;
             OnGround = true;
 		}
+        else if (Rect.Y < GroundPosition)
+        {
+            OnGround = false;
+        }
+
 	}
     void BattlePlayer::Draw(int i,int j)
     {
@@ -151,6 +157,30 @@ namespace game_framework
             Button_last.button_Up = KeyState_last.Player2_Up;
         }
     }
+    void BattlePlayer::GotoStandby(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    {
+        Action = "待機";
+        Step = 0;
+        RunningTimer = 0;
+        StandbyTimer = 0;
+        RushTimer = 0;
+    }
+    void BattlePlayer::GotoRunning(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    {
+        Action = "移動";
+        Step = 0;
+        RunningTimer = 0;
+    }
+    void BattlePlayer::GotoRush(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    {
+        if (this->SP >= Rush_cost)
+        {
+            this->SP -= Rush_cost;
+            Action = "衝刺";
+            Step = 0;
+            RushTimer = 0;
+        }
+    }
     void BattlePlayer::OnStandby(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
         if (Action == "待機")
@@ -169,9 +199,7 @@ namespace game_framework
                 {
                     Velocity_X += 1;
                 }
-                
             }
-
             StandbyTimer += TIMER_TICK_MILLIDECOND;
             if (StandbyTimer >= 250)
             {
@@ -189,18 +217,18 @@ namespace game_framework
             if (CanControl&&Button_now.button_Right&&OnGround)
             {
                 IsRight = true;
-                Action = "移動";
-                Step = 0;
-                RunningTimer = 0;
+                GotoRunning(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
             }
             else if (CanControl&&Button_now.button_Left&&OnGround)
             {
                 IsRight = false;
-                Action = "移動";
-                Step = 0;
-                RunningTimer = 0;
+                GotoRunning(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
             }
-
+            
+            if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
+            {
+                GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+            }
 
         }
     }
@@ -233,6 +261,10 @@ namespace game_framework
                 {
                     Velocity_X = 6;
                 }
+                if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
+                {
+                    GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                }
             }
             //向左走
             else if(CanControl&&IsRight == false&&OnGround && (Button_now.button_Right == true || Button_now.button_Left == true))
@@ -259,13 +291,14 @@ namespace game_framework
                 {
                     Velocity_X = -6;
                 }
+                if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
+                {
+                    GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                }
             }
             else if (Button_now.button_Right == false &&Button_now.button_Left == false)
             {
-                Action = "待機";
-                Step = 0;
-                RunningTimer = 0;
-                StandbyTimer = 0;
+                GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
             }
         }
     }

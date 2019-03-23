@@ -49,7 +49,7 @@ namespace game_framework
     {
     public:
         BattlePlayer();
-        ~BattlePlayer();
+        virtual ~BattlePlayer();
     
         //共用建置函數(大多需要繼承額外撰寫)
         virtual void AnimationUpdate(CameraPosition);
@@ -61,6 +61,9 @@ namespace game_framework
         
         //共用基礎動作函數
         virtual void InputJudge(KeyBoardState, KeyBoardState);//輸入更新按鈕
+        virtual void GotoStandby(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
+        virtual void GotoRunning(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
+        virtual void GotoRush(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
         virtual void OnStandby(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
         virtual void OnRunning(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
 
@@ -78,10 +81,14 @@ namespace game_framework
         bool OnGround;//是否在地面上
         string Action;//動作狀態
         int Step;//當前步驟數
+        int Rush_cost;//衝刺消耗氣力量
+        int StandbySPincrements;
+
 
         //Timer參數
         double StandbyTimer = 0;
         double RunningTimer = 0;
+        double RushTimer = 0;
 
         //輸入按鍵參數
         BattleInput Button_now;

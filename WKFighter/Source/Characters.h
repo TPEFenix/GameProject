@@ -19,8 +19,14 @@ namespace game_framework
 		public:
 			Matchstick(int);
 			~Matchstick();
+
 			virtual void AutoLoadBitmaps(CameraPosition,COLORREF);//依照各自角色讀檔
 			virtual void OnUpdate(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);//更新函式，且隨著視角移動
+            virtual void OnRush(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);//更新函式，且隨著視角移動
+            virtual void Draw(int, int);//更新函式，且隨著視角移動
+
+            //Effects
+            BitmapAnimation *Effect_Rush;
 
 
 

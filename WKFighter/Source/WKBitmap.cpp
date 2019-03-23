@@ -275,6 +275,7 @@ namespace game_framework
         AutoPlayTimer = 0;
         CanPixelCollision = false;
         visable = false;
+        BitmapisRight = true;
     }
     BitmapAnimation::BitmapAnimation(bool vis)
 	{
@@ -284,6 +285,7 @@ namespace game_framework
         AutoPlayTimer = 0;
         CanPixelCollision = false;
 		visable = vis;
+        BitmapisRight = true;
 	}
     BitmapAnimation::BitmapAnimation(string namein, bool vis)
     {
@@ -293,6 +295,7 @@ namespace game_framework
         CanPixelCollision = false;
         Name = namein;
         visable = vis;
+        BitmapisRight = true;
     }
     BitmapAnimation::BitmapAnimation(string namein, bool vis,bool inside)
     {
@@ -303,6 +306,7 @@ namespace game_framework
         Name = namein;
         visable = vis;
         InSideCamera = inside;
+        BitmapisRight = true;
     }
     BitmapAnimation::BitmapAnimation(string namein, int X, int Y, bool vis, bool CanHit, bool inside)
     {
@@ -317,6 +321,7 @@ namespace game_framework
         Rect.Y = Y;
         Rect.X_int = X;
         Rect.Y_int = Y;
+        BitmapisRight = true;
     }
     BitmapAnimation::~BitmapAnimation()
 	{
@@ -352,16 +357,50 @@ namespace game_framework
 		{
             string str = ("Content\\Bitmaps\\" + name + "\\" + name + "_" + IntToString(i) + ".bmp");
 			BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
-            static char cc[65535];
+            char *cc = new char[65535];
             strcpy(cc, str.c_str());
             BitmapPictures[str].LoadTexture(cc, CanPixelCollisionin,color);
+            delete[] cc;
 		}
         OnUpdate();
 	}
+    //Effect­n¦³¥ª¥k
+    void BitmapAnimation::AutoLoadBitmaps(string folder,string name, int MaxSteps, bool CanPixelCollisionin, COLORREF color)
+    {
+        AutoMaxStep = MaxSteps;
+        CanPixelCollision = CanPixelCollisionin;
+        string StepString = IntToString(MaxSteps);
+        BitmapPictures = map<string, BitmapPicture>();
+        for (int i = 0; i < MaxSteps; i += 1)
+        {
+            string str;
+            str = ("Content\\Bitmaps\\" + folder + "\\" + name + "_" + IntToString(i) + ".bmp");
+            BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
+            char *cr = new char[65535];
+            strcpy(cr, str.c_str());
+            BitmapPictures[str].LoadTexture(cr, CanPixelCollisionin, color);
+            delete[] cr;
+            str = ("Content\\Bitmaps\\" + folder + "\\" + name + "_" + IntToString(i) + "_L.bmp");
+            BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
+            char *cl = new char[65535];
+            strcpy(cl, str.c_str());
+            BitmapPictures[str].LoadTexture(cl, CanPixelCollisionin, color);
+            delete[] cl;
+        }
+        OnUpdate();
+    }
     void BitmapAnimation::OnUpdate()
     {
-        string Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + ".bmp";
-        static char cc[65535];
+        string Actionstring;
+        if (BitmapisRight)
+        {
+            Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + ".bmp";
+        }
+        else
+        {
+            Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + "_L.bmp";
+        }
+       char *cc = new char[65535];
         strcpy(cc, Actionstring.c_str());
         DisplayBitmap = &BitmapPictures[cc];
         Rect.Width = DisplayBitmap->Rect.Width;
@@ -371,12 +410,21 @@ namespace game_framework
         DisplayBitmap->Rect.X = Rect.X_int;
         DisplayBitmap->Rect.Y = Rect.Y_int;
         DisplayBitmap->OnUpdate();
+        DisplayBitmap->visable = visable;
+        delete[] cc;
     }
     void BitmapAnimation::OnUpdate(CameraPosition Camera)
     {
-
-        string Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + ".bmp";
-        static char cc[65535];
+        string Actionstring;
+        if (BitmapisRight)
+        {
+            Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + ".bmp";
+        }
+        else
+        {
+            Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + "_L.bmp";
+        }
+        char *cc = new char[65535];
         strcpy(cc, Actionstring.c_str());
         DisplayBitmap = &BitmapPictures[cc];
         Rect.Width = DisplayBitmap->Rect.Width;
@@ -394,6 +442,40 @@ namespace game_framework
         DisplayBitmap->Rect.X = Rect.X_int;
         DisplayBitmap->Rect.Y = Rect.Y_int;
         DisplayBitmap->OnUpdate();
+        DisplayBitmap->visable = visable;
+        delete[] cc;
+    }
+    void BitmapAnimation::OnUpdate(string unsingfolder,CameraPosition Camera)
+    {
+        string Actionstring;
+        if (BitmapisRight)
+        {
+                Actionstring = "Content\\Bitmaps\\" + unsingfolder + "\\" + Name + "_" + IntToString(Step) + ".bmp";
+        }
+        else
+        {
+            Actionstring = "Content\\Bitmaps\\" + unsingfolder + "\\" + Name + "_" + IntToString(Step) + "_L.bmp";
+        }
+        char *cc = new char[65535];
+        strcpy(cc, Actionstring.c_str());
+        DisplayBitmap = &BitmapPictures[cc];
+        Rect.Width = DisplayBitmap->Rect.Width;
+        Rect.Height = DisplayBitmap->Rect.Height;
+        if (InSideCamera)
+        {
+            Rect.X_int = (int)(Rect.X - Camera.X);
+            Rect.Y_int = (int)(Rect.Y - Camera.Y);
+        }
+        else
+        {
+            Rect.X_int = (int)(Rect.X);
+            Rect.Y_int = (int)(Rect.Y);
+        }
+        DisplayBitmap->Rect.X = Rect.X_int;
+        DisplayBitmap->Rect.Y = Rect.Y_int;
+        DisplayBitmap->OnUpdate();
+        DisplayBitmap->visable = visable;
+        delete[] cc;
     }
     string BitmapAnimation::GetName()
     {

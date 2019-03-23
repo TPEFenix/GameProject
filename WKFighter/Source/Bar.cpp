@@ -22,11 +22,11 @@ namespace game_framework
     Bar::~Bar()
 	{
 	}
-    void Bar::OnUpdate(double now, double max)
-    {
+	void Bar::Draw(int CurrentLayer, int TargetLayer, double now, double max)
+	{
         Rect.X_int = (int)(Rect.X);
         Rect.Y_int = (int)(Rect.Y);
-        if (now > 0)
+        if (!(now < 1))
         {
             newWidth = (int)(((double)Rect.Width)*(now / max));
         }
@@ -35,9 +35,6 @@ namespace game_framework
             this->visable = false;
             newWidth = Rect.Width;
         }
-    }
-	void Bar::Draw(int CurrentLayer, int TargetLayer)
-	{
 		if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
 		{
 			if (BelongPlayer == 2)
@@ -48,7 +45,7 @@ namespace game_framework
 			else if(BelongPlayer == 1)
 			{
 				SetTopLeft(Rect.X_int, Rect.Y_int);
-				ShowBitmap(this->Rect.X_int + Rect.Width - newWidth, this->Rect.Y_int, this->Rect.X_int + Rect.Width, this->Rect.Y_int + this->Rect.Height);
+				ShowBitmap(this->Rect.X_int + (Rect.Width - newWidth), this->Rect.Y_int, this->Rect.X_int + Rect.Width, this->Rect.Y_int + this->Rect.Height);
 			}
 		}
 	}

@@ -12,7 +12,6 @@ namespace game_framework
         ~Bar();
         int BelongPlayer;//屬於誰的(靠左或靠右)
         int newWidth;//新的寬度
-        virtual void OnUpdate(double, double);
-		virtual void Draw(int, int);//繪出圖型
+		virtual void Draw(int, int,double,double);//繪出圖型
 	};
 }
