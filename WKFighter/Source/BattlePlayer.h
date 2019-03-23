@@ -2,8 +2,11 @@
 #include "Keycode.h"
 #include "KeyBoardState.h"
 #include "WKAudio.h"
+#include "CollisionSensor.h"
+
 using namespace std;
 using namespace WKAudio_namespace;
+using namespace CollisionSensor_namespace;
 
 
 
@@ -56,7 +59,7 @@ namespace game_framework
         virtual void Draw(int,int);//更新函式，且隨著視角移動
         virtual void AutoLoadBitmaps(CameraPosition,COLORREF);//依照各自角色讀檔
 		virtual void OnUpdate(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);//更新函式，且隨著視角移動
-		virtual void PhysicalMovement(CameraPosition, KeyBoardState, KeyBoardState);//物理移動，全角色共用，除非特例
+		virtual void PhysicalMovement(BattlePlayer *,CameraPosition, KeyBoardState, KeyBoardState);//物理移動，全角色共用，除非特例
         virtual void InsertBitmapPicture(string,int,COLORREF);//使Bimap讀取圖檔
         
         //共用基礎動作函數
@@ -95,6 +98,7 @@ namespace game_framework
 		bool InSideCamera;//是否受到鏡頭影響
 		bool IsRight;//面相右邊
         bool OnGround;//是否在地面上
+        bool Throughing;
         string Action;//動作狀態
         int Step;//當前步驟數
         //Timer參數------------------------------------------------------------------------------------------------------
@@ -111,10 +115,11 @@ namespace game_framework
 		double Velocity_Y;//Y速度
 		double Acceleration_X;//X加速度
 		double Acceleration_Y;//Y加速度
-		double Acceleration_gravity = 0.4;//重力加速度
+		double Acceleration_gravity = 0.5;//重力加速度
         //顯示成員------------------------------------------------------------------------------------------------------
         BitmapPicture *DisplayBitmap;//永遠把顯示用的Bitmap指向對應的BitmapPicture==當前所顯示的BitmapPicture
 		BitMapRectangle Rect;//圖片材質矩形 掌管座標跟長寬，會在讀取檔案時設定完成，並且可以在外部更動
+        BitMapRectangle BodyRect;//人物碰撞的矩形
 		map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作
     };
 }

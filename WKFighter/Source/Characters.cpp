@@ -59,7 +59,7 @@ namespace game_framework
         Velocity_Y = 0;//Y速度
         Acceleration_X = 0;//X加速度
         Acceleration_Y = 0;//Y加速度
-
+        Throughing = false;
 
         //初始化特效
         Effect_Rush = new BitmapAnimation("Airboost", false);
@@ -110,7 +110,7 @@ namespace game_framework
         EffectAutoUpdate(Effect_Rush, 8, false, Camera);
         EffectAutoUpdate(Effect_Jump, 8, false, Camera);
         AnimationUpdate(Camera);
-        this->PhysicalMovement(Camera, KeyState_now, KeyState_last);
+        this->PhysicalMovement(Enemy,Camera, KeyState_now, KeyState_last);
     }
     void Matchstick::OnRush(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
@@ -127,6 +127,7 @@ namespace game_framework
                 RushTimer = 0;
                 Step = 1;
                 EffectReset(Effect_Rush, Camera, Rect.X, Rect.X + 30, Rect.Y - 30);
+                Throughing = true;
                 PlaySounds(Sounds.Rush, false);
                 if (IsRight)
                 {
@@ -154,6 +155,7 @@ namespace game_framework
             if (RushTimer > 80 && Step == 1)
             {
                 RushTimer = 0;
+                Throughing = false;
                 Invincible = false;
                 Velocity_X = 0;
                 Acceleration_X = 0;
@@ -189,7 +191,7 @@ namespace game_framework
             {
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -9;
+                Velocity_Y = -10;
                 OnGround = false;
                 EffectReset(Effect_Jump,Camera, Rect.X-30, Rect.X-35, Rect.Y + 80);
                 PlaySounds(Sounds.Rush, false);
@@ -198,7 +200,7 @@ namespace game_framework
             {
                 JumpTimer += TIMER_TICK_MILLIDECOND;
                 if (CanControl&&Button_now.button_Jump == true && Button_last.button_Jump == true && Velocity_Y < 2 && JumpTimer < 120)
-                    Velocity_Y -= 0.5;
+                    Velocity_Y -= 0.6;
             }
             else if (Velocity_Y >= 0 && Step == 3)
             {

@@ -9,10 +9,12 @@
 #include "Keycode.h"
 #include "KeyBoardState.h"
 #include "WKAudio.h"
+#include "CollisionSensor.h"
 #include "BattlePlayer.h"
 
 using namespace std;
 using namespace WKAudio_namespace;
+using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
@@ -23,6 +25,7 @@ namespace game_framework
     {
 
     }
+
     void BattlePlayer::AnimationUpdate(CameraPosition Camera)
     {
 #pragma region 確定圖檔名稱
@@ -60,6 +63,10 @@ namespace game_framework
         }
         DisplayBitmap->Rect.X = Rect.X_int;
         DisplayBitmap->Rect.Y = Rect.Y_int;
+        BodyRect.X = (Rect.X+45);
+        BodyRect.Y = (Rect.Y + 20);
+        BodyRect.Width = 30;
+        BodyRect.Height = 80;
         DisplayBitmap->OnUpdate();
 #pragma endregion 
 
@@ -68,7 +75,7 @@ namespace game_framework
     {
         AnimationUpdate(Camera);
     }
-    void BattlePlayer::PhysicalMovement(CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
+    void BattlePlayer::PhysicalMovement(BattlePlayer *Enemy,CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
     {
 #pragma region 基礎移動
         Rect.X += Velocity_X;
@@ -83,6 +90,35 @@ namespace game_framework
         else if (Rect.Y < GroundPosition)
         {
             OnGround = false;
+        }
+
+        if (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)) == true&&this->Throughing == false && Enemy->Throughing == false)
+        {
+            if (!(Velocity_X == 0))
+            {
+                Enemy->Rect.X += Velocity_X;
+
+                if (Enemy->Rect.X >= Rect.X)
+                {
+                    Rect.X -= 4;
+                }
+                else if (Enemy->Rect.X < Rect.X)
+                {
+                    Rect.X += 4;
+                }
+
+            }
+            else
+            {
+                if (Enemy->Rect.X >= Rect.X)
+                {
+                    Rect.X -= 4;
+                }
+                else if (Enemy->Rect.X < Rect.X)
+                {
+                    Rect.X += 4;
+                }
+            }
         }
 
 
@@ -303,7 +339,7 @@ namespace game_framework
             {
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -9;
+                Velocity_Y = -12;
                 OnGround = false;
             }
             else if (Step == 3 && Velocity_Y < 0)
@@ -407,13 +443,11 @@ namespace game_framework
             }
         }
     }
-
     void BattlePlayer::EffectAutoUpdate(BitmapAnimation * Effection,int tick,bool replay, CameraPosition Camera)
     {
         Effection->AutoPlay(tick, replay);
         Effection->OnUpdate("Effects", Camera);
     }
-
     void BattlePlayer::EffectReset(BitmapAnimation *Effection,CameraPosition Camera,double XR,double XL,double Y)
     {
         Effection->BitmapisRight = IsRight;
