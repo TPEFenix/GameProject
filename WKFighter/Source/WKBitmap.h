@@ -18,6 +18,8 @@ namespace game_framework
     {
         int X = 0;
         int Y = 0;
+        double X_double = 0;
+        double Y_double = 0;
     };
     class BitmapPicture :public   CMovingBitmap
     {
@@ -80,7 +82,7 @@ namespace game_framework
         ~BitmapAnimation();
 
         //方法函式
-        void AutoPlay(int);
+        void AutoPlay(int,bool);
         virtual void AutoLoadBitmaps(string, int, bool, COLORREF);//依照Name自動讀取檔名
         virtual void AutoLoadBitmaps(string,string, int, bool, COLORREF);//依照資料夾跟Name自動讀取檔名    //Effect要有左右
         virtual void OnUpdate();//更新函式，放在OnMove中(圖片才能動)

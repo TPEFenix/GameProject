@@ -64,12 +64,28 @@ namespace game_framework
         virtual void GotoStandby(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
         virtual void GotoRunning(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
         virtual void GotoRush(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
+        virtual void GotoJump(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
         virtual void OnStandby(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
         virtual void OnRunning(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
+        virtual void OnJump(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
+        
+        //套裝函式
+        virtual void AddSP(double mathin);//增加SP
+        virtual void ProduceFriction(double,double);//處理摩擦力(讓角色漸漸慢下來)
+        virtual void LoopStep(int);//(重複同樣動作)
+        virtual void RunAhead(double,double);//(正確方向走)
+        virtual void EffectAutoUpdate(BitmapAnimation*,int,bool,CameraPosition);//(讓特效自動更新狀態，放在Update裡)
+        virtual void EffectReset(BitmapAnimation*, CameraPosition,double,double,double);
 
-		int PlayerNumber;//玩家編號
+        //能力值變數(由子類別初始化)------------------------------------------------------------------------------------------------------
         double HP_Max;//最大生命值
         double SP_Max;//最大氣力
+        double Rush_cost;//衝刺消耗氣力量
+        double RunSpeed;//跑速
+        double StandbySPincrements;//待機時回復的氣力量
+        double RunningSPincrements;//移動時回復的氣力量
+        //現狀變數------------------------------------------------------------------------------------------------------
+        int PlayerNumber;//玩家編號
         double HP;//當前生命
         double SP;//當前氣力
         bool CanControl;//可以控制
@@ -81,29 +97,22 @@ namespace game_framework
         bool OnGround;//是否在地面上
         string Action;//動作狀態
         int Step;//當前步驟數
-        int Rush_cost;//衝刺消耗氣力量
-        int StandbySPincrements;
-
-
-        //Timer參數
+        //Timer參數------------------------------------------------------------------------------------------------------
+        double SPincrementsTimer = 0;
         double StandbyTimer = 0;
         double RunningTimer = 0;
         double RushTimer = 0;
-
-        //輸入按鍵參數
+        double JumpTimer = 0;
+        //輸入按鍵參數------------------------------------------------------------------------------------------------------
         BattleInput Button_now;
         BattleInput Button_last;
-        
-
-
-        //物理參數
+        //物理參數------------------------------------------------------------------------------------------------------
 		double Velocity_X;//X速度
 		double Velocity_Y;//Y速度
 		double Acceleration_X;//X加速度
 		double Acceleration_Y;//Y加速度
-		double Acceleration_gravity = 0.1;//重力加速度
-
-        //顯示成員
+		double Acceleration_gravity = 0.4;//重力加速度
+        //顯示成員------------------------------------------------------------------------------------------------------
         BitmapPicture *DisplayBitmap;//永遠把顯示用的Bitmap指向對應的BitmapPicture==當前所顯示的BitmapPicture
 		BitMapRectangle Rect;//圖片材質矩形 掌管座標跟長寬，會在讀取檔案時設定完成，並且可以在外部更動
 		map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作

@@ -16,7 +16,7 @@ using namespace WKAudio_namespace;
 
 namespace game_framework
 {
-    BattlePlayer::BattlePlayer():BitmapAnimation()
+    BattlePlayer::BattlePlayer() :BitmapAnimation()
     {
     }
     BattlePlayer::~BattlePlayer()
@@ -27,22 +27,22 @@ namespace game_framework
     {
 #pragma region 確定圖檔名稱
         //確定圖檔名稱
-		if (IsRight)
-		{
-			string Actionstring = "Content\\Bitmaps\\" + GetName() + "\\" + Action + "_" + IntToString(Step) + ".bmp";
-			char *cc = new char[65535];
-			strcpy(cc, Actionstring.c_str());
-			DisplayBitmap = &BitmapPictures[cc];
-            delete[] cc;
-		}
-		else
-		{
-			string Actionstring = "Content\\Bitmaps\\" + GetName() + "\\" + Action + "_" + IntToString(Step) + "_L.bmp";
+        if (IsRight)
+        {
+            string Actionstring = "Content\\Bitmaps\\" + GetName() + "\\" + Action + "_" + IntToString(Step) + ".bmp";
             char *cc = new char[65535];
             strcpy(cc, Actionstring.c_str());
             DisplayBitmap = &BitmapPictures[cc];
             delete[] cc;
-		}
+        }
+        else
+        {
+            string Actionstring = "Content\\Bitmaps\\" + GetName() + "\\" + Action + "_" + IntToString(Step) + "_L.bmp";
+            char *cc = new char[65535];
+            strcpy(cc, Actionstring.c_str());
+            DisplayBitmap = &BitmapPictures[cc];
+            delete[] cc;
+        }
 #pragma endregion 
 #pragma region 決定相對座標
         //決定相對座標
@@ -64,35 +64,39 @@ namespace game_framework
 #pragma endregion 
 
     }
-    void BattlePlayer::OnUpdate(BattlePlayer *Enemy,CameraPosition Camera,KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::OnUpdate(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
         AnimationUpdate(Camera);
     }
-	void BattlePlayer::PhysicalMovement(CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
-	{
-		Rect.X += Velocity_X;
-		Rect.Y += Velocity_Y;
-		Velocity_X += Acceleration_X;
-		Velocity_Y += Acceleration_Y + Acceleration_gravity;
-		if (Rect.Y >= GroundPosition)
-		{
-			Rect.Y = GroundPosition;
+    void BattlePlayer::PhysicalMovement(CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
+    {
+#pragma region 基礎移動
+        Rect.X += Velocity_X;
+        Rect.Y += Velocity_Y;
+        Velocity_X += Acceleration_X;
+        Velocity_Y += Acceleration_Y + Acceleration_gravity;
+        if (Rect.Y >= GroundPosition)
+        {
+            Rect.Y = GroundPosition;
             OnGround = true;
-		}
+        }
         else if (Rect.Y < GroundPosition)
         {
             OnGround = false;
         }
 
-	}
-    void BattlePlayer::Draw(int i,int j)
-    {
-        this->DisplayBitmap->Draw(i,j);
+
+#pragma endregion
+
     }
-    void BattlePlayer::AutoLoadBitmaps(CameraPosition Camera,COLORREF color)
+    void BattlePlayer::Draw(int i, int j)
+    {
+        this->DisplayBitmap->Draw(i, j);
+    }
+    void BattlePlayer::AutoLoadBitmaps(CameraPosition Camera, COLORREF color)
     {
     }
-    void BattlePlayer::InsertBitmapPicture(string action,int step,COLORREF color)
+    void BattlePlayer::InsertBitmapPicture(string action, int step, COLORREF color)
     {
         string str;
         str = ("Content\\Bitmaps\\" + GetName() + "\\" + action + "_" + IntToString(step) + ".bmp");
@@ -181,39 +185,38 @@ namespace game_framework
             RushTimer = 0;
         }
     }
+    void BattlePlayer::GotoJump(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID)
+    {
+        Action = "跳躍";
+        Step = 0;
+        RushTimer = 0;
+        JumpTimer = 0;
+    }
     void BattlePlayer::OnStandby(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
         if (Action == "待機")
         {
-            if (Button_now.button_Left == false && Button_now.button_Right == false)
-            {
-                if (Velocity_X <= 1&& Velocity_X>=-1)
-                {
-                    Velocity_X = 0;
-                }
-                else if (Velocity_X > 1)
-                {
-                    Velocity_X -= 1;
-                }
-                else if (Velocity_X < -1)
-                {
-                    Velocity_X += 1;
-                }
-            }
             StandbyTimer += TIMER_TICK_MILLIDECOND;
+            AddSP(StandbySPincrements);
+
+#pragma region 處理摩擦力
+            if (Button_now.button_Left == false && Button_now.button_Right == false)
+                ProduceFriction(1, 1);
+#pragma endregion
+
+#pragma region 待機擺頭動作
             if (StandbyTimer >= 250)
             {
                 StandbyTimer = 0;
                 if (Step == 0)
-                {
                     Step = 1;
-                }
-                else if(Step == 1)
-                {
+                else if (Step == 1)
                     Step = 0;
-                }
             }
-            
+#pragma endregion
+
+#pragma region 到別的動作
+
             if (CanControl&&Button_now.button_Right&&OnGround)
             {
                 IsRight = true;
@@ -224,11 +227,15 @@ namespace game_framework
                 IsRight = false;
                 GotoRunning(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
             }
-            
-            if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
+            else if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
             {
                 GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
             }
+            else if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false)
+            {
+                GotoJump(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+            }
+#pragma endregion
 
         }
     }
@@ -236,71 +243,194 @@ namespace game_framework
     {
         if (Action == "移動")
         {
-            //向右走
-            if (CanControl&&IsRight&&OnGround&&(Button_now.button_Right == true || Button_now.button_Left == true))
+
+            AddSP(RunningSPincrements);
+            RunningTimer += TIMER_TICK_MILLIDECOND;
+#pragma region 左右移動
+            if (CanControl&&IsRight&&OnGround && (Button_now.button_Right == true || Button_now.button_Left == true))
             {
                 if (Button_now.button_Left == true)
-                {
                     IsRight = false;
-                }
-                RunningTimer += TIMER_TICK_MILLIDECOND;
                 if (RunningTimer >= 25)
                 {
-                    Step += 1;
-                    if (Step > 4)
-                    {
-                        Step = 0;
-                    }
                     RunningTimer = 0;
+                    LoopStep(4);
                 }
-                if (Velocity_X < 6)
-                {
-                    Velocity_X += 0.5;
-                }
-                else
-                {
-                    Velocity_X = 6;
-                }
-                if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
-                {
-                    GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-                }
+
+                RunAhead(0.5, RunSpeed);
             }
-            //向左走
-            else if(CanControl&&IsRight == false&&OnGround && (Button_now.button_Right == true || Button_now.button_Left == true))
+            else if (CanControl&&IsRight == false && OnGround && (Button_now.button_Right == true || Button_now.button_Left == true))
             {
                 if (Button_now.button_Right == true)
-                {
                     IsRight = true;
-                }
-                RunningTimer += TIMER_TICK_MILLIDECOND;
                 if (RunningTimer >= 25)
                 {
-                    Step += 1;
-                    if (Step > 4)
-                    {
-                        Step = 0;
-                    }
                     RunningTimer = 0;
+                    LoopStep(4);
                 }
-                if (Velocity_X > -6)
+                RunAhead(0.5, RunSpeed);
+            }
+#pragma endregion
+
+#pragma region 到別的動作
+            if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
+            {
+                GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+            }
+            else if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false)
+            {
+                GotoJump(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+            }
+            else if (Button_now.button_Right == false && Button_now.button_Left == false)
+            {
+                GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+            }
+#pragma endregion
+
+        }
+    }
+    void BattlePlayer::OnJump(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    {
+        if (Action == "跳躍")
+        {
+            JumpTimer += TIMER_TICK_MILLIDECOND;
+            if (JumpTimer >= 10 && Step < 2)
+            {
+                Step += 1;
+                JumpTimer = 0;
+            }
+            else if (JumpTimer >= 30 && Step == 2)
+            {
+                Step = 3;
+                JumpTimer = 0;
+                Velocity_Y = -9;
+                OnGround = false;
+            }
+            else if (Step == 3 && Velocity_Y < 0)
+            {
+                if (CanControl&&Button_now.button_Jump == true && Button_last.button_Jump == true && Velocity_Y < 2 && JumpTimer < 120)
+                    Velocity_Y -= 0.5;
+            }
+            else if (Velocity_Y >= 0 && Step == 3)
+            {
+                JumpTimer = 0;
+                Step = 4;
+            }
+
+            if (Step >= 3)
+            {
+                if (CanControl&&Button_now.button_Right == false && CanControl&&Button_now.button_Left == false)
                 {
-                    Velocity_X -= 0.5;
+                    ProduceFriction(0.15,1);
                 }
-                else
+                else if (CanControl&&Button_now.button_Right == true)
                 {
-                    Velocity_X = -6;
+                    IsRight = true;
+                    RunAhead(0.5,3);
                 }
-                if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
+                else if (CanControl&&Button_now.button_Left == true)
                 {
-                    GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                    IsRight = false;
+                    RunAhead(0.5, 3);
                 }
             }
-            else if (Button_now.button_Right == false &&Button_now.button_Left == false)
+            if (OnGround&& Step >= 3)
             {
                 GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
             }
         }
     }
+    void BattlePlayer::AddSP(double mathin)
+    {
+        if (SP < SP_Max)
+        {
+            SPincrementsTimer += TIMER_TICK_MILLIDECOND;
+            if (SPincrementsTimer >= 25)
+            {
+                SPincrementsTimer = 0;
+                SP += mathin;
+                if (SP > SP_Max)
+                {
+                    SP = SP_Max;
+                }
+            }
+        }
+    }
+    void BattlePlayer::ProduceFriction(double power, double range)
+    {
+        if (Velocity_X <= range && Velocity_X >= -range)
+        {
+            Velocity_X = 0;
+        }
+        else if (Velocity_X > range)
+        {
+            Velocity_X -= power;
+        }
+        else if (Velocity_X < -range)
+        {
+            Velocity_X += power;
+        }
+    }
+    void BattlePlayer::LoopStep(int maxstep)
+    {
+        if (Step <= maxstep)
+        {
+            Step += 1;
+            if (Step == maxstep)
+            {
+                Step = 0;
+            }
+        }
+    }
+    void BattlePlayer::RunAhead(double Addspeed, double Maxspeed)
+    {
+        if (IsRight)
+        {
+            if (Velocity_X < Maxspeed)
+            {
+                Velocity_X += Addspeed;
+            }
+            else
+            {
+                Velocity_X = Maxspeed;
+            }
+        }
+        else
+        {
+            if (Velocity_X > -Maxspeed)
+            {
+                Velocity_X -= Addspeed;
+            }
+            else
+            {
+                Velocity_X = -Maxspeed;
+            }
+        }
+    }
+
+    void BattlePlayer::EffectAutoUpdate(BitmapAnimation * Effection,int tick,bool replay, CameraPosition Camera)
+    {
+        Effection->AutoPlay(tick, replay);
+        Effection->OnUpdate("Effects", Camera);
+    }
+
+    void BattlePlayer::EffectReset(BitmapAnimation *Effection,CameraPosition Camera,double XR,double XL,double Y)
+    {
+        Effection->BitmapisRight = IsRight;
+        if (Effection->BitmapisRight)
+        {
+            Effection->Rect.X = XR;
+        }
+        else
+        {
+            Effection->Rect.X = XL;
+        }
+        Effection->Rect.Y = Y;
+        Effection->visable = true;
+        Effection->AutoPlayTimer = 0;
+        Effection->Step = 0;
+        Effection->OnUpdate("Effects", Camera);
+    }
+
 }
 

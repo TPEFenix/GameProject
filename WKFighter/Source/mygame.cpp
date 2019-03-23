@@ -95,6 +95,21 @@ namespace game_framework
     const bool DebugMode = true;//是否啟用Debug模式
     const bool LoaddingBoost = true;//使否啟用讀取加速
     bool CloseingDebug = false;
+    //偵錯
+    BitmapPicture BK;
+    Bar Bar_HP1;
+    Bar Bar_HP2;
+    Bar Bar_SP1;
+    Bar Bar_SP2;
+    BitmapPicture Bar_HP1_MaskTop;
+    BitmapPicture Bar_HP1_MaskBottom;
+    BitmapPicture Bar_SP1_MaskTop;
+    BitmapPicture Bar_SP1_MaskBottom;
+    BitmapPicture Bar_HP2_MaskTop;
+    BitmapPicture Bar_HP2_MaskBottom;
+    BitmapPicture Bar_SP2_MaskTop;
+    BitmapPicture Bar_SP2_MaskBottom;
+
 
     //顯示
     CameraPosition Camera;//遊戲鏡頭
@@ -123,6 +138,7 @@ namespace game_framework
     BitmapPicture BackGround_Menu;
     int TitleSelection = 0;
 #pragma endregion 
+    
     BattlePlayer *Player1;
     BattlePlayer *Player2;
 
@@ -151,6 +167,119 @@ namespace game_framework
             CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
         }
     }
+    //地形環境
+    void ProduceTerrain(CameraPosition *C, BattlePlayer *P1, BattlePlayer *P2,BitmapPicture BK)
+    {
+        int CameraMax_right = SIZE_X + ((BK.Rect.Width - SIZE_X) / 2) - SIZE_X;//鏡頭右邊界
+        int CameraMax_Left = -(((BK.Rect.Width - SIZE_X) / 2) - 800) - SIZE_X;//鏡頭左邊界
+
+        if (P1->Rect.X_int + P1->Rect.Width >= SIZE_X&&P1->Velocity_X > 0)
+        {
+            if (C->X_double <CameraMax_right)
+                C->X_double += P1->Velocity_X;
+            if (P2->Rect.X < C->X_double)
+            {
+                P2->Rect.X += P1->Velocity_X;
+            }
+        }
+        if (P1->Rect.X_int <= 0 && P1->Velocity_X < 0)
+        {
+            if (C->X_double >CameraMax_Left)
+                C->X_double += P1->Velocity_X;
+            if (P2->Rect.X + P2->Rect.Width > C->X_double + SIZE_X)
+            {
+                P2->Rect.X += P1->Velocity_X;
+            }
+        }
+
+
+        if (P2->Rect.X_int + P2->Rect.Width >= SIZE_X&&P2->Velocity_X > 0)
+        {
+            if (C->X_double <CameraMax_right)
+                C->X_double += P2->Velocity_X;
+            if (P1->Rect.X < C->X_double)
+            {
+                P1->Rect.X += P2->Velocity_X;
+            }
+        }
+        if (P2->Rect.X_int <= 0 && P2->Velocity_X < 0)
+        {
+            if (C->X_double >CameraMax_Left)
+                C->X_double += P2->Velocity_X;
+            if (P1->Rect.X + P1->Rect.Width > C->X_double + SIZE_X)
+            {
+                P1->Rect.X += P2->Velocity_X;
+            }
+        }
+
+
+
+        if ((P1->Rect.X < CameraMax_Left))
+        {
+            if (P1->Action == "受傷"&&P1->Velocity_X<-8)
+            {
+                P1->Velocity_X *= -1;
+                P1->HP -= 20;
+            }
+            P1->Rect.X = CameraMax_Left;
+        }
+        if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + SIZE_X))
+        {
+            if (P1->Action == "受傷"&&P1->Velocity_X>8)
+            {
+                P1->Velocity_X *= -1;
+                P1->HP -= 20;
+            }
+            P1->Rect.X = CameraMax_right + SIZE_X - P1->Rect.Width;
+        }
+        if ((P2->Rect.X < CameraMax_Left))
+        {
+            if (P2->Action == "受傷"&&P2->Velocity_X<-8)
+            {
+                P2->Velocity_X *= -1;
+                P2->HP -= 20;
+            }
+            P2->Rect.X = CameraMax_Left;
+        }
+        if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + SIZE_X))
+        {
+            if (P2->Action == "受傷"&&P2->Velocity_X>8)
+            {
+                P2->Velocity_X *= -1;
+                P2->HP -= 20;
+            }
+            P2->Rect.X = CameraMax_right + SIZE_X - P2->Rect.Width;
+        }
+
+        C->X = (int)C->X_double;
+        C->Y = (int)C->Y_double;
+        if (C->X > CameraMax_right)
+            C->X = CameraMax_right;
+        if (C->X<CameraMax_Left)
+            C->X = CameraMax_Left;
+
+        if (P1->Rect.X_int < 0)
+        {
+            P1->Rect.X_int = 0;
+            P1->Rect.X = P1->Rect.X_int + C->X;
+        }
+        if (P1->Rect.X_int > SIZE_X - P1->Rect.Width)
+        {
+            P1->Rect.X_int = SIZE_X - P1->Rect.Width;
+            P1->Rect.X = P1->Rect.X_int + C->X;
+        }
+        if (P2->Rect.X_int < 0)
+        {
+            P2->Rect.X_int = 0;
+            P2->Rect.X = P2->Rect.X_int + C->X;
+        }
+        if (P2->Rect.X_int > SIZE_X - P2->Rect.Width)
+        {
+            P2->Rect.X_int = SIZE_X - P2->Rect.Width;
+            P2->Rect.X = P2->Rect.X_int + C->X;
+        }
+    }
+
 #pragma endregion 
 
     //程式開始
@@ -162,6 +291,7 @@ namespace game_framework
     {
         delete Player1;
         delete Player2;
+        
     }
     void CGameStateInit::OnBeginState()
     {
@@ -227,7 +357,6 @@ namespace game_framework
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
-        //
     }
     void CGameStateOver::OnInit()
     {
@@ -397,27 +526,13 @@ namespace game_framework
     //偵錯模式測試用
 #pragma region DebugValueable
 
-	BitmapPicture BK;
-    Bar Bar_HP1;
-    Bar Bar_HP2;
-    Bar Bar_SP1;
-    Bar Bar_SP2;
-    BitmapPicture Bar_HP1_MaskTop;
-    BitmapPicture Bar_HP1_MaskBottom;
-    BitmapPicture Bar_SP1_MaskTop;
-    BitmapPicture Bar_SP1_MaskBottom;
-    BitmapPicture Bar_HP2_MaskTop;
-    BitmapPicture Bar_HP2_MaskBottom;
-    BitmapPicture Bar_SP2_MaskTop;
-    BitmapPicture Bar_SP2_MaskBottom;
-
     void CGameStateInit::DebugmodeLoading()
     {
         if (DebugMode)
         {
 			Player1 = new Matchstick(1);
 			Player2 = new Matchstick(2);
-			BK = BitmapPicture("Content\\Bitmaps\\BackGround_Title.bmp",0,0,true,false,true);
+			BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp",-400,0,true,false,true);
 			BK.LoadTexture(TransparentColor);
 			Player1->AutoLoadBitmaps(Camera,TransparentColor);
 			Player2->AutoLoadBitmaps(Camera,TransparentColor);
@@ -459,7 +574,6 @@ namespace game_framework
         {
 			for (int i = 0; i <= 5; i++)
 			{
-                
 				BK.Draw(i, 1);
 				Player1->Draw(i,3);
 				Player2->Draw(i,3);
@@ -475,7 +589,6 @@ namespace game_framework
                 Bar_HP2_MaskBottom.Draw(i, 3);
                 Bar_SP2_MaskTop.Draw(i, 5);
                 Bar_SP2_MaskBottom.Draw(i, 3);
-                
 			}
         }
     }
@@ -495,6 +608,7 @@ namespace game_framework
             Bar_SP2_MaskBottom.OnUpdate();
 			Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds);
 			Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds);
+            ProduceTerrain(&Camera, Player1, Player2,BK);
             if (KeyState_now.Space == true)
             {
                 CloseingDebug = true;
@@ -502,6 +616,9 @@ namespace game_framework
             }
         }
     }
+
+
+
 #pragma endregion 
 
 }

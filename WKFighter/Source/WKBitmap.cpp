@@ -327,7 +327,7 @@ namespace game_framework
 	{
         
 	}
-    void BitmapAnimation::AutoPlay(int frequence)
+    void BitmapAnimation::AutoPlay(int frequence,bool replay)
     {
         if (AutoPlayTimer >= frequence)
         {
@@ -338,7 +338,15 @@ namespace game_framework
             }
             else
             {
-                Step = 0;
+                if (replay)
+                {
+                    Step = 0;
+                }
+                else
+                {
+                    this->visable = false;
+                    this->DisplayBitmap->visable = false;
+                }
             }
         }
         else
