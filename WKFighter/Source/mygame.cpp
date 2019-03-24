@@ -76,6 +76,7 @@
 #include "WKAudio.h"
 #include "Bar.h"
 #include "Characters.h"
+#include "AttackObj.h"
 #pragma endregion 
 
 //命名空間引入
@@ -593,6 +594,7 @@ namespace game_framework
                 Bar_SP2_MaskBottom.Draw(i, 3);
                 //Player1->BodyPicture.Draw(i,5);
                 //Player2->BodyPicture.Draw(i, 5);
+                
             }
         }
     }

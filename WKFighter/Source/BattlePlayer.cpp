@@ -10,6 +10,7 @@
 #include "KeyBoardState.h"
 #include "WKAudio.h"
 #include "CollisionSensor.h"
+#include "AttackObj.h"
 #include "BattlePlayer.h"
 
 using namespace std;
@@ -31,9 +32,9 @@ namespace game_framework
     void BattlePlayer::AutoLoadEffections(CameraPosition Camera, COLORREF color)
     {
         Effections = map<string, BitmapAnimation>();
-        InsertEffection("Airboost", 6, 10, color);
-        InsertEffection("Airboost2", 6, 10, color);
-        InsertEffection("SPCharge", 13, 10, color);
+        InsertEffection("Airboost", 6, 4,10, color);
+        InsertEffection("Airboost2", 6, 4,10, color);
+        InsertEffection("SPCharge", 13, 4,10, color);
     }
 
 
@@ -107,6 +108,11 @@ namespace game_framework
         else if (Rect.Y < GroundPosition)
         {
             OnGround = false;
+            if (Action == "«Ý¾÷")
+            {
+                Action = "¸õÅD";
+                Step = 4;
+            }
         }
 
         if (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)) == true && this->Throughing == false && Enemy->Throughing == false)
@@ -142,6 +148,19 @@ namespace game_framework
 #pragma endregion
 
     }
+    double BattlePlayer::Ahead(double move)
+    {
+        double returner = 0;
+        if (IsRight)
+        {
+            returner = move;
+        }
+        else
+        {
+            returner = -move;
+        }
+        return returner;
+    }
     void BattlePlayer::Draw(int i, int j, CameraPosition Camera)
     {
         this->DisplayBitmap->Draw(i, j);
@@ -152,7 +171,7 @@ namespace game_framework
         map<string, BitmapAnimation>::iterator iter;
         for (iter = Effections.begin(); iter != Effections.end(); iter++)
         {
-            iter->second.DisplayBitmap->Draw(i, j);
+            iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
         }
 
     }
@@ -175,11 +194,12 @@ namespace game_framework
         delete[] cr;
         delete[] cl;
     }
-    void BattlePlayer::InsertEffection(string name, int maxstep, double pre, COLORREF color)
+    void BattlePlayer::InsertEffection(string name, int maxstep,int drawlayer, double pre, COLORREF color)
     {
         Effections.insert(std::pair<string, BitmapAnimation>(name, BitmapAnimation(false)));
         Effections[name].SetName(name);
         Effections[name].AutoLoadBitmaps("Effects", name, maxstep, pre, false, color);
+        Effections[name].drawlayer = drawlayer;
         Effections[name].OnUpdate();
     }
     void BattlePlayer::InsertAction(string actionname, int maxstep, COLORREF color)
@@ -338,6 +358,10 @@ namespace game_framework
             {
                 GotoCharge(GPP);
             }
+            else if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false && OnGround)
+            {
+                GotoNormalAttack1(GPP);
+            }
 #pragma endregion
 
         }
@@ -360,7 +384,7 @@ namespace game_framework
                     LoopStep(4);
                 }
 
-                RunAhead(0.5, RunSpeed);
+                RunAhead(0.75,RunSpeed);
             }
             else if (CanControl&&IsRight == false && OnGround && (Button_now.button_Right == true || Button_now.button_Left == true))
             {
@@ -371,7 +395,7 @@ namespace game_framework
                     RunningTimer = 0;
                     LoopStep(4);
                 }
-                RunAhead(0.5, RunSpeed);
+                RunAhead(0.75, RunSpeed);
             }
 #pragma endregion
 
@@ -391,6 +415,10 @@ namespace game_framework
             else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && OnGround)
             {
                 GotoGuard(GPP);
+            }
+            else if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false && OnGround)
+            {
+                GotoNormalAttack1(GPP);
             }
 #pragma endregion
 
@@ -536,6 +564,12 @@ namespace game_framework
 
 
         }
+    }
+    void BattlePlayer::GotoNormalAttack1(GPH)
+    {
+    }
+    void BattlePlayer::OnNormalAttack1(GPH)
+    {
     }
     
     

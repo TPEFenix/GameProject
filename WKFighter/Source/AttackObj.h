@@ -11,7 +11,7 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-    class AttackObj
+    class AttackObj:public BitmapAnimation
     {
     public:
         AttackObj();

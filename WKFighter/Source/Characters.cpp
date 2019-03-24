@@ -14,7 +14,9 @@
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
 #include "WKAudio.h"
+#include "AttackObj.h"
 #include "Characters.h"
+
 
 using namespace std;
 using namespace WKAudio_namespace;
@@ -80,14 +82,14 @@ namespace game_framework
         InsertAction("跳躍", 4, color);
         InsertAction("防禦", 0, color);
         InsertAction("練氣", 3, color);
-
+        InsertAction("普攻1", 4, color);
 
 
         //LoadEffects
         AutoLoadEffections(Camera,color);
         AnimationUpdate(Camera);
     }
-    void Matchstick::OnUpdate(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void Matchstick::OnUpdate(GPH)
     {
 
         InputJudge(KeyState_now, KeyState_last);
@@ -98,6 +100,7 @@ namespace game_framework
         OnJump(GPP);
         OnGuard(GPP);
         OnCharge(GPP);
+        OnNormalAttack1(GPP);
 
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator iter;
@@ -108,7 +111,7 @@ namespace game_framework
         this->PhysicalMovement(Enemy,Camera, KeyState_now, KeyState_last);
         AnimationUpdate(Camera);
     }
-    void Matchstick::OnRush(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void Matchstick::OnRush(GPH)
     {
         if (Action == "衝刺")
         {
@@ -168,6 +171,54 @@ namespace game_framework
                     Step = 4;
                     JumpTimer = 0;
                 }
+            }
+
+        }
+    }
+
+    void Matchstick::GotoNormalAttack1(GPH)
+    {
+        if (SP >= 2)
+        {
+            SP -= 2;
+            if (SP <= 0)
+            {
+                SP = 0;
+            }
+            Action = "普攻1";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
+    }
+    void Matchstick::OnNormalAttack1(GPH)
+    {
+        if (Action == "普攻1")
+        {
+            ProduceFriction(1, 1);
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            if (NormalAttack1Timer >= 20&&Step <=2)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                if (Step >= 3)
+                {
+                    Velocity_X += Ahead(3.5);
+                    //出拳
+                }
+            }
+            else if (NormalAttack1Timer >= 80 && Step == 3)
+            {
+                NormalAttack1Timer = 0;
+                Step = 4;
+            }
+            else if (NormalAttack1Timer < 100 && Step >= 4)
+            {
+                //到別的動作
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
             }
 
         }

@@ -9,7 +9,7 @@
 #include "TypeConverter.h"
 using namespace std;
 using namespace TypeConverter_namespace;
-namespace game_framework 
+namespace game_framework
 {
     /////////////////////////////////////////////////////////////////////////////
     // BitmapPicture: 提供一個以下功能具備的Bitmap圖片
@@ -50,7 +50,7 @@ namespace game_framework
         CanPixelCollision = false;
         InSideCamera = false;
     }
-    BitmapPicture::BitmapPicture(string respath, bool vis,bool inside)
+    BitmapPicture::BitmapPicture(string respath, bool vis, bool inside)
     {
         Rect.X = 0;
         Rect.Y = 0;
@@ -107,10 +107,10 @@ namespace game_framework
                 CDC* pDC = CDDraw::GetBackCDC();
                 dc.CreateCompatibleDC(pDC);
 
-                for (int y = 0; y <bitmapSize.bmHeight; y++)
+                for (int y = 0; y < bitmapSize.bmHeight; y++)
                 {
                     EffectRect.push_back(vector<bool>());
-                    for (int x = 0; x <bitmapSize.bmWidth; x++)
+                    for (int x = 0; x < bitmapSize.bmWidth; x++)
                     {
                         EffectRect[y].push_back(false);
 
@@ -136,8 +136,8 @@ namespace game_framework
             const int ny = 0;
             GAME_ASSERT(!isBitmapLoaded, "A bitmap has been loaded. You can not load another bitmap !!!");
             HBITMAP hbitmap = (HBITMAP)LoadImage(NULL, cc, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-            if (hbitmap == NULL) 
-			{
+            if (hbitmap == NULL)
+            {
                 char error_msg[300];
                 sprintf(error_msg, "Loading bitmap from file \"%s\" failed !!!", cc);
                 GAME_ASSERT(false, error_msg);
@@ -158,13 +158,13 @@ namespace game_framework
                 CDC* pDC = CDDraw::GetBackCDC();
                 dc.CreateCompatibleDC(pDC);
 
-                for (int y = 0; y <bitmapSize.bmHeight; y++)
+                for (int y = 0; y < bitmapSize.bmHeight; y++)
                 {
                     EffectRect.push_back(vector<bool>());
-                    for (int x = 0; x <bitmapSize.bmWidth; x++)
+                    for (int x = 0; x < bitmapSize.bmWidth; x++)
                     {
                         EffectRect[y].push_back(false);
-                        
+
                         if (RGB(GetRValue(dc.GetPixel(x, y)), GetGValue(dc.GetPixel(x, y)), GetBValue(dc.GetPixel(x, y))) != color)
                         {
                             EffectRect[y][x] = true;
@@ -176,7 +176,7 @@ namespace game_framework
         }
         delete[] cc;
     }
-    void BitmapPicture::LoadTexture(char *filename,bool CanHit, COLORREF color)
+    void BitmapPicture::LoadTexture(char *filename, bool CanHit, COLORREF color)
     {
         if (this->isBitmapLoaded == false)
         {
@@ -205,10 +205,10 @@ namespace game_framework
                 CDC dc;
                 CDC* pDC = CDDraw::GetBackCDC();
                 dc.CreateCompatibleDC(pDC);
-                for (int y = 0; y <bitmapSize.bmHeight; y++)
+                for (int y = 0; y < bitmapSize.bmHeight; y++)
                 {
                     EffectRect.push_back(vector<bool>());
-                    for (int x = 0; x <bitmapSize.bmWidth; x++)
+                    for (int x = 0; x < bitmapSize.bmWidth; x++)
                     {
                         EffectRect[y].push_back(false);
                         COLORREF rgb = dc.GetPixel(x, y);
@@ -232,7 +232,7 @@ namespace game_framework
     }
     void BitmapPicture::OnUpdate(CameraPosition Camera)
     {
-        if (InSideCamera) 
+        if (InSideCamera)
         {
             Rect.X_int = (int)(Rect.X - Camera.X);
             Rect.Y_int = (int)(Rect.Y - Camera.Y);
@@ -243,7 +243,7 @@ namespace game_framework
             Rect.Y_int = (int)(Rect.Y);
         }
     }
-    void BitmapPicture::Draw(int CurrentLayer,int TargetLayer)
+    void BitmapPicture::Draw(int CurrentLayer, int TargetLayer)
     {
         if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
         {
@@ -276,17 +276,19 @@ namespace game_framework
         CanPixelCollision = false;
         visable = false;
         BitmapisRight = true;
+        drawlayer = 0;
     }
     BitmapAnimation::BitmapAnimation(bool vis)
-	{
+    {
         Name = "";
         Step = 0;
         AutoMaxStep = 0;
         AutoPlayTimer = 0;
         CanPixelCollision = false;
-		visable = vis;
+        visable = vis;
         BitmapisRight = true;
-	}
+        drawlayer = 0;
+    }
     BitmapAnimation::BitmapAnimation(string namein, bool vis)
     {
         Step = 0;
@@ -296,8 +298,9 @@ namespace game_framework
         Name = namein;
         visable = vis;
         BitmapisRight = true;
+        drawlayer = 0;
     }
-    BitmapAnimation::BitmapAnimation(string namein, bool vis,bool inside)
+    BitmapAnimation::BitmapAnimation(string namein, bool vis, bool inside)
     {
         Step = 0;
         AutoMaxStep = 0;
@@ -307,6 +310,7 @@ namespace game_framework
         visable = vis;
         InSideCamera = inside;
         BitmapisRight = true;
+        drawlayer = 0;
     }
     BitmapAnimation::BitmapAnimation(string namein, int X, int Y, bool vis, bool CanHit, bool inside)
     {
@@ -322,17 +326,18 @@ namespace game_framework
         Rect.X_int = X;
         Rect.Y_int = Y;
         BitmapisRight = true;
+        drawlayer = 0;
     }
     BitmapAnimation::~BitmapAnimation()
-	{
-        
-	}
-    void BitmapAnimation::AutoPlay(int frequence,bool replay)
+    {
+
+    }
+    void BitmapAnimation::AutoPlay(int frequence, bool replay)
     {
         if (AutoPlayTimer >= frequence)
         {
             AutoPlayTimer = 0;
-            if (Step < AutoMaxStep-1)
+            if (Step < AutoMaxStep - 1)
             {
                 Step += 1;
             }
@@ -355,25 +360,25 @@ namespace game_framework
         }
 
     }
-    void BitmapAnimation::AutoLoadBitmaps(string name,int MaxSteps,bool CanPixelCollisionin,COLORREF color)
-	{
+    void BitmapAnimation::AutoLoadBitmaps(string name, int MaxSteps, bool CanPixelCollisionin, COLORREF color)
+    {
         AutoMaxStep = MaxSteps;
         CanPixelCollision = CanPixelCollisionin;
-		string StepString = IntToString(MaxSteps);
-		BitmapPictures = map<string, BitmapPicture>();
-		for (int i = 0; i < MaxSteps; i += 1)
-		{
+        string StepString = IntToString(MaxSteps);
+        BitmapPictures = map<string, BitmapPicture>();
+        for (int i = 0; i < MaxSteps; i += 1)
+        {
             string str = ("Content\\Bitmaps\\" + name + "\\" + name + "_" + IntToString(i) + ".bmp");
-			BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
+            BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
             char *cc = new char[65535];
             strcpy(cc, str.c_str());
-            BitmapPictures[str].LoadTexture(cc, CanPixelCollisionin,color);
+            BitmapPictures[str].LoadTexture(cc, CanPixelCollisionin, color);
             delete[] cc;
-		}
+        }
         OnUpdate();
-	}
+    }
     //Effect要有左右
-    void BitmapAnimation::AutoLoadBitmaps(string folder,string name, int MaxSteps, double pre,bool CanPixelCollisionin, COLORREF color)
+    void BitmapAnimation::AutoLoadBitmaps(string folder, string name, int MaxSteps, double pre, bool CanPixelCollisionin, COLORREF color)
     {
         AutoMaxStep = MaxSteps;
         CanPixelCollision = CanPixelCollisionin;
@@ -408,7 +413,7 @@ namespace game_framework
         {
             Actionstring = "Content\\Bitmaps\\" + Name + "\\" + Name + "_" + IntToString(Step) + "_L.bmp";
         }
-       char *cc = new char[65535];
+        char *cc = new char[65535];
         strcpy(cc, Actionstring.c_str());
         DisplayBitmap = &BitmapPictures[cc];
         Rect.Width = DisplayBitmap->Rect.Width;
@@ -444,8 +449,8 @@ namespace game_framework
         }
         else
         {
-            Rect.X_int = (int)(Rect.X );
-            Rect.Y_int = (int)(Rect.Y );
+            Rect.X_int = (int)(Rect.X);
+            Rect.Y_int = (int)(Rect.Y);
         }
         DisplayBitmap->Rect.X = Rect.X_int;
         DisplayBitmap->Rect.Y = Rect.Y_int;
@@ -453,12 +458,12 @@ namespace game_framework
         DisplayBitmap->visable = visable;
         delete[] cc;
     }
-    void BitmapAnimation::OnUpdate(string unsingfolder,CameraPosition Camera)
+    void BitmapAnimation::OnUpdate(string unsingfolder, CameraPosition Camera)
     {
         string Actionstring;
         if (BitmapisRight)
         {
-                Actionstring = "Content\\Bitmaps\\" + unsingfolder + "\\" + Name + "_" + IntToString(Step) + ".bmp";
+            Actionstring = "Content\\Bitmaps\\" + unsingfolder + "\\" + Name + "_" + IntToString(Step) + ".bmp";
         }
         else
         {

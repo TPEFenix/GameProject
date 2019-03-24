@@ -102,6 +102,7 @@ namespace game_framework
         bool InSideCamera;
         bool BitmapisRight;
         double PreAutoFrequence;
+        int drawlayer;
         map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作
     private:
             string Name;//此可動圖檔的名稱[資源命名規則:放在Content\\Bitmaps\\Name\\Name_Step.bmp]

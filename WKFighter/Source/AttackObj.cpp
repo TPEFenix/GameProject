@@ -23,11 +23,9 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-    AttackObj::AttackObj()
+    AttackObj::AttackObj():BitmapAnimation()
     {
     }
-
-
     AttackObj::~AttackObj()
     {
     }

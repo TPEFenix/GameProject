@@ -3,6 +3,7 @@
 #include "KeyBoardState.h"
 #include "WKAudio.h"
 #include "CollisionSensor.h"
+#include "AttackObj.h"
 
 using namespace std;
 using namespace WKAudio_namespace;
@@ -88,6 +89,8 @@ namespace game_framework
         virtual void OnJump(GPH);
         virtual void OnGuard(GPH);
         virtual void OnCharge(GPH);
+        virtual void GotoNormalAttack1(GPH);//需要每個角色個別撰寫
+        virtual void OnNormalAttack1(GPH);//需要每個角色個別撰寫
 
         //套裝函式
         virtual void AddSP(double mathin);//增加SP
@@ -95,14 +98,22 @@ namespace game_framework
         virtual void LoopStep(int);//(重複同樣動作)
         virtual void RunAhead(double, double);//(正確方向走)
         virtual void PhysicalMovement(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState);//物理移動，全角色共用，除非特例
-
+        double Ahead(double move);
 
         //特效相關函式
         virtual void EffectAutoUpdate(BitmapAnimation*, int, bool, CameraPosition);//(讓特效自動更新狀態，放在Update裡)
         virtual void EffectReset(BitmapAnimation*, CameraPosition, double, double, double);
         virtual void DrawAllEffection(int, int, CameraPosition);//更新函式，且隨著視角移動
         virtual void AutoLoadEffections(CameraPosition, COLORREF);//讀取遊戲中全部特效
-        virtual void InsertEffection(string, int, double, COLORREF);//讀取遊戲中全部特效
+        virtual void InsertEffection(string, int,int, double, COLORREF);//讀取遊戲中全部特效
+
+        //攻擊物件相關函式
+        virtual void AttackAutoUpdate(BitmapAnimation*, int, bool, CameraPosition);
+        virtual void AttackReset(BitmapAnimation*, CameraPosition, double, double, double);
+        virtual void DrawAllAttacks(int, int, CameraPosition);
+        virtual void AutoLoadAttacks(CameraPosition, COLORREF);
+        virtual void InsertAttacks(string, int, int, double, COLORREF);
+
 
         //能力值變數(由子類別初始化)------------------------------------------------------------------------------------------------------
         double HP_Max;//最大生命值
@@ -157,6 +168,10 @@ namespace game_framework
 
         map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作
         map<string, BitmapAnimation>  Effections;//儲存所有特效
+
+        //攻擊物件--------------------------------------------------------------------------------------------------------
+        map<string, AttackObj> AttackObjects;//儲存所有攻擊物件
+
     };
 }
 
