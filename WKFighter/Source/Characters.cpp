@@ -33,7 +33,7 @@ namespace game_framework
         StandbySPincrements = Matchstick_StandbySPincrements;
         RunningSPincrements = Matchstick_RunningSPincrements;
         RunSpeed = Matchstick_RunSpeed;
-
+        ChargeSPincrements = Matchstick_ChargeSPincrements;
 
         //現狀變數
         SetName("Matchstick");
@@ -61,56 +61,52 @@ namespace game_framework
         Acceleration_Y = 0;//Y加速度
         Throughing = false;
 
-        //初始化特效
-        Effect_Rush = new BitmapAnimation("Airboost", false);
-        Effect_Jump = new BitmapAnimation("Airboost2", false);
+
 
     }
     Matchstick::~Matchstick()
     {
-        delete Effect_Rush;
-        delete Effect_Jump;
+
     }
     void Matchstick::AutoLoadBitmaps(CameraPosition Camera, COLORREF color)
     {
+        //有效判定區BitRect
+        BodyPicture.LoadTexture(color);
 
-        InsertBitmapPicture("待機", 0, color);
-        InsertBitmapPicture("待機", 1, color);
-        InsertBitmapPicture("移動", 0, color);
-        InsertBitmapPicture("移動", 1, color);
-        InsertBitmapPicture("移動", 2, color);
-        InsertBitmapPicture("移動", 3, color);
-        InsertBitmapPicture("移動", 4, color);
-        InsertBitmapPicture("衝刺", 0, color);
-        InsertBitmapPicture("衝刺", 1, color);
-        InsertBitmapPicture("跳躍", 0, color);
-        InsertBitmapPicture("跳躍", 1, color);
-        InsertBitmapPicture("跳躍", 2, color);
-        InsertBitmapPicture("跳躍", 3, color);
-        InsertBitmapPicture("跳躍", 4, color);
+
+        InsertAction("待機", 1, color);
+        InsertAction("移動", 4, color);
+        InsertAction("衝刺", 1, color);
+        InsertAction("跳躍", 4, color);
+        InsertAction("防禦", 0, color);
+        InsertAction("練氣", 3, color);
 
 
 
         //LoadEffects
-        Effect_Rush->AutoLoadBitmaps("Effects", "Airboost", 6, false, color);
-        Effect_Jump->AutoLoadBitmaps("Effects", "Airboost2", 6, false, color);
-
+        AutoLoadEffections(Camera,color);
         AnimationUpdate(Camera);
     }
     void Matchstick::OnUpdate(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
+
         InputJudge(KeyState_now, KeyState_last);
 
-        OnStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-        OnRunning(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-        OnRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-        OnJump(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+        OnStandby(GPP);
+        OnRunning(GPP);
+        OnRush(GPP);
+        OnJump(GPP);
+        OnGuard(GPP);
+        OnCharge(GPP);
+
+        //更新所有Effect的動作
+        map<string, BitmapAnimation>::iterator iter;
+        for (iter = Effections.begin(); iter != Effections.end(); iter++)
+            EffectAutoUpdate(&(iter->second), (int)(((iter->second).PreAutoFrequence)), false, Camera);
 
 
-        EffectAutoUpdate(Effect_Rush, 8, false, Camera);
-        EffectAutoUpdate(Effect_Jump, 8, false, Camera);
-        AnimationUpdate(Camera);
         this->PhysicalMovement(Enemy,Camera, KeyState_now, KeyState_last);
+        AnimationUpdate(Camera);
     }
     void Matchstick::OnRush(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
     {
@@ -126,7 +122,7 @@ namespace game_framework
             {
                 RushTimer = 0;
                 Step = 1;
-                EffectReset(Effect_Rush, Camera, Rect.X, Rect.X + 30, Rect.Y - 30);
+                EffectReset(&Effections["Airboost"], Camera, Rect.X, Rect.X + 30, Rect.Y - 30);
                 Throughing = true;
                 PlaySounds(Sounds.Rush, false);
                 if (IsRight)
@@ -159,12 +155,12 @@ namespace game_framework
                 Invincible = false;
                 Velocity_X = 0;
                 Acceleration_X = 0;
-                Effect_Rush->Step = 0;
-                Effect_Rush->visable = false;
-                Effect_Rush->OnUpdate("Effects", Camera);
+                Effections["AirBoost"].Step = 0;
+                Effections["AirBoost"].visable = false;
+                Effections["AirBoost"].OnUpdate("Effects", Camera);
                 if (OnGround)
                 {
-                    GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                    GotoStandby(GPP);
                 }
                 else
                 {
@@ -176,78 +172,7 @@ namespace game_framework
 
         }
     }
-    void Matchstick::OnJump(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
-    {
-        if (Action == "跳躍")
-        {
-            JumpTimer += TIMER_TICK_MILLIDECOND;
-#pragma region 跳躍主程序
-            if (JumpTimer >= 10 && Step < 2)
-            {
-                Step += 1;
-                JumpTimer = 0;
-            }
-            else if (JumpTimer >= 30 && Step == 2)
-            {
-                Step = 3;
-                JumpTimer = 0;
-                Velocity_Y = -10;
-                OnGround = false;
-                EffectReset(Effect_Jump,Camera, Rect.X-30, Rect.X-35, Rect.Y + 80);
-                PlaySounds(Sounds.Rush, false);
-            }
-            else if (Step == 3 && Velocity_Y < 0)
-            {
-                JumpTimer += TIMER_TICK_MILLIDECOND;
-                if (CanControl&&Button_now.button_Jump == true && Button_last.button_Jump == true && Velocity_Y < 2 && JumpTimer < 120)
-                    Velocity_Y -= 0.6;
-            }
-            else if (Velocity_Y >= 0 && Step == 3)
-            {
-                JumpTimer = 0;
-                Step = 4;
-            }
-#pragma endregion
-#pragma region 起跳後
-            if (Step >= 3)
-            {  
-#pragma region 空中移動
-                if (CanControl&&Button_now.button_Right == false && CanControl&&Button_now.button_Left == false)
-                {
-                    ProduceFriction(0.15, 1);
-                }
-                else if (CanControl&&Button_now.button_Right == true)
-                {
-                    IsRight = true;
-                    RunAhead(0.5, RunSpeed/2);
-                }
-                else if (CanControl&&Button_now.button_Left == true)
-                {
-                    IsRight = false;
-                    RunAhead(0.5, RunSpeed/2);
-                }
-#pragma endregion
 
-#pragma region 到別的動作
-                //正常落地
-                if (OnGround)
-                {
-                    GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-                }
-                else if (CanControl&&Button_now.button_Rush&& Button_last.button_Rush == false)
-                {
-                    GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-                }
-#pragma endregion
-            }
-#pragma endregion       
-        }
-    }
-    void Matchstick::Draw(int i, int j)
-    {
-        this->DisplayBitmap->Draw(i, j);
-        this->Effect_Rush->DisplayBitmap->Draw(i, j);
-        this->Effect_Jump->DisplayBitmap->Draw(i, j);
-    }
+    
 
 }

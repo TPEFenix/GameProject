@@ -84,7 +84,7 @@ namespace game_framework
         //方法函式
         void AutoPlay(int,bool);
         virtual void AutoLoadBitmaps(string, int, bool, COLORREF);//依照Name自動讀取檔名
-        virtual void AutoLoadBitmaps(string,string, int, bool, COLORREF);//依照資料夾跟Name自動讀取檔名    //Effect要有左右
+        virtual void AutoLoadBitmaps(string,string, int, double,bool, COLORREF);//依照資料夾跟Name自動讀取檔名    //Effect要有左右
         virtual void OnUpdate();//更新函式，放在OnMove中(圖片才能動)
         virtual void OnUpdate(CameraPosition);//更新函式，且隨著視角移動
         virtual void OnUpdate(string,CameraPosition);//Effectfolder
@@ -101,6 +101,7 @@ namespace game_framework
         bool CanPixelCollision;//是否使用像素碰撞，所有動作分割都會套用
         bool InSideCamera;
         bool BitmapisRight;
+        double PreAutoFrequence;
         map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作
     private:
             string Name;//此可動圖檔的名稱[資源命名規則:放在Content\\Bitmaps\\Name\\Name_Step.bmp]

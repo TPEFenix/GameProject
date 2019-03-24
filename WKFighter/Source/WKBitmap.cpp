@@ -373,11 +373,12 @@ namespace game_framework
         OnUpdate();
 	}
     //Effect­n¦³¥ª¥k
-    void BitmapAnimation::AutoLoadBitmaps(string folder,string name, int MaxSteps, bool CanPixelCollisionin, COLORREF color)
+    void BitmapAnimation::AutoLoadBitmaps(string folder,string name, int MaxSteps, double pre,bool CanPixelCollisionin, COLORREF color)
     {
         AutoMaxStep = MaxSteps;
         CanPixelCollision = CanPixelCollisionin;
         string StepString = IntToString(MaxSteps);
+        PreAutoFrequence = pre;
         BitmapPictures = map<string, BitmapPicture>();
         for (int i = 0; i < MaxSteps; i += 1)
         {
@@ -395,7 +396,6 @@ namespace game_framework
             BitmapPictures[str].LoadTexture(cl, CanPixelCollisionin, color);
             delete[] cl;
         }
-        OnUpdate();
     }
     void BitmapAnimation::OnUpdate()
     {

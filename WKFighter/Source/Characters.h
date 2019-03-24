@@ -22,6 +22,7 @@ namespace game_framework
         #define Matchstick_RunSpeed 7.5;
         #define Matchstick_StandbySPincrements 0.2;
         #define Matchstick_RunningSPincrements 0.1;
+        #define Matchstick_ChargeSPincrements 14;
 
 
 		public:
@@ -30,12 +31,10 @@ namespace game_framework
 			virtual void AutoLoadBitmaps(CameraPosition,COLORREF);//依照各自角色讀檔
 			virtual void OnUpdate(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);//更新函式，且隨著視角移動
             virtual void OnRush(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);//更新函式，且隨著視角移動
-            virtual void OnJump(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID);
-            virtual void Draw(int, int);//更新函式，且隨著視角移動
+
+
             
-            //Effects
-            BitmapAnimation *Effect_Rush;
-            BitmapAnimation *Effect_Jump;
+
 
 
 	};

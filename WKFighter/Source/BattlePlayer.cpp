@@ -20,11 +20,25 @@ namespace game_framework
 {
     BattlePlayer::BattlePlayer() :BitmapAnimation()
     {
+        BodyPicture = BitmapPicture("Content\\Bitmaps\\BodyRect.bmp", 0, 0, true, true, true);
     }
     BattlePlayer::~BattlePlayer()
     {
 
     }
+
+    //--------------------所有有色會用到的特效全部放在這---------------------//
+    void BattlePlayer::AutoLoadEffections(CameraPosition Camera, COLORREF color)
+    {
+        Effections = map<string, BitmapAnimation>();
+        InsertEffection("Airboost", 6, 10, color);
+        InsertEffection("Airboost2", 6, 10, color);
+        InsertEffection("SPCharge", 13, 10, color);
+    }
+
+
+
+
 
     void BattlePlayer::AnimationUpdate(CameraPosition Camera)
     {
@@ -63,19 +77,22 @@ namespace game_framework
         }
         DisplayBitmap->Rect.X = Rect.X_int;
         DisplayBitmap->Rect.Y = Rect.Y_int;
-        BodyRect.X = (Rect.X+45);
-        BodyRect.Y = (Rect.Y + 20);
-        BodyRect.Width = 30;
+        BodyRect.X = (Rect.X + 43);
+        BodyRect.Y = (Rect.Y + 27);
+        BodyRect.Width = 34;
         BodyRect.Height = 80;
+        BodyPicture.Rect.X = BodyRect.X;
+        BodyPicture.Rect.Y = BodyRect.Y;
+        BodyPicture.OnUpdate(Camera);
         DisplayBitmap->OnUpdate();
 #pragma endregion 
 
     }
-    void BattlePlayer::OnUpdate(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::OnUpdate(GPH)
     {
         AnimationUpdate(Camera);
     }
-    void BattlePlayer::PhysicalMovement(BattlePlayer *Enemy,CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
+    void BattlePlayer::PhysicalMovement(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
     {
 #pragma region 基礎移動
         Rect.X += Velocity_X;
@@ -92,7 +109,7 @@ namespace game_framework
             OnGround = false;
         }
 
-        if (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)) == true&&this->Throughing == false && Enemy->Throughing == false)
+        if (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)) == true && this->Throughing == false && Enemy->Throughing == false)
         {
             if (!(Velocity_X == 0))
             {
@@ -125,9 +142,19 @@ namespace game_framework
 #pragma endregion
 
     }
-    void BattlePlayer::Draw(int i, int j)
+    void BattlePlayer::Draw(int i, int j, CameraPosition Camera)
     {
         this->DisplayBitmap->Draw(i, j);
+        DrawAllEffection(i, j, Camera);
+    }
+    void BattlePlayer::DrawAllEffection(int i, int j, CameraPosition Camera)
+    {
+        map<string, BitmapAnimation>::iterator iter;
+        for (iter = Effections.begin(); iter != Effections.end(); iter++)
+        {
+            iter->second.DisplayBitmap->Draw(i, j);
+        }
+
     }
     void BattlePlayer::AutoLoadBitmaps(CameraPosition Camera, COLORREF color)
     {
@@ -139,14 +166,28 @@ namespace game_framework
         BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
         char *cr = new char[65535];
         strcpy(cr, str.c_str());
-        BitmapPictures[str].LoadTexture(cr, true, color);
+        BitmapPictures[str].LoadTexture(cr, false, color);
         str = ("Content\\Bitmaps\\" + GetName() + "\\" + action + "_" + IntToString(step) + "_L.bmp");
         BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
         char *cl = new char[65535];
         strcpy(cl, str.c_str());
-        BitmapPictures[str].LoadTexture(cl, true, color);
+        BitmapPictures[str].LoadTexture(cl, false, color);
         delete[] cr;
         delete[] cl;
+    }
+    void BattlePlayer::InsertEffection(string name, int maxstep, double pre, COLORREF color)
+    {
+        Effections.insert(std::pair<string, BitmapAnimation>(name, BitmapAnimation(false)));
+        Effections[name].SetName(name);
+        Effections[name].AutoLoadBitmaps("Effects", name, maxstep, pre, false, color);
+        Effections[name].OnUpdate();
+    }
+    void BattlePlayer::InsertAction(string actionname, int maxstep, COLORREF color)
+    {
+        for (int i = 0; i <= maxstep; i += 1)
+        {
+            InsertBitmapPicture(actionname, i, color);
+        }
     }
     void BattlePlayer::InputJudge(KeyBoardState KeyState_now, KeyBoardState KeyState_last)
     {
@@ -197,7 +238,9 @@ namespace game_framework
             Button_last.button_Up = KeyState_last.Player2_Up;
         }
     }
-    void BattlePlayer::GotoStandby(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    
+    
+    void BattlePlayer::GotoStandby(GPH)
     {
         Action = "待機";
         Step = 0;
@@ -205,13 +248,13 @@ namespace game_framework
         StandbyTimer = 0;
         RushTimer = 0;
     }
-    void BattlePlayer::GotoRunning(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::GotoRunning(GPH)
     {
         Action = "移動";
         Step = 0;
         RunningTimer = 0;
     }
-    void BattlePlayer::GotoRush(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::GotoRush(GPH)
     {
         if (this->SP >= Rush_cost)
         {
@@ -221,14 +264,30 @@ namespace game_framework
             RushTimer = 0;
         }
     }
-    void BattlePlayer::GotoJump(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState, Audio_ID)
+    void BattlePlayer::GotoJump(GPH)
     {
         Action = "跳躍";
         Step = 0;
         RushTimer = 0;
         JumpTimer = 0;
     }
-    void BattlePlayer::OnStandby(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::GotoGuard(GPH)
+    {
+        if (this->SP > 0)
+        {
+            Action = "防禦";
+            Step = 0;
+        }
+    }
+    void BattlePlayer::GotoCharge(GPH)
+    {
+        Action = "練氣";
+        Step = 0;
+        ChargeTimer = 0;
+        //特效
+        EffectReset(&Effections["SPCharge"], Camera, Rect.X - 35, Rect.X - 30, Rect.Y - 45);
+    }
+    void BattlePlayer::OnStandby(GPH)
     {
         if (Action == "待機")
         {
@@ -256,26 +315,34 @@ namespace game_framework
             if (CanControl&&Button_now.button_Right&&OnGround)
             {
                 IsRight = true;
-                GotoRunning(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoRunning(GPP);
             }
             else if (CanControl&&Button_now.button_Left&&OnGround)
             {
                 IsRight = false;
-                GotoRunning(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoRunning(GPP);
             }
             else if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
             {
-                GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoRush(GPP);
             }
             else if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false)
             {
-                GotoJump(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoJump(GPP);
+            }
+            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down == false&& OnGround)
+            {
+                GotoGuard(GPP);
+            }
+            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false&& Button_now.button_Down && OnGround)
+            {
+                GotoCharge(GPP);
             }
 #pragma endregion
 
         }
     }
-    void BattlePlayer::OnRunning(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::OnRunning(GPH)
     {
         if (Action == "移動")
         {
@@ -311,25 +378,30 @@ namespace game_framework
 #pragma region 到別的動作
             if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
             {
-                GotoRush(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoRush(GPP);
             }
             else if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false)
             {
-                GotoJump(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoJump(GPP);
             }
             else if (Button_now.button_Right == false && Button_now.button_Left == false)
             {
-                GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
+                GotoStandby(GPP);
+            }
+            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && OnGround)
+            {
+                GotoGuard(GPP);
             }
 #pragma endregion
 
         }
     }
-    void BattlePlayer::OnJump(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds)
+    void BattlePlayer::OnJump(GPH)
     {
         if (Action == "跳躍")
         {
             JumpTimer += TIMER_TICK_MILLIDECOND;
+#pragma region 跳躍主程序
             if (JumpTimer >= 10 && Step < 2)
             {
                 Step += 1;
@@ -339,43 +411,134 @@ namespace game_framework
             {
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -12;
+                Velocity_Y = -11;
                 OnGround = false;
+                EffectReset(&Effections["Airboost2"], Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
+                PlaySounds(Sounds.Jump, false);
             }
             else if (Step == 3 && Velocity_Y < 0)
             {
+                JumpTimer += TIMER_TICK_MILLIDECOND;
                 if (CanControl&&Button_now.button_Jump == true && Button_last.button_Jump == true && Velocity_Y < 2 && JumpTimer < 120)
-                    Velocity_Y -= 0.5;
+                    Velocity_Y -= 0.55;
             }
             else if (Velocity_Y >= 0 && Step == 3)
             {
                 JumpTimer = 0;
                 Step = 4;
             }
-
+#pragma endregion
+#pragma region 起跳後
             if (Step >= 3)
             {
+#pragma region 空中移動
                 if (CanControl&&Button_now.button_Right == false && CanControl&&Button_now.button_Left == false)
                 {
-                    ProduceFriction(0.15,1);
+                    ProduceFriction(0.15, 1);
                 }
                 else if (CanControl&&Button_now.button_Right == true)
                 {
                     IsRight = true;
-                    RunAhead(0.5,3);
+                    RunAhead(0.5, RunSpeed / 2);
                 }
                 else if (CanControl&&Button_now.button_Left == true)
                 {
                     IsRight = false;
-                    RunAhead(0.5, 3);
+                    RunAhead(0.5, RunSpeed / 2);
                 }
+#pragma endregion
+
+#pragma region 到別的動作
+                //正常落地
+                if (OnGround)
+                {
+                    GotoStandby(GPP);
+                }
+                else if (CanControl&&Button_now.button_Rush&& Button_last.button_Rush == false)
+                {
+                    GotoRush(GPP);
+                }
+#pragma endregion
             }
-            if (OnGround&& Step >= 3)
-            {
-                GotoStandby(Enemy, Camera, KeyState_now, KeyState_last, Sounds);
-            }
+#pragma endregion       
         }
     }
+    void BattlePlayer::OnGuard(GPH)
+    {
+        if (Action == "防禦")
+        {
+            if (SP <= 0 || Button_now.button_Guard == false)
+            {
+                Action = "待機";
+            }
+            else
+            {
+                ProduceFriction(1, 1);
+                SP -= GuardSPCost;
+            }
+
+#pragma region 到別的動作
+            if (CanControl&&Button_now.button_Down == true && Button_last.button_Down == false)
+            {
+                GotoCharge(GPP);
+            }
+#pragma endregion
+
+
+        }
+    }
+    void BattlePlayer::OnCharge(GPH)
+    {
+        if (Action == "練氣")
+        {
+            ProduceFriction(1, 1);
+            ChargeTimer2 += TIMER_TICK_MILLIDECOND;
+            ChargeTimer += TIMER_TICK_MILLIDECOND;
+            if (ChargeTimer >= 80 && Step == 0)
+            {
+                Step = 1;
+                ChargeTimer = 0;
+            }
+            else if (ChargeTimer >= 16 && Step >= 1 && Step < 3)
+            {
+                Step += 1;
+                ChargeTimer = 0;
+                if (Step == 3)
+                {
+                    ChargeTimer2 = 0;
+                    Chargecount = 0;
+                    PlaySounds(Sounds.SPCharge,false);
+                }
+            }
+            else if (ChargeTimer2 >= 10 && Step == 3)
+            {
+                Chargecount += 1;
+                if (Chargecount < 10)
+                {
+                    SP += ChargeSPincrements / 10;
+                    if (SP > SP_Max)
+                        SP = SP_Max;
+                }
+                ChargeTimer2 = 0;
+            }
+            else if (ChargeTimer >= 120 && Step == 3)//正常結束
+            {
+                ChargeTimer = 0;
+                if (Button_now.button_Guard == true)
+                {
+                    GotoGuard(GPP);
+                }
+                else
+                {
+                    GotoStandby(GPP);
+                }
+            }
+
+
+        }
+    }
+    
+    
     void BattlePlayer::AddSP(double mathin)
     {
         if (SP < SP_Max)
@@ -443,12 +606,12 @@ namespace game_framework
             }
         }
     }
-    void BattlePlayer::EffectAutoUpdate(BitmapAnimation * Effection,int tick,bool replay, CameraPosition Camera)
+    void BattlePlayer::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)
     {
         Effection->AutoPlay(tick, replay);
         Effection->OnUpdate("Effects", Camera);
     }
-    void BattlePlayer::EffectReset(BitmapAnimation *Effection,CameraPosition Camera,double XR,double XL,double Y)
+    void BattlePlayer::EffectReset(BitmapAnimation *Effection, CameraPosition Camera, double XR, double XL, double Y)
     {
         Effection->BitmapisRight = IsRight;
         if (Effection->BitmapisRight)
@@ -463,7 +626,7 @@ namespace game_framework
         Effection->visable = true;
         Effection->AutoPlayTimer = 0;
         Effection->Step = 0;
-        Effection->OnUpdate("Effects", Camera);
+        EffectAutoUpdate(Effection, (int)(Effection->PreAutoFrequence), false, Camera);
     }
 
 }

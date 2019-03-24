@@ -257,6 +257,7 @@
     <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AttackObj.cpp" />
     <ClCompile Include="Source\audio.cpp" />
     <ClCompile Include="Source\Bar.cpp" />
     <ClCompile Include="Source\BattlePlayer.cpp" />
@@ -310,6 +311,7 @@
     <ClCompile Include="Source\WKBitmap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AttackObj.h" />
     <ClInclude Include="Source\audio.h" />
     <ClInclude Include="Source\Bar.h" />
     <ClInclude Include="Source\BattlePlayer.h" />

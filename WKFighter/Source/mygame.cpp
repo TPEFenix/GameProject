@@ -114,8 +114,8 @@ namespace game_framework
     //顯示
     CameraPosition Camera;//遊戲鏡頭
     const COLORREF TransparentColor = RGB(100, 120, 0);//透明色設定
-	const int left = 1;
-	const int right = 2;
+    const int left = 1;
+    const int right = 2;
 
     //聲音
     const Audio_ID Sounds;//音效資源編碼
@@ -138,7 +138,7 @@ namespace game_framework
     BitmapPicture BackGround_Menu;
     int TitleSelection = 0;
 #pragma endregion 
-    
+
     BattlePlayer *Player1;
     BattlePlayer *Player2;
 
@@ -168,14 +168,14 @@ namespace game_framework
         }
     }
     //地形環境
-    void ProduceTerrain(CameraPosition *C, BattlePlayer *P1, BattlePlayer *P2,BitmapPicture BK)
+    void ProduceTerrain(CameraPosition *C, BattlePlayer *P1, BattlePlayer *P2, BitmapPicture BK)
     {
         int CameraMax_right = SIZE_X + ((BK.Rect.Width - SIZE_X) / 2) - SIZE_X;//鏡頭右邊界
         int CameraMax_Left = -(((BK.Rect.Width - SIZE_X) / 2) - 800) - SIZE_X;//鏡頭左邊界
 
         if (P1->Rect.X_int + P1->Rect.Width >= SIZE_X&&P1->Velocity_X > 0)
         {
-            if (C->X_double <CameraMax_right)
+            if (C->X_double < CameraMax_right)
                 C->X_double += P1->Velocity_X;
             if (P2->Rect.X < C->X_double)
             {
@@ -184,7 +184,7 @@ namespace game_framework
         }
         if (P1->Rect.X_int <= 0 && P1->Velocity_X < 0)
         {
-            if (C->X_double >CameraMax_Left)
+            if (C->X_double > CameraMax_Left)
                 C->X_double += P1->Velocity_X;
             if (P2->Rect.X + P2->Rect.Width > C->X_double + SIZE_X)
             {
@@ -195,7 +195,7 @@ namespace game_framework
 
         if (P2->Rect.X_int + P2->Rect.Width >= SIZE_X&&P2->Velocity_X > 0)
         {
-            if (C->X_double <CameraMax_right)
+            if (C->X_double < CameraMax_right)
                 C->X_double += P2->Velocity_X;
             if (P1->Rect.X < C->X_double)
             {
@@ -204,7 +204,7 @@ namespace game_framework
         }
         if (P2->Rect.X_int <= 0 && P2->Velocity_X < 0)
         {
-            if (C->X_double >CameraMax_Left)
+            if (C->X_double > CameraMax_Left)
                 C->X_double += P2->Velocity_X;
             if (P1->Rect.X + P1->Rect.Width > C->X_double + SIZE_X)
             {
@@ -216,7 +216,7 @@ namespace game_framework
 
         if ((P1->Rect.X < CameraMax_Left))
         {
-            if (P1->Action == "受傷"&&P1->Velocity_X<-8)
+            if (P1->Action == "受傷"&&P1->Velocity_X < -8)
             {
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
@@ -225,7 +225,7 @@ namespace game_framework
         }
         if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + SIZE_X))
         {
-            if (P1->Action == "受傷"&&P1->Velocity_X>8)
+            if (P1->Action == "受傷"&&P1->Velocity_X > 8)
             {
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
@@ -234,7 +234,7 @@ namespace game_framework
         }
         if ((P2->Rect.X < CameraMax_Left))
         {
-            if (P2->Action == "受傷"&&P2->Velocity_X<-8)
+            if (P2->Action == "受傷"&&P2->Velocity_X < -8)
             {
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
@@ -243,7 +243,7 @@ namespace game_framework
         }
         if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + SIZE_X))
         {
-            if (P2->Action == "受傷"&&P2->Velocity_X>8)
+            if (P2->Action == "受傷"&&P2->Velocity_X > 8)
             {
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
@@ -255,7 +255,7 @@ namespace game_framework
         C->Y = (int)C->Y_double;
         if (C->X > CameraMax_right)
             C->X = CameraMax_right;
-        if (C->X<CameraMax_Left)
+        if (C->X < CameraMax_Left)
             C->X = CameraMax_Left;
 
         if (P1->Rect.X_int < 0)
@@ -291,7 +291,7 @@ namespace game_framework
     {
         delete Player1;
         delete Player2;
-        
+
     }
     void CGameStateInit::OnBeginState()
     {
@@ -354,6 +354,8 @@ namespace game_framework
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
         LoadSounds(Sounds.Rush, "Content\\Sounds\\rush.wav");
+        LoadSounds(Sounds.Jump, "Content\\Sounds\\jump.wav");
+        LoadSounds(Sounds.SPCharge, "Content\\Sounds\\SPCharge.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -530,17 +532,17 @@ namespace game_framework
     {
         if (DebugMode)
         {
-			Player1 = new Matchstick(1);
-			Player2 = new Matchstick(2);
-			BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp",-400,0,true,false,true);
-			BK.LoadTexture(TransparentColor);
-			Player1->AutoLoadBitmaps(Camera,TransparentColor);
-			Player2->AutoLoadBitmaps(Camera,TransparentColor);
-			Player1->Rect.X = 50;
-			Player1->Rect.Y = GroundPosition-200;
-			Player2->Rect.X = 630;
-			Player2->Rect.Y = GroundPosition-200;
-            Bar_HP1 = Bar("Content\\Bitmaps\\red_bar.bmp",1,25,25,true);
+            Player1 = new Matchstick(1);
+            Player2 = new Matchstick(2);
+            BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
+            BK.LoadTexture(TransparentColor);
+            Player1->AutoLoadBitmaps(Camera, TransparentColor);
+            Player2->AutoLoadBitmaps(Camera, TransparentColor);
+            Player1->Rect.X = 50;
+            Player1->Rect.Y = GroundPosition - 200;
+            Player2->Rect.X = 630;
+            Player2->Rect.Y = GroundPosition - 200;
+            Bar_HP1 = Bar("Content\\Bitmaps\\red_bar.bmp", 1, 25, 25, true);
             Bar_HP1.LoadTexture(TransparentColor);
             Bar_HP2 = Bar("Content\\Bitmaps\\red_bar.bmp", 2, 525, 25, true);
             Bar_HP2.LoadTexture(TransparentColor);
@@ -550,7 +552,7 @@ namespace game_framework
             Bar_SP2.LoadTexture(TransparentColor);
             Player1->CanControl = true;
             Player2->CanControl = true;
-            Bar_HP1_MaskTop = BitmapPicture("Content\\Bitmaps\\Red_BarMaskTop.bmp",20,25,true,false,false);
+            Bar_HP1_MaskTop = BitmapPicture("Content\\Bitmaps\\Red_BarMaskTop.bmp", 20, 25, true, false, false);
             Bar_HP1_MaskTop.LoadTexture(TransparentColor);
             Bar_HP1_MaskBottom = BitmapPicture("Content\\Bitmaps\\Red_BarMaskBottom.bmp", 20, 25, true, false, false);
             Bar_HP1_MaskBottom.LoadTexture(TransparentColor);
@@ -572,32 +574,34 @@ namespace game_framework
     {
         if (DebugMode&&CloseingDebug == false)
         {
-			for (int i = 0; i <= 5; i++)
-			{
-				BK.Draw(i, 1);
-				Player1->Draw(i,3);
-				Player2->Draw(i,3);
-                Bar_HP1.Draw(i,4, Player1->HP, Player1->HP_Max);
+            for (int i = 0; i <= 5; i++)
+            {
+                BK.Draw(i, 1);
+                Player1->Draw(i, 3, Camera);
+                Player2->Draw(i, 3, Camera);
+                Bar_HP1.Draw(i, 4, Player1->HP, Player1->HP_Max);
                 Bar_HP2.Draw(i, 4, Player2->HP, Player2->HP_Max);
                 Bar_SP1.Draw(i, 4, Player1->SP, Player1->SP_Max);
                 Bar_SP2.Draw(i, 4, Player2->SP, Player2->SP_Max);
                 Bar_HP1_MaskTop.Draw(i, 5);
-                Bar_HP1_MaskBottom.Draw(i,3);
+                Bar_HP1_MaskBottom.Draw(i, 3);
                 Bar_SP1_MaskTop.Draw(i, 5);
                 Bar_SP1_MaskBottom.Draw(i, 3);
                 Bar_HP2_MaskTop.Draw(i, 5);
                 Bar_HP2_MaskBottom.Draw(i, 3);
                 Bar_SP2_MaskTop.Draw(i, 5);
                 Bar_SP2_MaskBottom.Draw(i, 3);
-			}
+                //Player1->BodyPicture.Draw(i,5);
+                //Player2->BodyPicture.Draw(i, 5);
+            }
         }
     }
     void CGameStateInit::DebugmodeOnMove()
     {
         if (DebugMode)
         {
-            
-			BK.OnUpdate(Camera);
+
+            BK.OnUpdate(Camera);
             Bar_HP1_MaskTop.OnUpdate();
             Bar_HP1_MaskBottom.OnUpdate();
             Bar_SP1_MaskTop.OnUpdate();
@@ -606,9 +610,9 @@ namespace game_framework
             Bar_HP2_MaskBottom.OnUpdate();
             Bar_SP2_MaskTop.OnUpdate();
             Bar_SP2_MaskBottom.OnUpdate();
-			Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds);
-			Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds);
-            ProduceTerrain(&Camera, Player1, Player2,BK);
+            Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds);
+            Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds);
+            ProduceTerrain(&Camera, Player1, Player2, BK);
             if (KeyState_now.Space == true)
             {
                 CloseingDebug = true;

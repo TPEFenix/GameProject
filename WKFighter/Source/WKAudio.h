@@ -8,6 +8,8 @@ namespace WKAudio_namespace
     {
         const int Ding = 0;
         const int Rush = 1;
+        const int Jump = 2;
+        const int SPCharge = 3;
     };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);
