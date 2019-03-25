@@ -34,7 +34,7 @@ namespace game_framework
             virtual void OnRush(GPH);
             virtual void GotoNormalAttack1(GPH);
             virtual void OnNormalAttack1(GPH);
-
+			virtual void AutoLoadAttacks(CameraPosition, COLORREF);
             //TimerのΩ计北把计------------------------------------------------------------------------------------------------------
             double NormalAttack1Timer = 0;
 

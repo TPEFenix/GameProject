@@ -109,7 +109,7 @@ namespace game_framework
 
         //攻擊物件相關函式
         virtual void AttackAutoUpdate(BitmapAnimation*, int, bool, CameraPosition);
-        virtual void AttackReset(BitmapAnimation*, CameraPosition, double, double, double);
+        virtual void AttackReset(AttackObj*, CameraPosition, double, double, double);
         virtual void DrawAllAttacks(int, int, CameraPosition);
         virtual void AutoLoadAttacks(CameraPosition, COLORREF);
         virtual void InsertAttacks(string, int, int, double, COLORREF);

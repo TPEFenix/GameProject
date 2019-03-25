@@ -17,5 +17,18 @@ namespace game_framework
         AttackObj();
         ~AttackObj();
 
+
+		//
+		double Damage = 0;//傷害
+		double HitVelocity_X = 0;
+		double HitVelocity_Y = 0;
+		bool IsHited;//已經擊中
+		bool CanCombo;//可持續擊中
+
+		//方法函式
+
+
+
+
     };
 }
