@@ -1,5 +1,5 @@
 #pragma once
-
+#include "stdafx.h"
 
 namespace game_framework
 {

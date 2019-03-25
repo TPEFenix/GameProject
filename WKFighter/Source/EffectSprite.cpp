@@ -1,15 +1,13 @@
 #pragma once
 #include "stdafx.h"
 #include "Resource.h"
-#include <mmsystem.h>
 #include <ddraw.h>
 #include <windows.h>
-#include <vector>
 #include "audio.h"
 #include "gamelib.h"
 #include "WKBitmap.h"
 #include "BattlePlayer.h"
-#include "AttackObj.h"
+
 #include "EffectSprite.h"
 
 using namespace std;
@@ -31,8 +29,8 @@ namespace game_framework
         InsertEffection("Airboost", 5, 4, 10, color);
         InsertEffection("Airboost2", 5, 4, 10, color);
         InsertEffection("SPCharge", 12, 4, 10, color);
+        InsertEffection("PunchHit", 3, 4, 16, color);
     }
-
 
     void EffectSprite::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)
     {
@@ -67,8 +65,9 @@ namespace game_framework
     {
         Content.insert(std::pair<string, BitmapAnimation>(name, BitmapAnimation(false)));
         Content[name].SetName(name);
-        Content[name].AutoLoadBitmaps("Effects", name, maxstep+1, pre, false, color);
+        Content[name].AutoLoadBitmaps("Effects", name, maxstep + 1, pre, false, color);
         Content[name].drawlayer = drawlayer;
         Content[name].OnUpdate();
     }
+
 }

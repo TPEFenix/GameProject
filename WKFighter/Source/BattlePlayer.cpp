@@ -10,9 +10,9 @@
 #include "KeyBoardState.h"
 #include "WKAudio.h"
 #include "CollisionSensor.h"
-#include "AttackObj.h"
 #include "EffectSprite.h"
 #include "BattlePlayer.h"
+
 
 using namespace std;
 using namespace WKAudio_namespace;
@@ -24,6 +24,7 @@ namespace game_framework
     {
         BodyPicture = BitmapPicture("Content\\Bitmaps\\BodyRect.bmp", 0, 0, true, true, true);
         Effects = EffectSprite();
+
     }
     BattlePlayer::~BattlePlayer()
     {
@@ -98,6 +99,7 @@ namespace game_framework
         if (Rect.Y >= GroundPosition)
         {
             Rect.Y = GroundPosition;
+            Velocity_Y = 0;
             OnGround = true;
         }
         else if (Rect.Y < GroundPosition)
@@ -159,10 +161,10 @@ namespace game_framework
     void BattlePlayer::Draw(int i, int j, CameraPosition Camera)
     {
         this->DisplayBitmap->Draw(i, j);
-        //DrawAllEffection(i, j, Camera);
         Effects.DrawAllEffection(i);
+        Attacks.DrawAllAttacks(i);
     }
-    void BattlePlayer::AutoLoadBitmaps(CameraPosition Camera, COLORREF color)
+    void BattlePlayer::AutoLoadBitmaps(GPH)
     {
     }
     void BattlePlayer::InsertBitmapPicture(string action, int step, COLORREF color)
@@ -183,47 +185,6 @@ namespace game_framework
     }
 
 
-    void BattlePlayer::AttackAutoUpdate(BitmapAnimation *, int, bool, CameraPosition)
-    {
-
-    }
-    void BattlePlayer::AttackReset(AttackObj *Attack, CameraPosition Camera, double XR, double XL, double Y)
-    {
-        Attack->BitmapisRight = IsRight;
-        if (Attack->BitmapisRight)
-        {
-            Attack->Rect.X = XR;
-        }
-        else
-        {
-            Attack->Rect.X = XL;
-        }
-        Attack->Rect.Y = Y;
-        Attack->visable = true;
-        Attack->AutoPlayTimer = 0;
-        Attack->Step = 0;
-        Attack->OnUpdate(GetName() + "\\Attacks", Camera);
-    }
-    void BattlePlayer::DrawAllAttacks(int i, int j, CameraPosition Camera)
-    {
-        map<string, AttackObj>::iterator iter;
-        for (iter = AttackObjects.begin(); iter != AttackObjects.end(); iter++)
-        {
-            iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
-        }
-    }
-    void BattlePlayer::AutoLoadAttacks(CameraPosition, COLORREF)
-    {
-        AttackObjects = map<string, AttackObj>();
-    }
-    void BattlePlayer::InsertAttacks(string name, int maxstep, int drawlayer, double pre, COLORREF color)
-    {
-        AttackObjects.insert(std::pair<string, AttackObj>(name, AttackObj()));
-        AttackObjects[name].SetName(name);
-        AttackObjects[name].AutoLoadBitmaps(GetName() + "\\Attacks", name, maxstep, pre, false, color);
-        AttackObjects[name].drawlayer = drawlayer;
-        AttackObjects[name].OnUpdate();
-    }
 
     void BattlePlayer::InsertAction(string actionname, int maxstep, COLORREF color)
     {
@@ -328,7 +289,7 @@ namespace game_framework
         Step = 0;
         ChargeTimer = 0;
         //特效
-        Effects.BootEffect(&Effects.Content["SPCharge"], Camera, Rect.X - 35, Rect.X - 30, Rect.Y - 45,0,0,false,IsRight);
+        Effects.BootEffect(&Effects.Content["SPCharge"], Camera, Rect.X - 35, Rect.X - 30, Rect.Y - 45, 0, 0, false, IsRight);
     }
     void BattlePlayer::OnStandby(GPH)
     {
@@ -435,13 +396,17 @@ namespace game_framework
             {
                 GotoStandby(GPP);
             }
-            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && OnGround)
+            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down == false && OnGround)
             {
                 GotoGuard(GPP);
             }
             else if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false && OnGround)
             {
                 GotoNormalAttack1(GPP);
+            }
+            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround)
+            {
+                GotoCharge(GPP);
             }
 #pragma endregion
 
@@ -588,11 +553,107 @@ namespace game_framework
 
         }
     }
+    void BattlePlayer::OnHit(GPH)
+    {
+        if (Action == "受傷")
+        {
+            ProduceFriction(0.5, 1);
+            BeHitTimer += TIMER_TICK_MILLIDECOND;
+            if (BeHitTimer >= BeHitTimeMax)
+            {
+                BeHitTimer = 0;
+                BeHitTimeMax = 0;
+                GotoStandby(GPP);
+            }
+        }
+    }
+    void BattlePlayer::OnHitGuard(GPH)
+    {
+        if (Action == "防禦受傷")
+        {
+            BeHitTimer += TIMER_TICK_MILLIDECOND;
+            if (BeHitTimer >= BeHitTimeMax)
+            {
+                BeHitTimer = 0;
+                BeHitTimeMax = 0;
+                if (Button_now.button_Guard)
+                {
+                    if (SP > 0)
+                    {
+                        GotoGuard(GPP);
+                    }
+                    else
+                    {
+                        GotoStandby(GPP);
+                    }
+                }
+                else
+                {
+                    GotoStandby(GPP);
+                }
+            }
+        }
+    }
     void BattlePlayer::GotoNormalAttack1(GPH)
     {
     }
     void BattlePlayer::OnNormalAttack1(GPH)
     {
+    }
+
+    void BattlePlayer::CheckHit(GPH)
+    {
+        //可受傷狀態
+        if (this->Invincible == false)
+        {
+            map<string, AttackObj>::iterator iter;
+            for (iter = Enemy->Attacks.AttackObjects.begin(); iter != Enemy->Attacks.AttackObjects.end(); iter++)
+            {
+                if (iter->second.IsHited == false || iter->second.CanCombo)
+                {
+                    if (PixelCollision(&(this->BodyPicture), iter->second.DisplayBitmap, 2))
+                    {
+                        if (Action == "防禦"&&iter->second.HitBreak == false)
+                        {
+                            iter->second.IsHited = true;
+                            BeHitTimer = 0;
+                            PlaySounds(iter->second.HitSound, false);
+                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, iter->second.Rect.X + 20, iter->second.Rect.X - 25, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
+                            HP -= iter->second.Damage / 3;
+                            if (HP < 0)
+                                HP = 0;
+                            SP -= iter->second.Damage / 4;
+                            if (SP < 0)
+                                SP = 0;
+                            Action = "防禦受傷";
+                            Velocity_X = iter->second.Ahead(iter->second.HitVelocity_X) / 2;
+                            Velocity_Y = 0;
+                            BeHitTimeMax = (iter->second.HitTime) / 5;
+                            Step = 0;
+                        }
+                        else
+                        {
+
+                            iter->second.IsHited = true;
+                            BeHitTimer = 0;
+                            PlaySounds(iter->second.HitSound, false);
+                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, iter->second.Rect.X + 20, iter->second.Rect.X - 25, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
+                            HP -= iter->second.Damage;
+                            SP += StandbySPincrements;
+                            if (SP > SP_Max)
+                                SP = SP_Max;
+                            Action = "受傷";
+                            Velocity_X = iter->second.Ahead(iter->second.HitVelocity_X);
+                            Velocity_Y -= iter->second.HitVelocity_Y;
+                            BeHitTimeMax = iter->second.HitTime;
+                            Step = 0;
+
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
 

@@ -72,7 +72,7 @@ namespace game_framework
     {
 
     }
-    void Matchstick::AutoLoadBitmaps(CameraPosition Camera, COLORREF color)
+    void Matchstick::AutoLoadBitmaps(GPH)
     {
         //有效判定區BitRect
         BodyPicture.LoadTexture(color);
@@ -85,29 +85,38 @@ namespace game_framework
         InsertAction("防禦", 0, color);
         InsertAction("練氣", 3, color);
         InsertAction("普攻1", 4, color);
-
-
+        InsertAction("受傷", 0, color);
+        InsertAction("防禦受傷", 0, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
+        //LoadAttacks
+        AutoLoadAttacks(GPP);
         AnimationUpdate(Camera);
     }
     void Matchstick::OnUpdate(GPH)
     {
 
         InputJudge(KeyState_now, KeyState_last);
-
+        CheckHit(GPP);
         OnStandby(GPP);
         OnRunning(GPP);
         OnRush(GPP);
         OnJump(GPP);
         OnGuard(GPP);
         OnCharge(GPP);
+        OnHit(GPP);
+        OnHitGuard(GPP);
         OnNormalAttack1(GPP);
 
         //更新所有Effect的動作
-        map<string, BitmapAnimation>::iterator iter;
-        for (iter = Effects.Content.begin(); iter != Effects.Content.end(); iter++)
-            Effects.EffectAutoUpdate(&(iter->second), (int)(((iter->second).PreAutoFrequence)), false, Camera);
+        map<string, BitmapAnimation>::iterator Iter_Effect;
+        for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
+            Effects.EffectAutoUpdate(&(Iter_Effect->second), (int)(((Iter_Effect->second).PreAutoFrequence)), false, Camera);
+
+        //更新所有Attacks的動作
+        map<string, AttackObj>::iterator Iter_Attack;
+        for (Iter_Attack = Attacks.AttackObjects.begin(); Iter_Attack != Attacks.AttackObjects.end(); Iter_Attack++)
+            Attacks.AttackAutoUpdate(&(Iter_Attack->second), GetName(), (int)(((Iter_Attack->second).PreAutoFrequence)), false, Camera);
 
 
         this->PhysicalMovement(Enemy, Camera, KeyState_now, KeyState_last);
@@ -127,7 +136,7 @@ namespace game_framework
             {
                 RushTimer = 0;
                 Step = 1;
-                Effects.BootEffect(&Effects.Content["Airboost"], Camera, Rect.X, Rect.X + 30, Rect.Y - 30,0,0,false,IsRight);
+                Effects.BootEffect(&Effects.Content["Airboost"], Camera, Rect.X, Rect.X + 30, Rect.Y - 30, 0, 0, false, IsRight);
                 Throughing = true;
                 PlaySounds(Sounds.Rush, false);
                 if (IsRight)
@@ -177,18 +186,12 @@ namespace game_framework
 
         }
     }
-    void Matchstick::AutoLoadAttacks(CameraPosition, COLORREF)
-    {
-        AttackObjects = map<string, AttackObj>();
-        //火柴人所有攻擊放這
 
-
-    }
     void Matchstick::GotoNormalAttack1(GPH)
     {
-        if (SP >= 2)
+        if (SP >= 3)
         {
-            SP -= 2;
+            SP -= 3;
             if (SP <= 0)
             {
                 SP = 0;
@@ -212,6 +215,26 @@ namespace game_framework
                 {
                     Velocity_X += Ahead(3.5);
                     //出拳
+                    Attacks.AttackReset(
+                        &(Attacks.AttackObjects["Normal1"]),
+                        GetName(), 
+                        "PunchHit",
+                        Sounds.NormalHit,
+                        20,
+                        Rect.X + 70,
+                        Rect.X,
+                        Rect.Y + 35,
+                        0,
+                        0,
+                        4,
+                        2,
+                        100,
+                        false,
+                        IsRight,
+                        false,
+                        false,
+                        false,
+                        Camera);
                 }
             }
             else if (NormalAttack1Timer >= 80 && Step == 3)
@@ -230,6 +253,12 @@ namespace game_framework
             }
 
         }
+    }
+
+    void Matchstick::AutoLoadAttacks(GPH)
+    {
+        Attacks.AttackObjects = map<string, AttackObj>();
+        Attacks.InsertAttacks(GetName(), "Normal1", 0, 0, 16, color, Camera);
     }
 
 

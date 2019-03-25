@@ -30,12 +30,13 @@ namespace game_framework
 		public:
 			Matchstick(int);
 			~Matchstick();
-			virtual void AutoLoadBitmaps(CameraPosition,COLORREF);//依照各自角色讀檔
+			virtual void AutoLoadBitmaps(GPH);//依照各自角色讀檔
 			virtual void OnUpdate(GPH);//更新函式，且隨著視角移動
             virtual void OnRush(GPH);
             virtual void GotoNormalAttack1(GPH);
             virtual void OnNormalAttack1(GPH);
-			virtual void AutoLoadAttacks(CameraPosition, COLORREF);
+            void AutoLoadAttacks(GPH);
+
             //Timer及次數控制參數------------------------------------------------------------------------------------------------------
             double NormalAttack1Timer = 0;
 

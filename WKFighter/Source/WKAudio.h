@@ -10,6 +10,8 @@ namespace WKAudio_namespace
         const int Rush = 1;
         const int Jump = 2;
         const int SPCharge = 3;
+        const int BKMusic = 4;
+        const int NormalHit = 5;
     };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);

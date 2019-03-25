@@ -76,7 +76,7 @@
 #include "WKAudio.h"
 #include "Bar.h"
 #include "Characters.h"
-#include "AttackObj.h"
+
 #pragma endregion 
 
 //命名空間引入
@@ -110,7 +110,7 @@ namespace game_framework
     BitmapPicture Bar_HP2_MaskBottom;
     BitmapPicture Bar_SP2_MaskTop;
     BitmapPicture Bar_SP2_MaskBottom;
-
+    bool played = false;
 
     //顯示
     CameraPosition Camera;//遊戲鏡頭
@@ -222,7 +222,7 @@ namespace game_framework
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
             }
-            P1->Rect.X = CameraMax_Left;
+
         }
         if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + SIZE_X))
         {
@@ -231,7 +231,7 @@ namespace game_framework
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
             }
-            P1->Rect.X = CameraMax_right + SIZE_X - P1->Rect.Width;
+
         }
         if ((P2->Rect.X < CameraMax_Left))
         {
@@ -240,7 +240,7 @@ namespace game_framework
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
             }
-            P2->Rect.X = CameraMax_Left;
+
         }
         if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + SIZE_X))
         {
@@ -249,7 +249,7 @@ namespace game_framework
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
             }
-            P2->Rect.X = CameraMax_right + SIZE_X - P2->Rect.Width;
+
         }
 
         C->X = (int)C->X_double;
@@ -357,6 +357,8 @@ namespace game_framework
         LoadSounds(Sounds.Rush, "Content\\Sounds\\rush.wav");
         LoadSounds(Sounds.Jump, "Content\\Sounds\\jump.wav");
         LoadSounds(Sounds.SPCharge, "Content\\Sounds\\SPCharge.wav");
+        LoadSounds(Sounds.BKMusic, "Content\\Sounds\\Lemegeton.mp3");
+        LoadSounds(Sounds.NormalHit, "Content\\Sounds\\NormalHit.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -403,6 +405,11 @@ namespace game_framework
     {
         if (DebugMode)
         {
+            if (played == false)
+            {
+                played = true;
+                //PlaySounds(Sounds.BKMusic, true);
+            }
             DebugmodeOnShow();
         }
         else
@@ -537,8 +544,8 @@ namespace game_framework
             Player2 = new Matchstick(2);
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
             BK.LoadTexture(TransparentColor);
-            Player1->AutoLoadBitmaps(Camera, TransparentColor);
-            Player2->AutoLoadBitmaps(Camera, TransparentColor);
+            Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+            Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player1->Rect.X = 50;
             Player1->Rect.Y = GroundPosition - 200;
             Player2->Rect.X = 630;
@@ -594,7 +601,7 @@ namespace game_framework
                 Bar_SP2_MaskBottom.Draw(i, 3);
                 //Player1->BodyPicture.Draw(i,5);
                 //Player2->BodyPicture.Draw(i, 5);
-                
+
             }
         }
     }
@@ -612,8 +619,8 @@ namespace game_framework
             Bar_HP2_MaskBottom.OnUpdate();
             Bar_SP2_MaskTop.OnUpdate();
             Bar_SP2_MaskBottom.OnUpdate();
-            Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds);
-            Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds);
+            Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+            Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             ProduceTerrain(&Camera, Player1, Player2, BK);
             if (KeyState_now.Space == true)
             {

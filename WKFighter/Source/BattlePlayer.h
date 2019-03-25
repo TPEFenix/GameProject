@@ -1,15 +1,17 @@
 #pragma once
+#include "stdafx.h"
 #include "Keycode.h"
 #include "KeyBoardState.h"
-#include "WKAudio.h"
 #include "CollisionSensor.h"
-#include "AttackObj.h"
+#include "WKAudio.h"
 #include "EffectSprite.h"
+#include "AttackObj.h"
+
+
 
 using namespace std;
 using namespace WKAudio_namespace;
 using namespace CollisionSensor_namespace;
-
 
 
 namespace game_framework
@@ -18,9 +20,9 @@ namespace game_framework
     //程式編碼用定義
 
     //Game_Parameter_Header
-#define GPH BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds
+#define GPH BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds, COLORREF color
     //Game_Parameter_Parameter
-#define GPP Enemy, Camera, KeyState_now, KeyState_last, Sounds
+#define GPP Enemy, Camera, KeyState_now, KeyState_last, Sounds,color
 
 
 //Inputconfigure
@@ -39,10 +41,10 @@ namespace game_framework
 #define Player2_Up				    Up 
 #define Player2_Down			    Down 
 #define Player2_Attack			    K
-#define Player2_Skill			        I 
+#define Player2_Skill			        L 
 #define Player2_Technique	    O 
 #define Player2_Jump			    J 
-#define Player2_Rush			    U 
+#define Player2_Rush			    I 
 #define Player2_Guard			    P
 //共用設定
 #define GuardSPCost                0.2
@@ -72,7 +74,7 @@ namespace game_framework
         //共用建置函數(大多需要繼承額外撰寫)
         virtual void AnimationUpdate(CameraPosition);
         virtual void Draw(int, int, CameraPosition);//更新函式，且隨著視角移動
-        virtual void AutoLoadBitmaps(CameraPosition, COLORREF);//依照各自角色讀檔
+        virtual void AutoLoadBitmaps(GPH);//依照各自角色讀檔
         virtual void OnUpdate(GPH);//更新函式，且隨著視角移動
         virtual void InsertBitmapPicture(string, int, COLORREF);//使BimapAnimation讀取圖檔
         virtual void InsertAction(string, int, COLORREF);//讀取一個動作的所有圖檔
@@ -90,8 +92,11 @@ namespace game_framework
         virtual void OnJump(GPH);
         virtual void OnGuard(GPH);
         virtual void OnCharge(GPH);
+        virtual void OnHit(GPH);
+        virtual void OnHitGuard(GPH);
         virtual void GotoNormalAttack1(GPH);//需要每個角色個別撰寫
         virtual void OnNormalAttack1(GPH);//需要每個角色個別撰寫
+        virtual void CheckHit(GPH);
 
         //套裝函式
         virtual void AddSP(double mathin);//增加SP
@@ -101,12 +106,6 @@ namespace game_framework
         virtual void PhysicalMovement(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState);//物理移動，全角色共用，除非特例
         double Ahead(double move);
 
-        //攻擊物件相關函式
-        virtual void AttackAutoUpdate(BitmapAnimation*, int, bool, CameraPosition);
-        virtual void AttackReset(AttackObj*, CameraPosition, double, double, double);
-        virtual void DrawAllAttacks(int, int, CameraPosition);
-        virtual void AutoLoadAttacks(CameraPosition, COLORREF);
-        virtual void InsertAttacks(string, int, int, double, COLORREF);
 
 
         //能力值變數(由子類別初始化)------------------------------------------------------------------------------------------------------
@@ -142,6 +141,8 @@ namespace game_framework
         double ChargeTimer = 0;
         double ChargeTimer2 = 0;
         int Chargecount = 0;
+        double BeHitTimer = 0;
+        double BeHitTimeMax = 0;
         //輸入按鍵參數------------------------------------------------------------------------------------------------------
         BattleInput Button_now;//現在的鍵盤狀態
         BattleInput Button_last;//上一瞬間的鍵盤狀態
@@ -162,11 +163,7 @@ namespace game_framework
 
         map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作
         EffectSprite Effects;
-
-
-        //攻擊物件--------------------------------------------------------------------------------------------------------
-        map<string, AttackObj> AttackObjects;//儲存所有攻擊物件
-
+        AttackManager Attacks;
     };
 }
 
