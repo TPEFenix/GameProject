@@ -4,6 +4,7 @@
 #include "WKAudio.h"
 #include "CollisionSensor.h"
 #include "AttackObj.h"
+#include "EffectSprite.h"
 
 using namespace std;
 using namespace WKAudio_namespace;
@@ -100,13 +101,6 @@ namespace game_framework
         virtual void PhysicalMovement(BattlePlayer *, CameraPosition, KeyBoardState, KeyBoardState);//物理移動，全角色共用，除非特例
         double Ahead(double move);
 
-        //特效相關函式
-        virtual void EffectAutoUpdate(BitmapAnimation*, int, bool, CameraPosition);//(讓特效自動更新狀態，放在Update裡)
-        virtual void EffectReset(BitmapAnimation*, CameraPosition, double, double, double);
-        virtual void DrawAllEffection(int, int, CameraPosition);//更新函式，且隨著視角移動
-        virtual void AutoLoadEffections(CameraPosition, COLORREF);//讀取遊戲中全部特效
-        virtual void InsertEffection(string, int,int, double, COLORREF);//讀取遊戲中全部特效
-
         //攻擊物件相關函式
         virtual void AttackAutoUpdate(BitmapAnimation*, int, bool, CameraPosition);
         virtual void AttackReset(AttackObj*, CameraPosition, double, double, double);
@@ -167,7 +161,8 @@ namespace game_framework
         BitMapRectangle BodyRect;//人物碰撞的矩形
 
         map<string, BitmapPicture>  BitmapPictures;//該Animation的所有圖片動作
-        map<string, BitmapAnimation>  Effections;//儲存所有特效
+        EffectSprite Effects;
+
 
         //攻擊物件--------------------------------------------------------------------------------------------------------
         map<string, AttackObj> AttackObjects;//儲存所有攻擊物件

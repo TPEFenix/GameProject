@@ -263,6 +263,7 @@
     <ClCompile Include="Source\BattlePlayer.cpp" />
     <ClCompile Include="Source\Characters.cpp" />
     <ClCompile Include="Source\CollisionSensor.cpp" />
+    <ClCompile Include="Source\EffectSprite.cpp" />
     <ClCompile Include="Source\game.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -317,6 +318,7 @@
     <ClInclude Include="Source\BattlePlayer.h" />
     <ClInclude Include="Source\Characters.h" />
     <ClInclude Include="Source\CollisionSensor.h" />
+    <ClInclude Include="Source\EffectSprite.h" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\gameDoc.h" />
     <ClInclude Include="Source\gameView.h" />

@@ -5,6 +5,7 @@
 #include "TypeConverter.h"
 #include "WKAudio.h"
 #include "AttackObj.h"
+#include "EffectSprite.h"
 
 
 using namespace std;

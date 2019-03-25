@@ -175,6 +175,9 @@
     <ClCompile Include="Source\AttackObj.cpp">
       <Filter>GameLibrary\GameSprite\AttackObj</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EffectSprite.cpp">
+      <Filter>GameLibrary\GameSprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\game.h">
@@ -236,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="Source\AttackObj.h">
       <Filter>GameLibrary\GameSprite\AttackObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSprite.h">
+      <Filter>GameLibrary\GameSprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
