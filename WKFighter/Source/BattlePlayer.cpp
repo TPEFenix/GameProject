@@ -705,7 +705,7 @@ namespace game_framework
                             }
 
                             PlaySounds(iter->second.HitSound, false);
-                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera,BodyRect.X,  BodyRect.X+5, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
+                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, BodyRect.X+3, BodyRect.X-6, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
 
                             GainHP(-(iter->second.Damage/3));
                             GainSP(-(iter->second.Damage / 4));
@@ -731,7 +731,7 @@ namespace game_framework
                             }
 
                             PlaySounds(iter->second.HitSound, false);
-                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, iter->second.Rect.X + 20, iter->second.Rect.X - 25, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
+                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, BodyRect.X+3, BodyRect.X-6, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
                             
                             GainHP(-(iter->second.Damage));
                             GainSP(+(iter->second.Damage / 4));
@@ -788,7 +788,7 @@ namespace game_framework
         SP += mathin;
         if (SP > SP_Max)
             SP = SP_Max;
-        else if (HP <= 0)
+        else if (SP <= 0)
             SP = 0;
     }
     void BattlePlayer::ProduceFriction(double power, double range)
