@@ -217,37 +217,53 @@ namespace game_framework
 
         if ((P1->Rect.X < CameraMax_Left))
         {
-            if (P1->Action == "受傷"&&P1->Velocity_X < -8)
+            if (P1->Action == "受傷"&&P1->Velocity_X < -12)
             {
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
+                P1->HitFly = true;
+                P1->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
             }
 
         }
         if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + SIZE_X))
         {
-            if (P1->Action == "受傷"&&P1->Velocity_X > 8)
+            if (P1->Action == "受傷"&&P1->Velocity_X > 12)
             {
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
+                P1->HitFly = true;
+                P1->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
             }
 
         }
         if ((P2->Rect.X < CameraMax_Left))
         {
-            if (P2->Action == "受傷"&&P2->Velocity_X < -8)
+            if (P2->Action == "受傷"&&P2->Velocity_X < -12)
             {
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
+                P2->HitFly = true;
+                P2->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
             }
 
         }
         if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + SIZE_X))
         {
-            if (P2->Action == "受傷"&&P2->Velocity_X > 8)
+            if (P2->Action == "受傷"&&P2->Velocity_X > 12)
             {
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
+                P2->HitFly = true;
+                P2->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
             }
 
         }
@@ -359,6 +375,7 @@ namespace game_framework
         LoadSounds(Sounds.SPCharge, "Content\\Sounds\\SPCharge.wav");
         LoadSounds(Sounds.BKMusic, "Content\\Sounds\\Lemegeton.mp3");
         LoadSounds(Sounds.NormalHit, "Content\\Sounds\\NormalHit.wav");
+        LoadSounds(Sounds.HitWall, "Content\\Sounds\\HitWall.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -609,7 +626,6 @@ namespace game_framework
     {
         if (DebugMode)
         {
-
             BK.OnUpdate(Camera);
             Bar_HP1_MaskTop.OnUpdate();
             Bar_HP1_MaskBottom.OnUpdate();

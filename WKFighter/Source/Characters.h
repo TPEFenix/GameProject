@@ -35,6 +35,10 @@ namespace game_framework
             virtual void OnRush(GPH);
             virtual void GotoNormalAttack1(GPH);
             virtual void OnNormalAttack1(GPH);
+            virtual void GotoNormalAttack2(GPH);
+            virtual void OnNormalAttack2(GPH);
+            virtual void GotoNormalAttack3(GPH);
+            virtual void OnNormalAttack3(GPH);
             void AutoLoadAttacks(GPH);
 
             //TimerのΩ计北把计------------------------------------------------------------------------------------------------------

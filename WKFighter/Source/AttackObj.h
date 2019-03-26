@@ -12,7 +12,7 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-#define AttackObjPH AttackObj *Attack, string BeloneName, double Damage ,double SP_Damege, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,string HitEffect,int HitSound,CameraPosition Camera
+#define AttackObjPH AttackObj *Attack, string BeloneName, double Damage ,double SP_Damege, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
     
     
     
@@ -48,7 +48,7 @@ namespace game_framework
         bool Replay;//是否將攻擊圖檔持續撥放
         bool HitNoon;//是否攻擊完就消失
         bool HitBreak;//是否破防
-
+        bool CanHitFly;//是否可擊飛
 
         string HitEffect;//擊中特效名稱
         int HitSound;//擊中聲音ID

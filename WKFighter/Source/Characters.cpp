@@ -64,6 +64,7 @@ namespace game_framework
         Acceleration_X = 0;//X加速度
         Acceleration_Y = 0;//Y加速度
         Throughing = false;
+        HitFly = false;
 
 
 
@@ -85,7 +86,9 @@ namespace game_framework
         InsertAction("防禦", 0, color);
         InsertAction("練氣", 3, color);
         InsertAction("普攻1", 4, color);
-        InsertAction("受傷", 0, color);
+        InsertAction("普攻2", 4, color);
+        InsertAction("普攻3", 4, color);
+        InsertAction("受傷", 2, color);
         InsertAction("防禦受傷", 0, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
@@ -107,6 +110,8 @@ namespace game_framework
         OnHit(GPP);
         OnHitGuard(GPP);
         OnNormalAttack1(GPP);
+        OnNormalAttack2(GPP);
+        OnNormalAttack3(GPP);
 
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
@@ -221,12 +226,133 @@ namespace game_framework
                             20,0,                                                                                        //傷害,削減SP
                             IsRight,2,2,Rect.X+72,Rect.X-2,Rect.Y+35,                   //左右,HitX,HitY,XR,XL,Y
                             0,0,                                                                                          //VX,VY
-                            100,30,-1,false,false,false,true,false,                                 //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,破防
+                            100,30,-1,false,false,false,true,false,false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                             "PunchHit",Sounds.NormalHit,Camera                         //擊中特效名稱,擊中音效名稱,Camera
                         );
                 }
             }
             else if (NormalAttack1Timer >= 80 && Step == 3)
+            {
+                NormalAttack1Timer = 0;
+                Step = 4;
+            }
+            else if (NormalAttack1Timer < 100 && Step >= 4)
+            {
+                //到別的動作
+                if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false)
+                {
+                    GotoNormalAttack2(GPP);
+                }
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+
+        }
+    }
+    void Matchstick::GotoNormalAttack2(GPH)
+    {
+        if (SP >= 3)
+        {
+            SP -= 3;
+            if (SP <= 0)
+            {
+                SP = 0;
+            }
+            Action = "普攻2";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
+    }
+    void Matchstick::OnNormalAttack2(GPH)
+    {
+        if (Action == "普攻2")
+        {
+            ProduceFriction(1, 1);
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            if (NormalAttack1Timer >= 16 && Step <= 2)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                if (Step >= 3)
+                {
+                    Velocity_X += Ahead(3.5);
+                    //出拳
+                    Attacks.AttackReset
+                    (
+                        &(Attacks.AttackObjects["Normal1"]), GetName(),     //攻擊物件位置,發出者名稱
+                        20, 0,                                                                                        //傷害,削減SP
+                        IsRight, 5, 3, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
+                        0, 0,                                                                                          //VX,VY
+                        100, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
+                    );
+                }
+            }
+            else if (NormalAttack1Timer >= 80 && Step == 3)
+            {
+                NormalAttack1Timer = 0;
+                Step = 4;
+            }
+            else if (NormalAttack1Timer < 100 && Step >= 4)
+            {
+                //到別的動作
+                if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false)
+                {
+                    GotoNormalAttack3(GPP);
+                }
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+
+        }
+    }
+
+    void Matchstick::GotoNormalAttack3(GPH)
+    {
+        if (SP >= 4)
+        {
+            SP -= 4;
+            if (SP <= 0)
+            {
+                SP = 0;
+            }
+            Velocity_X += Ahead(5);
+            Velocity_Y -= 5;
+            Action = "普攻3";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
+    }
+    void Matchstick::OnNormalAttack3(GPH)
+    {
+        if (Action == "普攻3")
+        {
+            ProduceFriction(0.2, 0.25);
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            if (NormalAttack1Timer >= 100 && Step <= 2)
+            {
+                Step += 1;
+                if (Step >= 3)
+                {
+                    //出拳
+                    Attacks.AttackReset
+                    (
+                        &(Attacks.AttackObjects["Normal2"]), GetName(),     //攻擊物件位置,發出者名稱
+                        35, 0,                                                                                        //傷害,削減SP
+                        IsRight, 13, 8, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
+                        0, 0,                                                                                          //VX,VY
+                        200, 30, -1, false, false, false, true, false, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
+                    );
+                }
+            }
+            else if (NormalAttack1Timer >= 150 && Step == 3)
             {
                 NormalAttack1Timer = 0;
                 Step = 4;
@@ -243,11 +369,12 @@ namespace game_framework
 
         }
     }
-
+   
     void Matchstick::AutoLoadAttacks(GPH)
     {
         Attacks.AttackObjects = map<string, AttackObj>();
         Attacks.InsertAttacks(GetName(), "Normal1", 0,5, 16,0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
     }
 
 

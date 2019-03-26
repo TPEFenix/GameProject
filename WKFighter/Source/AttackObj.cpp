@@ -71,6 +71,7 @@ namespace game_framework
         Attack->Replay = Replay;
         Attack->HitNoon = HitNoon;
         Attack->HitBreak = HitBreak;
+        Attack->CanHitFly = CanHitFly;
         Attack->HitEffect = HitEffect;
         Attack->HitSound = HitSound;
 

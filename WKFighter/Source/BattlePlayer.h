@@ -130,10 +130,11 @@ namespace game_framework
         bool InSideCamera;//是否受到鏡頭影響
         bool IsRight;//面相右邊
         bool OnGround;//是否在地面上
-        bool Throughing;
+        bool Throughing;//可否穿越
+        bool HitFly;//被擊非
         string Action;//動作狀態
         int Step;//當前步驟數
-        vector<bool> AttributeState;
+        vector<bool> AttributeState;//異常狀態
 
         //Timer及次數控制參數------------------------------------------------------------------------------------------------------
         double SPincrementsTimer = 0;

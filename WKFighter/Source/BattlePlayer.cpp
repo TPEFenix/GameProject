@@ -115,29 +115,53 @@ namespace game_framework
 
         if (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)) == true && this->Throughing == false && Enemy->Throughing == false)
         {
-            if (!(Velocity_X == 0))
+
+            if (Velocity_X == 0 && Enemy->Velocity_X == 0 && Enemy->BodyRect.X >= BodyRect.X)
             {
-                Enemy->Rect.X += Velocity_X;
-
-                if (Enemy->Rect.X >= Rect.X)
+                while (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)))
                 {
-                    Rect.X -= 4;
+                    Rect.X -= 1;
+                    Rect.X_int -= 1;
+                    BodyRect.X -= 1;
+                    Enemy->Rect.X += 1;
+                    Enemy->Rect.X_int += 1;
+                    Enemy->BodyRect.X += 1;
                 }
-                else if (Enemy->Rect.X < Rect.X)
-                {
-                    Rect.X += 4;
-                }
-
             }
-            else
+            if (Velocity_X > 0 && Enemy->Velocity_X == 0 && Enemy->BodyRect.X >= BodyRect.X)
             {
-                if (Enemy->Rect.X >= Rect.X)
+                while (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)))
                 {
-                    Rect.X -= 4;
+                    Rect.X -= 1;
+                    Rect.X_int -= 1;
+                    BodyRect.X -= 1;
+                    Enemy->Rect.X += 1;
+                    Enemy->Rect.X_int += 1;
+                    Enemy->BodyRect.X += 1;
                 }
-                else if (Enemy->Rect.X < Rect.X)
+            }
+            if (Velocity_X < 0 && Enemy->Velocity_X == 0 && Enemy->BodyRect.X <= BodyRect.X)
+            {
+                while (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)))
                 {
-                    Rect.X += 4;
+                    Rect.X += 1;
+                    Rect.X_int += 1;
+                    BodyRect.X += 1;
+                    Enemy->Rect.X -= 1;
+                    Enemy->Rect.X_int -= 1;
+                    Enemy->BodyRect.X -= 1;
+                }
+            }
+            if (Velocity_X > 0 && Enemy->Velocity_X < 0 && Enemy->BodyRect.X >= BodyRect.X)
+            {
+                while (BitmapPicture_HitRectangle((this->BodyRect), (Enemy->BodyRect)))
+                {
+                    Rect.X -= 1;
+                    Rect.X_int -= 1;
+                    BodyRect.X -= 1;
+                    Enemy->Rect.X += 1;
+                    Enemy->Rect.X_int += 1;
+                    Enemy->BodyRect.X += 1;
                 }
             }
         }
@@ -162,6 +186,7 @@ namespace game_framework
     void BattlePlayer::Draw(int i, int j, CameraPosition Camera)
     {
         this->DisplayBitmap->Draw(i, j);
+        //this->BodyPicture.Draw(i, j+1);
         Effects.DrawAllEffection(i);
         Attacks.DrawAllAttacks(i);
     }
@@ -558,12 +583,66 @@ namespace game_framework
     {
         if (Action == "¨ü¶Ë")
         {
-            ProduceFriction(0.5, 0.5);
+            ProduceFriction(0.35, 0.5);
             BeHitTimer += TIMER_TICK_MILLIDECOND;
-            if (BeHitTimer >= BeHitTimeMax)
+            if (BeHitTimer >= BeHitTimeMax&&HitFly == false)
             {
                 BeHitTimer = 0;
                 BeHitTimeMax = 0;
+                GotoStandby(GPP);
+            }
+            else if (HitFly == true)
+            {
+                if(Step == 0)
+                     Step = 1;
+                if (BeHitTimer >= 80 && BeHitTimer <= 180&&Button_now.button_Jump&&Button_last.button_Jump == false&&OnGround == false)
+                {
+                    GotoJump(GPP);
+                    Step = 3;
+                    JumpTimer = 0;
+                    Velocity_Y = -5;
+                    Velocity_X /= 2;
+                    OnGround = false;
+                    HitFly = false;
+                    Effects.BootEffect(&Effects.Content["Airboost2"], Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80, 0, 0, false, IsRight);
+                    PlaySounds(Sounds.Jump, false);
+                }
+                else if(BeHitTimer > 300||(BeHitTimer > 100 && OnGround))
+                {
+                    if (OnGround)
+                    {
+                        if (Step < 2)
+                        {
+                            BeHitTimer = 0;
+                            Invincible = true;
+                            Throughing = true;
+                            Step = 2;
+                        }
+                    }
+                }
+            }
+            if (Step >= 2 && BeHitTimer < 500&& BeHitTimer >= 200 && OnGround&&Button_now.button_Jump&&Button_last.button_Jump == false)
+            {
+                GotoJump(GPP);
+                Step = 3;
+                JumpTimer = 0;
+                Velocity_Y = -5;
+                Velocity_X /= 2;
+                OnGround = false;
+                HitFly = false;
+                BeHitTimer = 0;
+                Invincible = false;
+                Throughing = false;
+                HitFly = false;
+                Effects.BootEffect(&Effects.Content["Airboost2"], Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80, 0, 0, false, IsRight);
+                PlaySounds(Sounds.Jump, false);
+            }
+            if (Step >= 2 && BeHitTimer >= 500)
+            {
+                BeHitTimer = 0;
+                Invincible = false;
+                Throughing = false;
+                HitFly = false;
                 GotoStandby(GPP);
             }
         }
@@ -626,7 +705,7 @@ namespace game_framework
                             }
 
                             PlaySounds(iter->second.HitSound, false);
-                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, iter->second.Rect.X + 20, iter->second.Rect.X - 25, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
+                            Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera,BodyRect.X,  BodyRect.X+5, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
 
                             GainHP(-(iter->second.Damage/3));
                             GainSP(-(iter->second.Damage / 4));
@@ -667,9 +746,10 @@ namespace game_framework
                             BeHitTimer = 0;
                             BeHitTimeMax = iter->second.HitTime;
 
+                            Sleep(25);
+                            HitFly = iter->second.CanHitFly;
                             Action = "¨ü¶Ë";
                             Step = 0;
-
                         }
                     }
                 }

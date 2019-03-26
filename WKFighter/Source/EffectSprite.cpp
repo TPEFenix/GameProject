@@ -34,6 +34,7 @@ namespace game_framework
 
     void EffectSprite::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)
     {
+        Effection->InSideCamera = true;
         Effection->AutoPlay(tick, replay);
         Effection->Rect.X += Effection->Velocity_X;
         Effection->Rect.Y += Effection->Velocity_Y;
@@ -47,7 +48,7 @@ namespace game_framework
         if (Effection->BitmapisRight)
             Effection->Rect.X = XR;
         else
-            Effection->Rect.X = XL;
+        Effection->Rect.X = XL;
         Effection->Rect.Y = Y;
         Effection->visable = true;
         Effection->Velocity_X = VX;
@@ -65,7 +66,7 @@ namespace game_framework
     {
         Content.insert(std::pair<string, BitmapAnimation>(name, BitmapAnimation(false)));
         Content[name].SetName(name);
-        Content[name].AutoLoadBitmaps("Effects", name, maxstep + 1, pre, false, color);
+        Content[name].AutoLoadBitmaps("Effects", name, maxstep + 1, pre,false, color);
         Content[name].drawlayer = drawlayer;
         Content[name].OnUpdate();
     }
