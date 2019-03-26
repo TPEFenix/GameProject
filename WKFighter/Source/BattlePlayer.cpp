@@ -23,8 +23,9 @@ namespace game_framework
     BattlePlayer::BattlePlayer() :BitmapAnimation()
     {
         BodyPicture = BitmapPicture("Content\\Bitmaps\\BodyRect.bmp", 0, 0, true, true, true);
+        AttributeState = vector<bool>(10,false);
         Effects = EffectSprite();
-
+        Attacks = AttackManager();
     }
     BattlePlayer::~BattlePlayer()
     {
@@ -557,7 +558,7 @@ namespace game_framework
     {
         if (Action == "¨ü¶Ë")
         {
-            ProduceFriction(0.5, 1);
+            ProduceFriction(0.5, 0.5);
             BeHitTimer += TIMER_TICK_MILLIDECOND;
             if (BeHitTimer >= BeHitTimeMax)
             {
@@ -571,6 +572,7 @@ namespace game_framework
     {
         if (Action == "¨¾¿m¨ü¶Ë")
         {
+            ProduceFriction(0.5, 0.5);
             BeHitTimer += TIMER_TICK_MILLIDECOND;
             if (BeHitTimer >= BeHitTimeMax)
             {
@@ -615,37 +617,57 @@ namespace game_framework
                     {
                         if (Action == "¨¾¿m"&&iter->second.HitBreak == false)
                         {
+                            IsRight = !(iter->second.BitmapisRight);
                             iter->second.IsHited = true;
-                            BeHitTimer = 0;
+                            if (iter->second.HitNoon == true)
+                            {
+                                iter->second.visable = false;
+                                iter->second.DisplayBitmap->visable = false;
+                            }
+
                             PlaySounds(iter->second.HitSound, false);
                             Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, iter->second.Rect.X + 20, iter->second.Rect.X - 25, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
-                            HP -= iter->second.Damage / 3;
-                            if (HP < 0)
-                                HP = 0;
-                            SP -= iter->second.Damage / 4;
-                            if (SP < 0)
-                                SP = 0;
+
+                            GainHP(-(iter->second.Damage/3));
+                            GainSP(-(iter->second.Damage / 4));
+                            GainSP(-(iter->second.SP_Damege/2));
+
+                            Velocity_X = iter->second.Ahead(iter->second.HitVelocity_X)/3;
+                            Velocity_Y -= 0;
+
+                            BeHitTimer = 0;
+                            BeHitTimeMax = iter->second.HitTime;
+
                             Action = "¨¾¿m¨ü¶Ë";
-                            Velocity_X = iter->second.Ahead(iter->second.HitVelocity_X) / 2;
-                            Velocity_Y = 0;
-                            BeHitTimeMax = (iter->second.HitTime) / 5;
                             Step = 0;
                         }
                         else
                         {
-
+                            IsRight = !(iter->second.BitmapisRight);
                             iter->second.IsHited = true;
-                            BeHitTimer = 0;
+                            if (iter->second.HitNoon == true)
+                            {
+                                iter->second.visable = false;
+                                iter->second.DisplayBitmap->visable = false;
+                            }
+
                             PlaySounds(iter->second.HitSound, false);
                             Effects.BootEffect(&(Effects.Content[iter->second.HitEffect]), Camera, iter->second.Rect.X + 20, iter->second.Rect.X - 25, Rect.Y + 30, 0, 0, false, iter->second.BitmapisRight);
-                            HP -= iter->second.Damage;
-                            SP += StandbySPincrements;
-                            if (SP > SP_Max)
-                                SP = SP_Max;
-                            Action = "¨ü¶Ë";
+                            
+                            GainHP(-(iter->second.Damage));
+                            GainSP(+(iter->second.Damage / 4));
+                            GainSP(-iter->second.SP_Damege);
+                            if (-iter->second.Attributes >= 0)
+                                AttributeState[-iter->second.Attributes] = true;
+                            
+
                             Velocity_X = iter->second.Ahead(iter->second.HitVelocity_X);
-                            Velocity_Y -= iter->second.HitVelocity_Y;
+                            Velocity_Y = -(iter->second.HitVelocity_Y);
+
+                            BeHitTimer = 0;
                             BeHitTimeMax = iter->second.HitTime;
+
+                            Action = "¨ü¶Ë";
                             Step = 0;
 
                         }
@@ -656,7 +678,7 @@ namespace game_framework
         }
     }
 
-
+    
     void BattlePlayer::AddSP(double mathin)
     {
         if (SP < SP_Max)
@@ -672,6 +694,22 @@ namespace game_framework
                 }
             }
         }
+    }
+    void BattlePlayer::GainHP(double mathin)
+    {
+        HP += mathin;
+        if (HP > HP_Max)
+            HP = HP_Max;
+        else if (HP <= 0)
+            HP = 0;
+    }
+    void BattlePlayer::GainSP(double mathin)
+    {
+        SP += mathin;
+        if (SP > SP_Max)
+            SP = SP_Max;
+        else if (HP <= 0)
+            SP = 0;
     }
     void BattlePlayer::ProduceFriction(double power, double range)
     {

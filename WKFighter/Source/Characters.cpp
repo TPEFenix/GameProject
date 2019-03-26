@@ -116,7 +116,7 @@ namespace game_framework
         //更新所有Attacks的動作
         map<string, AttackObj>::iterator Iter_Attack;
         for (Iter_Attack = Attacks.AttackObjects.begin(); Iter_Attack != Attacks.AttackObjects.end(); Iter_Attack++)
-            Attacks.AttackAutoUpdate(&(Iter_Attack->second), GetName(), (int)(((Iter_Attack->second).PreAutoFrequence)), false, Camera);
+            Attacks.AttackAutoUpdate(&(Iter_Attack->second), GetName(), (int)(((Iter_Attack->second).PreAutoFrequence)), (Iter_Attack->second).Replay, Camera);
 
 
         this->PhysicalMovement(Enemy, Camera, KeyState_now, KeyState_last);
@@ -215,26 +215,15 @@ namespace game_framework
                 {
                     Velocity_X += Ahead(3.5);
                     //出拳
-                    Attacks.AttackReset(
-                        &(Attacks.AttackObjects["Normal1"]),
-                        GetName(), 
-                        "PunchHit",
-                        Sounds.NormalHit,
-                        20,
-                        Rect.X + 70,
-                        Rect.X,
-                        Rect.Y + 35,
-                        0,
-                        0,
-                        4,
-                        2,
-                        100,
-                        false,
-                        IsRight,
-                        false,
-                        false,
-                        false,
-                        Camera);
+                    Attacks.AttackReset
+                        (
+                            &(Attacks.AttackObjects["Normal1"]),GetName(),     //攻擊物件位置,發出者名稱
+                            20,0,                                                                                        //傷害,削減SP
+                            IsRight,2,2,Rect.X+72,Rect.X-2,Rect.Y+35,                   //左右,HitX,HitY,XR,XL,Y
+                            0,0,                                                                                          //VX,VY
+                            100,30,-1,false,false,false,true,false,                                 //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,破防
+                            "PunchHit",Sounds.NormalHit,Camera                         //擊中特效名稱,擊中音效名稱,Camera
+                        );
                 }
             }
             else if (NormalAttack1Timer >= 80 && Step == 3)
@@ -258,7 +247,7 @@ namespace game_framework
     void Matchstick::AutoLoadAttacks(GPH)
     {
         Attacks.AttackObjects = map<string, AttackObj>();
-        Attacks.InsertAttacks(GetName(), "Normal1", 0, 0, 16, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal1", 0,5, 16,0, color, Camera);
     }
 
 

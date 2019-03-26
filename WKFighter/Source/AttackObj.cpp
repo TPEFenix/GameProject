@@ -27,6 +27,22 @@ namespace game_framework
     }
     void AttackManager::AttackAutoUpdate(AttackObj * Attack, string BeloneName, int tick, bool replay, CameraPosition Camera)
     {
+        if (Attack->IsHited&&Attack->CanCombo)
+        {
+            Attack->ComboTimer += TIMER_TICK_MILLIDECOND;
+            if (Attack->ComboTimer > TIMER_TICK_MILLIDECOND * 4)
+            {
+                Attack->IsHited = false;
+            }
+        }
+
+        if(Attack->visable = true)
+            Attack->AliveTimer += TIMER_TICK_MILLIDECOND;
+        if (Attack->AliveTimer >= Attack->MaxAliveTime)
+        {
+            Attack->visable = false;
+            Attack->DisplayBitmap->visable = false;
+        }
         Attack->AutoPlay(tick, replay);
         Attack->Rect.X += Attack->Velocity_X;
         Attack->Rect.Y += Attack->Velocity_Y;
@@ -34,28 +50,41 @@ namespace game_framework
     }
     void AttackManager::AttackReset(AttackObjPH)
     {
+        //屬性設定
+        Attack->Damage = Damage;
+        Attack->SP_Damege = SP_Damege;
+        Attack->HitVelocity_X = HitVelocity_X;
+        Attack->HitVelocity_Y = HitVelocity_Y;
         Attack->BitmapisRight = IsRight;
         if (Attack->BitmapisRight)
             Attack->Rect.X = XR;
         else
             Attack->Rect.X = XL;
-
         Attack->Rect.Y = Y;
-        Attack->visable = true;
-        Attack->AutoPlayTimer = 0;
-        Attack->Step = 0;
-        Attack->IsHited = false;
-        Attack->Damage = Damage;
         Attack->Velocity_X = VX;
         Attack->Velocity_Y = VY;
-        Attack->HitVelocity_X = HitVX;
-        Attack->HitVelocity_Y = HitVY;
-        Attack->HitEffect = HitEffect;
-        Attack->CanCombo = CanCombo;
-        Attack->Drawable = drawable;
-        Attack->HitSound = HitSound;
         Attack->HitTime = HitTime;
+        Attack->MaxAliveTime = MaxAliveTime;
+        Attack->Attributes = Attributes;
+        Attack->CanCombo = CanCombo;
+        Attack->Drawable = Drawable;
+        Attack->Replay = Replay;
+        Attack->HitNoon = HitNoon;
         Attack->HitBreak = HitBreak;
+        Attack->HitEffect = HitEffect;
+        Attack->HitSound = HitSound;
+
+
+        Attack->visable = true;
+        Attack->IsHited = false;
+        Attack->AutoPlayTimer = 0;
+        Attack->Step = 0;
+        Attack->AliveTimer = 0;
+        Attack->Timer1 = 0;
+        Attack->Timer2 = 0;
+        Attack->ComboTimer = 0;
+
+        //初次更新
         Attack->OnUpdate(BeloneName + "\\Attacks", Camera);
     }
     void AttackManager::DrawAllAttacks(int i)
@@ -69,9 +98,9 @@ namespace game_framework
             }
         }
     }
-    void AttackManager::InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, COLORREF color, CameraPosition Camera)
+    void AttackManager::InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre,int category, COLORREF color, CameraPosition Camera)
     {
-        AttackObjects.insert(std::pair<string, AttackObj>(name, AttackObj(name, 0, 0, false, true, true)));
+        if (category == 0) { AttackObjects.insert(std::pair<string, AttackObj>(name, AttackObj(name, 0, 0, false, true, true))); }
         AttackObjects[name].SetName(name);
         AttackObjects[name].AutoLoadBitmaps(BeloneName + "\\Attacks", name, maxstep + 1, pre, true, color);
         AttackObjects[name].drawlayer = drawlayer;

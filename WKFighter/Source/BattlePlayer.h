@@ -100,6 +100,8 @@ namespace game_framework
 
         //套裝函式
         virtual void AddSP(double mathin);//增加SP
+        virtual void GainHP(double mathin);//增加HP
+        virtual void GainSP(double mathin);//增加SP
         virtual void ProduceFriction(double, double);//處理摩擦力(讓角色漸漸慢下來)
         virtual void LoopStep(int);//(重複同樣動作)
         virtual void RunAhead(double, double);//(正確方向走)
@@ -131,6 +133,7 @@ namespace game_framework
         bool Throughing;
         string Action;//動作狀態
         int Step;//當前步驟數
+        vector<bool> AttributeState;
 
         //Timer及次數控制參數------------------------------------------------------------------------------------------------------
         double SPincrementsTimer = 0;
