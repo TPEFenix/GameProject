@@ -113,6 +113,7 @@ namespace game_framework
         //能力值變數(由子類別初始化)------------------------------------------------------------------------------------------------------
         double HP_Max;//最大生命值
         double SP_Max;//最大氣力
+		double recovery;
         double Rush_cost;//衝刺消耗氣力量
         double RunSpeed;//跑速
         double StandbySPincrements;//待機時回復的氣力量
@@ -147,6 +148,8 @@ namespace game_framework
         int Chargecount = 0;
         double BeHitTimer = 0;
         double BeHitTimeMax = 0;
+		double NotHitTimer = 0;
+		double OnHitTimer = 0;
         //輸入按鍵參數------------------------------------------------------------------------------------------------------
         BattleInput Button_now;//現在的鍵盤狀態
         BattleInput Button_last;//上一瞬間的鍵盤狀態

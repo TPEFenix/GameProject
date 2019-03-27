@@ -33,6 +33,7 @@ namespace game_framework
         //能力值變數
         HP_Max = Matchstick_HP_Max;//最大生命值
         SP_Max = Matchstick_SP_Max;//最大氣力
+		recovery = 0;
         Rush_cost = Matchstick_Rush_Cost;//衝刺消耗量
         StandbySPincrements = Matchstick_StandbySPincrements;
         RunningSPincrements = Matchstick_RunningSPincrements;
@@ -112,6 +113,11 @@ namespace game_framework
         OnNormalAttack1(GPP);
         OnNormalAttack2(GPP);
         OnNormalAttack3(GPP);
+		if (recovery > 0)
+		{
+			GainHP(0.1);
+			recovery -= 0.1;
+		}
 
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
