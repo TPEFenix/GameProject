@@ -30,6 +30,7 @@ namespace game_framework
         InsertEffection("Airboost2", 5, 4, 10, color);
         InsertEffection("SPCharge", 12, 4, 10, color);
         InsertEffection("PunchHit", 3, 4, 16, color);
+        InsertEffection("ResetBody", 4, 4, 16, color);
     }
 
     void EffectSprite::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)

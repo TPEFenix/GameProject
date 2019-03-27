@@ -200,9 +200,9 @@ namespace game_framework
 
     void Matchstick::GotoNormalAttack1(GPH)
     {
-        if (SP >= 3)
+        if (SP >= 4)
         {
-            SP -= 3;
+            SP -= 4;
             if (SP <= 0)
             {
                 SP = 0;
@@ -260,9 +260,9 @@ namespace game_framework
     }
     void Matchstick::GotoNormalAttack2(GPH)
     {
-        if (SP >= 3)
+        if (SP >= 4)
         {
-            SP -= 3;
+            SP -= 4;
             if (SP <= 0)
             {
                 SP = 0;
@@ -292,7 +292,7 @@ namespace game_framework
                         20, 0,                                                                                        //傷害,削減SP
                         IsRight, 5, 3, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        100, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        125, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -321,9 +321,9 @@ namespace game_framework
 
     void Matchstick::GotoNormalAttack3(GPH)
     {
-        if (SP >= 4)
+        if (SP >= 5)
         {
-            SP -= 4;
+            SP -= 5;
             if (SP <= 0)
             {
                 SP = 0;
@@ -341,7 +341,7 @@ namespace game_framework
         {
             ProduceFriction(0.2, 0.25);
             NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
-            if (NormalAttack1Timer >= 100 && Step <= 2)
+            if (NormalAttack1Timer >= 84 && Step <= 2)
             {
                 Step += 1;
                 if (Step >= 3)

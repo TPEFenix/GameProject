@@ -26,27 +26,24 @@ namespace game_framework
 	{
         Rect.X_int = (int)(Rect.X);
         Rect.Y_int = (int)(Rect.Y);
-        if (!(now < 1))
+        newWidth = (int)(((double)Rect.Width)*(now / max));
+        if (newWidth <= 0)
+            this->visable = false;
+        else if(newWidth>0)
+            this->visable = true;
+        
+        if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
         {
-
-            newWidth = (int)(((double)Rect.Width)*(now / max));
-            if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
+            if (BelongPlayer == 2)
             {
-                if (BelongPlayer == 2)
-                {
-                    SetTopLeft(Rect.X_int, Rect.Y_int);
-                    ShowBitmap(this->Rect.X_int, this->Rect.Y_int, this->Rect.X_int + newWidth, this->Rect.Y_int + this->Rect.Height);
-                }
-                else if (BelongPlayer == 1)
-                {
-                    SetTopLeft(Rect.X_int, Rect.Y_int);
-                    ShowBitmap(this->Rect.X_int + (Rect.Width - newWidth), this->Rect.Y_int, this->Rect.X_int + Rect.Width, this->Rect.Y_int + this->Rect.Height);
-                }
+                SetTopLeft(Rect.X_int, Rect.Y_int);
+                ShowBitmap(this->Rect.X_int, this->Rect.Y_int, this->Rect.X_int + newWidth, this->Rect.Y_int + this->Rect.Height);
             }
-        }
-        else
-        {
-            newWidth = Rect.Width;
+            else if (BelongPlayer == 1)
+            {
+                SetTopLeft(Rect.X_int, Rect.Y_int);
+                ShowBitmap(this->Rect.X_int + (Rect.Width - newWidth), this->Rect.Y_int, this->Rect.X_int + Rect.Width, this->Rect.Y_int + this->Rect.Height);
+            }
         }
 
 	}

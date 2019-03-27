@@ -18,7 +18,9 @@ Global
 		{DDD280D7-4B85-4B03-BBC4-C46CA9BECCCB}.Release|Win32.ActiveCfg = Release|Win32
 		{DDD280D7-4B85-4B03-BBC4-C46CA9BECCCB}.Release|Win32.Build.0 = Release|Win32
 		{BBA06668-BEE8-4369-91FD-A6A4BE77D7D5}.Debug|Win32.ActiveCfg = Debug
+		{BBA06668-BEE8-4369-91FD-A6A4BE77D7D5}.Debug|Win32.Build.0 = Debug
 		{BBA06668-BEE8-4369-91FD-A6A4BE77D7D5}.Release|Win32.ActiveCfg = Release
+		{BBA06668-BEE8-4369-91FD-A6A4BE77D7D5}.Release|Win32.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
