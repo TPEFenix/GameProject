@@ -70,6 +70,6 @@ namespace game_framework
         virtual void AttackReset(AttackObjPH);
         virtual void DrawAllAttacks(int);
         virtual void InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category, COLORREF color, CameraPosition Camera);
-
+        virtual void InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category,int current, COLORREF color, CameraPosition Camera);
     };
 }

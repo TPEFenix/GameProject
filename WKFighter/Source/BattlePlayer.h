@@ -96,7 +96,11 @@ namespace game_framework
         virtual void OnHitGuard(GPH);
         virtual void GotoNormalAttack1(GPH);//需要每個角色個別撰寫
         virtual void OnNormalAttack1(GPH);//需要每個角色個別撰寫
-        virtual void CheckHit(GPH);
+        virtual void GotoAirAttack1(GPH);//需要每個角色個別撰寫
+        virtual void OnAirAttack1(GPH);//需要每個角色個別撰寫
+        virtual void GotoSkill1(GPH);//需要每個角色個別撰寫
+        virtual void OnSkill1(GPH);//需要每個角色個別撰寫
+        virtual void CheckHit(GPH);//受傷觸發瞬間函式
 
         //套裝函式
         virtual void AddSP(double mathin);//增加SP
@@ -159,7 +163,7 @@ namespace game_framework
         double Velocity_Y;//Y速度
         double Acceleration_X;//X加速度
         double Acceleration_Y;//Y加速度
-        double Acceleration_gravity = 0.6;//重力加速度
+        double Acceleration_gravity = 0.5;//重力加速度
 
         //顯示成員------------------------------------------------------------------------------------------------------
         BitmapPicture *DisplayBitmap;//永遠把顯示用的Bitmap指向對應的BitmapPicture==當前所顯示的BitmapPicture

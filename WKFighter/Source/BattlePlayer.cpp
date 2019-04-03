@@ -101,6 +101,7 @@ namespace game_framework
         {
             Rect.Y = GroundPosition;
             Velocity_Y = 0;
+            Acceleration_Y = 0;
             OnGround = true;
         }
         else if (Rect.Y < GroundPosition)
@@ -360,7 +361,7 @@ namespace game_framework
             {
                 GotoJump(GPP);
             }
-            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down == false && OnGround)
+            else if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround)
             {
                 GotoGuard(GPP);
             }
@@ -371,6 +372,10 @@ namespace game_framework
             else if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false && OnGround)
             {
                 GotoNormalAttack1(GPP);
+            }
+            else if (CanControl&&Button_now.button_Skill&&Button_last.button_Skill == false && OnGround)
+            {
+                GotoSkill1(GPP);
             }
 #pragma endregion
 
@@ -422,7 +427,7 @@ namespace game_framework
             {
                 GotoStandby(GPP);
             }
-            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down == false && OnGround)
+            else if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround)
             {
                 GotoGuard(GPP);
             }
@@ -433,6 +438,10 @@ namespace game_framework
             else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround)
             {
                 GotoCharge(GPP);
+            }
+            else if (CanControl&&Button_now.button_Skill&&Button_last.button_Skill == false && OnGround)
+            {
+                GotoSkill1(GPP);
             }
 #pragma endregion
 
@@ -446,14 +455,15 @@ namespace game_framework
 #pragma region 跳躍主程序
             if (JumpTimer >= 10 && Step < 2)
             {
+                ProduceFriction(0.15, 1);
                 Step += 1;
                 JumpTimer = 0;
             }
-            else if (JumpTimer >= 30 && Step == 2)
+            else if (JumpTimer >= 20 && Step == 2)
             {
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -11;
+                Velocity_Y = -10;
                 OnGround = false;
                 Effects.BootEffect(&Effects.Content["Airboost2"], Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80, 0, 0, false, IsRight);
                 PlaySounds(Sounds.Jump, false);
@@ -462,7 +472,7 @@ namespace game_framework
             {
                 JumpTimer += TIMER_TICK_MILLIDECOND;
                 if (CanControl&&Button_now.button_Jump == true && Button_last.button_Jump == true && Velocity_Y < 2 && JumpTimer < 120)
-                    Velocity_Y -= 0.55;
+                    Velocity_Y -= 0.5;
             }
             else if (Velocity_Y >= 0 && Step == 3)
             {
@@ -500,6 +510,10 @@ namespace game_framework
                 {
                     GotoRush(GPP);
                 }
+                else if (CanControl&&Button_now.button_Attack&& Button_last.button_Attack == false)
+                {
+                    GotoAirAttack1(GPP);
+                }
 #pragma endregion
             }
 #pragma endregion       
@@ -536,7 +550,7 @@ namespace game_framework
             ProduceFriction(1, 1);
             ChargeTimer2 += TIMER_TICK_MILLIDECOND;
             ChargeTimer += TIMER_TICK_MILLIDECOND;
-            if (ChargeTimer >= 80 && Step == 0)
+            if (ChargeTimer >= 50 && Step == 0)
             {
                 Step = 1;
                 ChargeTimer = 0;
@@ -563,7 +577,7 @@ namespace game_framework
                 }
                 ChargeTimer2 = 0;
             }
-            else if (ChargeTimer >= 120 && Step == 3)//正常結束
+            else if (ChargeTimer >= 100 && Step == 3)//正常結束
             {
                 ChargeTimer = 0;
                 if (Button_now.button_Guard == true)
@@ -585,8 +599,12 @@ namespace game_framework
         if (Action == "受傷")
         {
             OnHitTimer += TIMER_TICK_MILLIDECOND;
-            ProduceFriction(0.35, 0.5);
+            ProduceFriction(0.25, 0.35);
             BeHitTimer += TIMER_TICK_MILLIDECOND;
+            if (HitFly)
+            {
+                Acceleration_Y = -0.075;
+            }
             if (BeHitTimer >= BeHitTimeMax&&HitFly == false)
             {
                 BeHitTimer = 0;
@@ -619,6 +637,7 @@ namespace game_framework
                             Invincible = true;
                             Throughing = true;
                             Step = 2;
+                            Acceleration_Y = 0;
                         }
                     }
                 }
@@ -636,8 +655,9 @@ namespace game_framework
                 Invincible = false;
                 Throughing = false;
                 HitFly = false;
-                Effects.BootEffect(&Effects.Content["ResetBody"], Camera, Rect.X , Rect.X , Rect.Y, 0, 0, false, IsRight);
+                Effects.BootEffect(&Effects.Content["ResetBody"], Camera, Rect.X, Rect.X, Rect.Y, 0, 0, false, IsRight);
                 PlaySounds(Sounds.Jump, false);
+                Acceleration_Y = 0;
             }
             if (Step >= 2 && BeHitTimer >= 500)
             {
@@ -646,6 +666,7 @@ namespace game_framework
                 Throughing = false;
                 HitFly = false;
                 GotoStandby(GPP);
+                Acceleration_Y = 0;
             }
             if (NotHitTimer - OnHitTimer > 1500)
             {
@@ -689,6 +710,18 @@ namespace game_framework
     void BattlePlayer::OnNormalAttack1(GPH)
     {
     }
+    void BattlePlayer::GotoAirAttack1(GPH)
+    {
+    }
+    void BattlePlayer::OnAirAttack1(GPH)
+    {
+    }
+    void BattlePlayer::GotoSkill1(GPH)
+    {
+    }
+    void BattlePlayer::OnSkill1(GPH)
+    {
+    }
     void BattlePlayer::CheckHit(GPH)
     {
         //可受傷狀態
@@ -701,7 +734,7 @@ namespace game_framework
                 {
                     if (PixelCollision(&(this->BodyPicture), iter->second.DisplayBitmap, 2))
                     {
-                        if (Action == "防禦"&&iter->second.HitBreak == false)
+                        if ((Action == "防禦" || Action == "防禦受傷") && iter->second.HitBreak == false)
                         {
                             IsRight = !(iter->second.BitmapisRight);
                             iter->second.IsHited = true;
@@ -709,6 +742,7 @@ namespace game_framework
                             {
                                 iter->second.visable = false;
                                 iter->second.DisplayBitmap->visable = false;
+                                iter->second.Drawable = false;
                             }
 
                             PlaySounds(iter->second.HitSound, false);
@@ -722,8 +756,9 @@ namespace game_framework
                             Velocity_Y -= 0;
 
                             BeHitTimer = 0;
-                            BeHitTimeMax = iter->second.HitTime;
+                            BeHitTimeMax = (iter->second.HitTime / 2.5);
 
+                            Sleep(25);
                             Action = "防禦受傷";
                             Step = 0;
                         }
@@ -735,6 +770,7 @@ namespace game_framework
                             {
                                 iter->second.visable = false;
                                 iter->second.DisplayBitmap->visable = false;
+                                iter->second.Drawable = false;
                             }
 
                             PlaySounds(iter->second.HitSound, false);
@@ -745,6 +781,8 @@ namespace game_framework
                             GainSP(-iter->second.SP_Damege);
                             if (((int)HP) > 0)
                                 recovery = recovery + (iter->second.Damage / 1.5);
+                            else
+                                recovery = 0;
 
                             if (-iter->second.Attributes >= 0)
                                 AttributeState[-iter->second.Attributes] = true;
@@ -757,9 +795,17 @@ namespace game_framework
                             BeHitTimeMax = iter->second.HitTime;
 
                             Sleep(25);
-                            HitFly = iter->second.CanHitFly;
+                            if (Action == "受傷"&&HitFly)
+                            {
+                                Step = 1;
+                            }
+                            else
+                            {
+                                HitFly = iter->second.CanHitFly;
+                                Step = 0;
+                            }
+
                             Action = "受傷";
-                            Step = 0;
                         }
                     }
                 }

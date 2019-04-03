@@ -24,7 +24,7 @@ namespace game_framework
         #define Matchstick_RunSpeed 6;
         #define Matchstick_StandbySPincrements 0.2;
         #define Matchstick_RunningSPincrements 0.1;
-        #define Matchstick_ChargeSPincrements 14;
+        #define Matchstick_ChargeSPincrements 12;
 
 
 		public:
@@ -39,11 +39,18 @@ namespace game_framework
             virtual void OnNormalAttack2(GPH);
             virtual void GotoNormalAttack3(GPH);
             virtual void OnNormalAttack3(GPH);
+            virtual void GotoSkill1(GPH);
+            virtual void OnSkill1(GPH);
+            virtual void GotoAirAttack1(GPH);
+            virtual void OnAirAttack1(GPH);
+            virtual void GotoAirAttack2(GPH);
+            virtual void OnAirAttack2(GPH);
             void AutoLoadAttacks(GPH);
 
             //TimerのΩ计北把计------------------------------------------------------------------------------------------------------
             double NormalAttack1Timer = 0;
-
+            double Shot1Timer = 0;
+            int Shot1Current = 0;
 
 
 	};

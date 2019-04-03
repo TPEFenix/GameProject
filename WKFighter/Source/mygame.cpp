@@ -219,7 +219,7 @@ namespace game_framework
 
         if ((P1->Rect.X < CameraMax_Left))
         {
-            if (P1->Action == "受傷"&&P1->Velocity_X < -12)
+            if (P1->Action == "受傷"&&P1->Velocity_X < -9)
             {
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
@@ -232,7 +232,7 @@ namespace game_framework
         }
         if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + GAME_SIZE_X))
         {
-            if (P1->Action == "受傷"&&P1->Velocity_X > 12)
+            if (P1->Action == "受傷"&&P1->Velocity_X > 9)
             {
                 P1->Velocity_X *= -1;
                 P1->HP -= 20;
@@ -245,7 +245,7 @@ namespace game_framework
         }
         if ((P2->Rect.X < CameraMax_Left))
         {
-            if (P2->Action == "受傷"&&P2->Velocity_X < -12)
+            if (P2->Action == "受傷"&&P2->Velocity_X < -9)
             {
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;
@@ -258,7 +258,7 @@ namespace game_framework
         }
         if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + GAME_SIZE_X))
         {
-            if (P2->Action == "受傷"&&P2->Velocity_X > 12)
+            if (P2->Action == "受傷"&&P2->Velocity_X > 9)
             {
                 P2->Velocity_X *= -1;
                 P2->HP -= 20;

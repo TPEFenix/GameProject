@@ -9,11 +9,13 @@
 #include "WKAudio.h"
 #include "AttackObj.h"
 #include "EffectSprite.h"
+#include "TypeConverter.h"
 
 
 using namespace std;
 using namespace WKAudio_namespace;
 using namespace CollisionSensor_namespace;
+using namespace TypeConverter_namespace;
 
 namespace game_framework
 {
@@ -36,7 +38,7 @@ namespace game_framework
             }
         }
 
-        if(Attack->visable = true)
+        if (Attack->visable = true)
             Attack->AliveTimer += TIMER_TICK_MILLIDECOND;
         if (Attack->AliveTimer >= Attack->MaxAliveTime)
         {
@@ -93,19 +95,31 @@ namespace game_framework
         map<string, AttackObj>::iterator iter;
         for (iter = AttackObjects.begin(); iter != AttackObjects.end(); iter++)
         {
-            if (iter->second.Drawable)
+            if (iter->second.Drawable&&iter->second.visable)
             {
                 iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
             }
         }
     }
-    void AttackManager::InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre,int category, COLORREF color, CameraPosition Camera)
+    void AttackManager::InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category, COLORREF color, CameraPosition Camera)
     {
         if (category == 0) { AttackObjects.insert(std::pair<string, AttackObj>(name, AttackObj(name, 0, 0, false, true, true))); }
         AttackObjects[name].SetName(name);
         AttackObjects[name].AutoLoadBitmaps(BeloneName + "\\Attacks", name, maxstep + 1, pre, true, color);
         AttackObjects[name].drawlayer = drawlayer;
         AttackObjects[name].OnUpdate(BeloneName + "\\Attacks", Camera);
+    }
+
+    void AttackManager::InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category, int current, COLORREF color, CameraPosition Camera)
+    {
+        for (int i = 0; i < current; i++)
+        {
+            if (category == 0) { AttackObjects.insert(std::pair<string, AttackObj>(name + "_" + IntToString(i), AttackObj(name, 0, 0, false, true, true))); }
+            AttackObjects[name + "_" + IntToString(i)].SetName(name);
+            AttackObjects[name + "_" + IntToString(i)].AutoLoadBitmaps(BeloneName + "\\Attacks", name, maxstep + 1, pre, true, color);
+            AttackObjects[name + "_" + IntToString(i)].drawlayer = drawlayer;
+            AttackObjects[name + "_" + IntToString(i)].OnUpdate(BeloneName + "\\Attacks", Camera);
+        }
     }
 
 

@@ -7,7 +7,6 @@
 #include "gamelib.h"
 #include "WKBitmap.h"
 #include "BattlePlayer.h"
-
 #include "EffectSprite.h"
 
 using namespace std;
