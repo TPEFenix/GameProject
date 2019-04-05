@@ -75,6 +75,8 @@ namespace game_framework
     {
 
     }
+
+    //讀檔在此
     void Matchstick::AutoLoadBitmaps(GPH)
     {
         //有效判定區BitRect
@@ -102,6 +104,18 @@ namespace game_framework
         AutoLoadAttacks(GPP);
         AnimationUpdate(Camera);
     }
+
+    //註冊攻擊物件
+    void Matchstick::AutoLoadAttacks(GPH)
+    {
+        Attacks.AttackObjects = map<string, AttackObj>();
+        Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
+    }
+
+    //註冊動作在此
     void Matchstick::OnUpdate(GPH)
     {
 
@@ -133,7 +147,7 @@ namespace game_framework
             Attacks.AttackAutoUpdate(&(Iter_Attack->second), GetName(), (int)(((Iter_Attack->second).PreAutoFrequence)), (Iter_Attack->second).Replay, Camera);
 
 
-        this->PhysicalMovement(Enemy, Camera, KeyState_now, KeyState_last);
+        this->PhysicalMovement(GPP);
         AnimationUpdate(Camera);
 
         if (recovery > 0)
@@ -142,6 +156,11 @@ namespace game_framework
             recovery -= 0.1;
         }
     }
+
+
+
+
+
     void Matchstick::OnRush(GPH)
     {
         if (Action == "衝刺")
@@ -254,14 +273,10 @@ namespace game_framework
             else if (NormalAttack1Timer < 100 && Step >= 4)
             {
                 //到別的動作
-                if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false)
-                {
-                    GotoNormalAttack2(GPP);
-                }
-                else if (CanControl&&Button_now.button_Skill&&Button_last.button_Skill == false && OnGround)
-                {
-                    GotoSkill1(GPP);
-                }
+                CanToNormalAttack2;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -318,14 +333,10 @@ namespace game_framework
             else if (NormalAttack1Timer < 100 && Step >= 4)
             {
                 //到別的動作
-                if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false)
-                {
-                    GotoNormalAttack3(GPP);
-                }
-                else if (CanControl&&Button_now.button_Skill&&Button_last.button_Skill == false && OnGround)
-                {
-                    GotoSkill1(GPP);
-                }
+                CanToNormalAttack3;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -381,7 +392,8 @@ namespace game_framework
             }
             else if (NormalAttack1Timer < 100 && Step >= 4)
             {
-                //到別的動作
+                CanToJump;
+                CanToRush;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -401,6 +413,10 @@ namespace game_framework
             {
                 SP = 0;
             }
+            if (Velocity_Y > 0 && OnGround == false)
+            {
+                Velocity_Y = 0;
+            }
             Action = "特技1";
             Step = 0;
             Shot1Timer = 0;
@@ -410,11 +426,17 @@ namespace game_framework
     {
         if (Action == "特技1")
         {
-            ProduceFriction(1, 1);
+            if (OnGround)
+                ProduceFriction(1, 1);
+            else
+                ProduceFriction(0.15, 0.75);
             Shot1Timer += TIMER_TICK_MILLIDECOND;
             if (Shot1Timer >= 50 && Step == 0)
             {
                 Step = 1;
+                if (Velocity_Y > 0 && OnGround == false)
+                    Velocity_Y = 0;
+
             }
             if (Shot1Timer >= 16 && Step >= 1 && Step <= 4)
             {
@@ -429,7 +451,7 @@ namespace game_framework
                         12, 0,                                                                                        //傷害,削減SP
                         IsRight, 2, 3.5, Rect.X + 50, Rect.X + 10, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         Ahead(3), 0,                                                                                          //VX,VY
-                        125, 1000, -1, false, true, true, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        150, 1000, -1, false, true, true, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     Shot1Current += 1;
@@ -444,14 +466,29 @@ namespace game_framework
                 Shot1Timer = 0;
                 Step = 5;
             }
-            else if (Shot1Timer < 50 && Step >= 5)
+            else if (Shot1Timer < 100 && Step >= 5)
             {
                 //到別的可能動作
+                CanToNormalAttack1;
+                CanToRush;
+                if (OnGround)
+                {
+                    CanToJump;
+                }
             }
-            else if (Shot1Timer >= 50 && Step >= 5)
+            else if (Shot1Timer >= 100 && Step >= 5)
             {
                 //正常結束
-                GotoStandby(GPP);
+                if (OnGround)
+                {
+                    GotoStandby(GPP);
+                }
+                else
+                {
+                    Action = "跳躍";
+                    Step = 4;
+                    JumpTimer = 0;
+                }
             }
 
         }
@@ -518,20 +555,19 @@ namespace game_framework
                     );
                 }
             }
-            else if (NormalAttack1Timer >= 100 && Step == 3)
+            else if (NormalAttack1Timer >= 125 && Step == 3)
             {
                 NormalAttack1Timer = 0;
                 Step = 4;
             }
-            else if (NormalAttack1Timer < 100 && Step >= 4)
+            else if (NormalAttack1Timer < 125 && Step >= 4)
             {
                 //到別的可能動作
-                if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false)
-                {
-                    GotoAirAttack2(GPP);
-                }
+                CanToAirAttack2;
+                CanToSkill1;
+                CanToRush;
             }
-            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            else if (NormalAttack1Timer >= 125 && Step >= 4)
             {
                 //正常結束
                 if (OnGround)
@@ -584,8 +620,8 @@ namespace game_framework
                     (
                         &(Attacks.AttackObjects["Normal2"]), GetName(),     //攻擊物件位置,發出者名稱
                         35, 0,                                                                                        //傷害,削減SP
-                        IsRight, 12, 7.5, Rect.X + 95, Rect.X , Rect.Y + 40,                   //左右,HitX,HitY,XR,XL,Y
-                        Velocity_X/3, 0,                                                                                          //VX,VY
+                        IsRight, 12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40,                   //左右,HitX,HitY,XR,XL,Y
+                        Velocity_X / 3, 0,                                                                                          //VX,VY
                         200, 50, -1, false, false, false, true, false, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
@@ -621,14 +657,6 @@ namespace game_framework
 
 
 
-    void Matchstick::AutoLoadAttacks(GPH)
-    {
-        Attacks.AttackObjects = map<string, AttackObj>();
-        Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
-        Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
-        Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
-        Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
-    }
 
 
 

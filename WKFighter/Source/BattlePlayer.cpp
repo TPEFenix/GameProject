@@ -32,8 +32,6 @@ namespace game_framework
 
     }
 
-    //--------------------所有有色會用到的特效全部放在這---------------------//
-
 
 
 
@@ -90,7 +88,7 @@ namespace game_framework
     {
         AnimationUpdate(Camera);
     }
-    void BattlePlayer::PhysicalMovement(BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last)
+    void BattlePlayer::PhysicalMovement(GPH)
     {
 #pragma region 基礎移動
         Rect.X += Velocity_X;
@@ -100,7 +98,20 @@ namespace game_framework
         if (Rect.Y >= GroundPosition)
         {
             Rect.Y = GroundPosition;
-            Velocity_Y = 0;
+            if (this->Action == "受傷"&&this->Velocity_Y > 14)
+            {
+                this->Velocity_Y *= -0.5;
+                this->HP -= 12;
+                this->HitFly = true;
+                this->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
+            }
+            else
+            {
+                Velocity_Y = 0;
+            }
+
             Acceleration_Y = 0;
             OnGround = true;
         }
@@ -210,9 +221,6 @@ namespace game_framework
         delete[] cr;
         delete[] cl;
     }
-
-
-
     void BattlePlayer::InsertAction(string actionname, int maxstep, COLORREF color)
     {
         for (int i = 0; i <= maxstep; i += 1)
@@ -279,45 +287,6 @@ namespace game_framework
         StandbyTimer = 0;
         RushTimer = 0;
     }
-    void BattlePlayer::GotoRunning(GPH)
-    {
-        Action = "移動";
-        Step = 0;
-        RunningTimer = 0;
-    }
-    void BattlePlayer::GotoRush(GPH)
-    {
-        if (this->SP >= Rush_cost)
-        {
-            this->SP -= Rush_cost;
-            Action = "衝刺";
-            Step = 0;
-            RushTimer = 0;
-        }
-    }
-    void BattlePlayer::GotoJump(GPH)
-    {
-        Action = "跳躍";
-        Step = 0;
-        RushTimer = 0;
-        JumpTimer = 0;
-    }
-    void BattlePlayer::GotoGuard(GPH)
-    {
-        if (this->SP > 0)
-        {
-            Action = "防禦";
-            Step = 0;
-        }
-    }
-    void BattlePlayer::GotoCharge(GPH)
-    {
-        Action = "練氣";
-        Step = 0;
-        ChargeTimer = 0;
-        //特效
-        Effects.BootEffect(&Effects.Content["SPCharge"], Camera, Rect.X - 35, Rect.X - 30, Rect.Y - 45, 0, 0, false, IsRight);
-    }
     void BattlePlayer::OnStandby(GPH)
     {
         if (Action == "待機")
@@ -353,33 +322,22 @@ namespace game_framework
                 IsRight = false;
                 GotoRunning(GPP);
             }
-            else if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
-            {
-                GotoRush(GPP);
-            }
-            else if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false)
-            {
-                GotoJump(GPP);
-            }
-            else if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround)
-            {
-                GotoGuard(GPP);
-            }
-            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround)
-            {
-                GotoCharge(GPP);
-            }
-            else if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false && OnGround)
-            {
-                GotoNormalAttack1(GPP);
-            }
-            else if (CanControl&&Button_now.button_Skill&&Button_last.button_Skill == false && OnGround)
-            {
-                GotoSkill1(GPP);
-            }
+            CanToCharge;
+            CanToGuard;
+            CanToRush;
+            CanToJump;
+            CanToNormalAttack1;
+            CanToSkill1;
 #pragma endregion
 
         }
+    }
+
+    void BattlePlayer::GotoRunning(GPH)
+    {
+        Action = "移動";
+        Step = 0;
+        RunningTimer = 0;
     }
     void BattlePlayer::OnRunning(GPH)
     {
@@ -415,37 +373,39 @@ namespace game_framework
 #pragma endregion
 
 #pragma region 到別的動作
-            if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false)
-            {
-                GotoRush(GPP);
-            }
-            else if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false)
-            {
-                GotoJump(GPP);
-            }
-            else if (Button_now.button_Right == false && Button_now.button_Left == false)
-            {
-                GotoStandby(GPP);
-            }
-            else if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround)
-            {
-                GotoGuard(GPP);
-            }
-            else if (CanControl&&Button_now.button_Attack&&Button_last.button_Attack == false && OnGround)
-            {
-                GotoNormalAttack1(GPP);
-            }
-            else if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround)
-            {
-                GotoCharge(GPP);
-            }
-            else if (CanControl&&Button_now.button_Skill&&Button_last.button_Skill == false && OnGround)
-            {
-                GotoSkill1(GPP);
-            }
+            if (Button_now.button_Right == false && Button_now.button_Left == false)
+                CanToStandby;
+            CanToCharge;
+            CanToGuard;
+            CanToJump;
+            CanToNormalAttack1;
+            CanToRush;
+            CanToSkill1;
 #pragma endregion
 
         }
+    }
+
+    void BattlePlayer::GotoRush(GPH)
+    {
+        if (this->SP >= Rush_cost)
+        {
+            this->SP -= Rush_cost;
+            Action = "衝刺";
+            Step = 0;
+            RushTimer = 0;
+        }
+    }
+    void BattlePlayer::OnRush(GPH)
+    {
+    }
+
+    void BattlePlayer::GotoJump(GPH)
+    {
+        Action = "跳躍";
+        Step = 0;
+        RushTimer = 0;
+        JumpTimer = 0;
     }
     void BattlePlayer::OnJump(GPH)
     {
@@ -504,19 +464,23 @@ namespace game_framework
                 //正常落地
                 if (OnGround)
                 {
-                    GotoStandby(GPP);
+                    CanToStandby;
                 }
-                else if (CanControl&&Button_now.button_Rush&& Button_last.button_Rush == false)
-                {
-                    GotoRush(GPP);
-                }
-                else if (CanControl&&Button_now.button_Attack&& Button_last.button_Attack == false)
-                {
-                    GotoAirAttack1(GPP);
-                }
+                CanToAirAttack1;
+                CanToRush;
+                CanToSkill1;
 #pragma endregion
             }
 #pragma endregion       
+        }
+    }
+
+    void BattlePlayer::GotoGuard(GPH)
+    {
+        if (this->SP > 0)
+        {
+            Action = "防禦";
+            Step = 0;
         }
     }
     void BattlePlayer::OnGuard(GPH)
@@ -525,7 +489,7 @@ namespace game_framework
         {
             if (SP <= 0 || Button_now.button_Guard == false)
             {
-                Action = "待機";
+                GotoStandby(GPP);
             }
             else
             {
@@ -542,6 +506,15 @@ namespace game_framework
 
 
         }
+    }
+
+    void BattlePlayer::GotoCharge(GPH)
+    {
+        Action = "練氣";
+        Step = 0;
+        ChargeTimer = 0;
+        //特效
+        Effects.BootEffect(&Effects.Content["SPCharge"], Camera, Rect.X - 35, Rect.X - 30, Rect.Y - 45, 0, 0, false, IsRight);
     }
     void BattlePlayer::OnCharge(GPH)
     {
@@ -593,6 +566,8 @@ namespace game_framework
 
         }
     }
+
+
     void BattlePlayer::OnHit(GPH)
     {
         NotHitTimer += TIMER_TICK_MILLIDECOND;
@@ -609,6 +584,8 @@ namespace game_framework
             {
                 BeHitTimer = 0;
                 BeHitTimeMax = 0;
+                OnGround = false;
+                HitFly = false;
                 GotoStandby(GPP);
             }
             else if (HitFly == true)
@@ -617,15 +594,19 @@ namespace game_framework
                     Step = 1;
                 if (BeHitTimer >= 80 && BeHitTimer <= 180 && Button_now.button_Jump&&Button_last.button_Jump == false && OnGround == false)
                 {
-                    GotoJump(GPP);
-                    Step = 3;
-                    JumpTimer = 0;
-                    Velocity_Y = -5;
-                    Velocity_X /= 2;
-                    OnGround = false;
-                    HitFly = false;
-                    Effects.BootEffect(&Effects.Content["ResetBody"], Camera, Rect.X, Rect.X, Rect.Y, 0, 0, false, IsRight);
-                    PlaySounds(Sounds.Jump, false);
+                    if (SP >= 8)
+                    {
+                        SP -= 8;
+                        GotoJump(GPP);
+                        Step = 3;
+                        JumpTimer = 0;
+                        Velocity_Y = -5;
+                        Velocity_X /= 2;
+                        OnGround = false;
+                        HitFly = false;
+                        Effects.BootEffect(&Effects.Content["ResetBody"], Camera, Rect.X, Rect.X, Rect.Y, 0, 0, false, IsRight);
+                        PlaySounds(Sounds.Jump, false);
+                    }
                 }
                 else if (BeHitTimer > 300 || (BeHitTimer > 100 && OnGround))
                 {
@@ -644,10 +625,11 @@ namespace game_framework
             }
             if (Step >= 2 && BeHitTimer < 500 && BeHitTimer >= 200 && OnGround&&Button_now.button_Jump&&Button_last.button_Jump == false)
             {
+                GainSP(8);
                 GotoJump(GPP);
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -5;
+                Velocity_Y = -1;
                 Velocity_X /= 2;
                 OnGround = false;
                 HitFly = false;
@@ -704,6 +686,9 @@ namespace game_framework
             }
         }
     }
+
+
+
     void BattlePlayer::GotoNormalAttack1(GPH)
     {
     }
@@ -734,7 +719,7 @@ namespace game_framework
                 {
                     if (PixelCollision(&(this->BodyPicture), iter->second.DisplayBitmap, 2))
                     {
-                        if ((Action == "防禦" || Action == "防禦受傷") && iter->second.HitBreak == false)
+                        if ((Action == "防禦" || Action == "防禦受傷") && (iter->second.BitmapisRight != IsRight) && iter->second.HitBreak == false)
                         {
                             IsRight = !(iter->second.BitmapisRight);
                             iter->second.IsHited = true;
@@ -813,6 +798,10 @@ namespace game_framework
             }
         }
     }
+
+
+
+
 
 
     void BattlePlayer::AddSP(double mathin)

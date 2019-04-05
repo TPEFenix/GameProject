@@ -175,6 +175,65 @@ namespace game_framework
     {
         int CameraMax_right = GAME_SIZE_X + ((BK.Rect.Width - GAME_SIZE_X) / 2) - GAME_SIZE_X;//鏡頭右邊界
         int CameraMax_Left = -(((BK.Rect.Width - GAME_SIZE_X) / 2) - GAME_SIZE_X) - GAME_SIZE_X;//鏡頭左邊界
+#pragma region 地形傷害_X
+        if ((P1->Rect.X < CameraMax_Left))
+        {
+            if (P1->Action == "受傷"&&P1->Velocity_X < -9)
+            {
+                P1->Velocity_X *= -1;
+                P1->HP -= 12;
+                P1->HitFly = true;
+                P1->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
+            }
+
+        }
+        if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + GAME_SIZE_X))
+        {
+            if (P1->Action == "受傷"&&P1->Velocity_X > 9)
+            {
+                P1->Velocity_X *= -1;
+                P1->HP -= 12;
+                P1->HitFly = true;
+                P1->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
+            }
+
+        }
+        if ((P2->Rect.X < CameraMax_Left))
+        {
+            if (P2->Action == "受傷"&&P2->Velocity_X < -9)
+            {
+                P2->Velocity_X *= -1;
+                P2->HP -= 20;
+                P2->HitFly = true;
+                P2->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
+            }
+
+        }
+        if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + GAME_SIZE_X))
+        {
+            if (P2->Action == "受傷"&&P2->Velocity_X > 9)
+            {
+                P2->Velocity_X *= -1;
+                P2->HP -= 20;
+                P2->HitFly = true;
+                P2->BeHitTimeMax += 200;
+                PlaySounds(Sounds.HitWall, false);
+                Sleep(100);
+            }
+        }
+#pragma endregion
+
+
+
+#pragma region 鏡頭控制
+
+
 
         if (P1->Rect.X_int + P1->Rect.Width >= GAME_SIZE_X&&P1->Velocity_X > 0)
         {
@@ -214,62 +273,6 @@ namespace game_framework
                 P1->Rect.X += P2->Velocity_X;
             }
         }
-
-
-
-        if ((P1->Rect.X < CameraMax_Left))
-        {
-            if (P1->Action == "受傷"&&P1->Velocity_X < -9)
-            {
-                P1->Velocity_X *= -1;
-                P1->HP -= 20;
-                P1->HitFly = true;
-                P1->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                Sleep(100);
-            }
-
-        }
-        if ((P1->Rect.X + P1->Rect.Width > CameraMax_right + GAME_SIZE_X))
-        {
-            if (P1->Action == "受傷"&&P1->Velocity_X > 9)
-            {
-                P1->Velocity_X *= -1;
-                P1->HP -= 20;
-                P1->HitFly = true;
-                P1->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                Sleep(100);
-            }
-
-        }
-        if ((P2->Rect.X < CameraMax_Left))
-        {
-            if (P2->Action == "受傷"&&P2->Velocity_X < -9)
-            {
-                P2->Velocity_X *= -1;
-                P2->HP -= 20;
-                P2->HitFly = true;
-                P2->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                Sleep(100);
-            }
-
-        }
-        if ((P2->Rect.X + P2->Rect.Width > CameraMax_right + GAME_SIZE_X))
-        {
-            if (P2->Action == "受傷"&&P2->Velocity_X > 9)
-            {
-                P2->Velocity_X *= -1;
-                P2->HP -= 20;
-                P2->HitFly = true;
-                P2->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                Sleep(100);
-            }
-
-        }
-
         C->X = (int)C->X_double;
         C->Y = (int)C->Y_double;
         if (C->X > CameraMax_right)
@@ -297,6 +300,10 @@ namespace game_framework
             P2->Rect.X_int = GAME_SIZE_X - P2->Rect.Width;
             P2->Rect.X = P2->Rect.X_int + C->X;
         }
+#pragma endregion
+
+
+
     }
 
 #pragma endregion 
