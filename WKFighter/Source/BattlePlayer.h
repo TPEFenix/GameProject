@@ -26,16 +26,14 @@ namespace game_framework
 #define CanToStandby GotoStandby(GPP)
 #define CanToRunning GotoRunning(GPP)
 #define CanToJump if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false){GotoJump(GPP);}
-#define CanToRush if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false){GotoRush(GPP);}
+#define CanToRush if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false&&Button_now.button_Down == false){GotoRush(GPP);}
 #define CanToGuard  if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround){GotoGuard(GPP);}
 #define CanToCharge  if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround){GotoCharge(GPP);}
 #define CanToNormalAttack1  if (CanControl&&Button_now.button_Attack&&Button_now.button_Up == false && Button_now.button_Down == false&&Button_last.button_Attack == false && OnGround){GotoNormalAttack1(GPP);}
-#define CanToNormalAttack2  if (CanControl&&Button_now.button_Attack&&Button_now.button_Up == false && Button_now.button_Down == false&&Button_last.button_Attack == false && OnGround){GotoNormalAttack2(GPP);}
-#define CanToNormalAttack3  if (CanControl&&Button_now.button_Attack&&Button_now.button_Up == false && Button_now.button_Down == false&&Button_last.button_Attack == false && OnGround){GotoNormalAttack3(GPP);}
 #define CanToSkill1  if (CanControl&&Button_now.button_Skill&&Button_now.button_Up == false&& Button_now.button_Down == false&&Button_last.button_Skill == false){GotoSkill1(GPP);}
 #define CanToAirAttack1  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack1(GPP);}
 #define CanToAirAttack2  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack2(GPP);}
-
+#define CanToAirDownAttack if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirDownAttack(GPP);}
 
 
 //Inputconfigure
@@ -60,7 +58,7 @@ namespace game_framework
 #define Player2_Rush			    I 
 #define Player2_Guard			    P
 //共用設定
-#define GuardSPCost                0.2
+#define GuardSPCost                0.15
 #pragma endregion
 
 
@@ -102,8 +100,8 @@ namespace game_framework
         virtual void GotoRunning(GPH);
         virtual void OnRunning(GPH);
         //衝刺動作
-        virtual void GotoRush(GPH);//需要每個角色個別撰寫
-        virtual void OnRush(GPH);//需要每個角色個別撰寫
+        virtual void GotoRush(GPH);
+        virtual void OnRush(GPH);
         //跳躍動作
         virtual void GotoJump(GPH);
         virtual void OnJump(GPH);
@@ -125,11 +123,26 @@ namespace game_framework
         virtual void OnAirAttack1(GPH);//需要每個角色個別撰寫
         virtual void GotoSkill1(GPH);//需要每個角色個別撰寫
         virtual void OnSkill1(GPH);//需要每個角色個別撰寫
-
-
-
-
-
+        virtual void GotoUpAttack(GPH);//需要每個角色個別撰寫
+        virtual void OnUpAttack(GPH);//需要每個角色個別撰寫
+        virtual void GotoDownAttack(GPH);//需要每個角色個別撰寫
+        virtual void OnDownAttack(GPH);//需要每個角色個別撰寫
+        virtual void GotoRushAttack(GPH);//需要每個角色個別撰寫
+        virtual void OnRushAttack(GPH);//需要每個角色個別撰寫
+        virtual void GotoAirUpAttack(GPH);//需要每個角色個別撰寫
+        virtual void OnAirUpAttack(GPH);//需要每個角色個別撰寫
+        virtual void GotoAirDownAttack(GPH);//需要每個角色個別撰寫
+        virtual void OnAirDownAttack(GPH);//需要每個角色個別撰寫
+        virtual void GotoUpSkill(GPH);//需要每個角色個別撰寫
+        virtual void OnUpSkill(GPH);//需要每個角色個別撰寫
+        virtual void GotoDownSkill(GPH);//需要每個角色個別撰寫
+        virtual void OnDownSkill(GPH);//需要每個角色個別撰寫
+        virtual void GotoRushSkill(GPH);//需要每個角色個別撰寫
+        virtual void OnRushSkill(GPH);//需要每個角色個別撰寫
+        virtual void GotoAirUpSkill(GPH);//需要每個角色個別撰寫
+        virtual void OnAirUpSkill(GPH);//需要每個角色個別撰寫
+        virtual void GotoAirDownSkill(GPH);//需要每個角色個別撰寫
+        virtual void OnAirDownSkill(GPH);//需要每個角色個別撰寫
 
         //套裝函式------------------------------------------------------------------------------------------------------
         virtual void AddSP(double mathin);//增加SP

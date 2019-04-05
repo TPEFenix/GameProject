@@ -97,7 +97,7 @@ namespace game_framework
         InsertAction("特技1", 5, color);
         InsertAction("空普1", 4, color);
         InsertAction("空普2", 4, color);
-
+        InsertAction("空下普", 7, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -112,6 +112,7 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal4", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
     }
 
@@ -135,7 +136,7 @@ namespace game_framework
         OnSkill1(GPP);
         OnAirAttack1(GPP);
         OnAirAttack2(GPP);
-
+        OnAirDownAttack(GPP);
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
         for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
@@ -158,9 +159,16 @@ namespace game_framework
     }
 
 
-
-
-
+    void Matchstick::GotoRush(GPH)
+    {
+        if (this->SP >= Rush_cost)
+        {
+            this->SP -= Rush_cost;
+            Action = "衝刺";
+            Step = 0;
+            RushTimer = 0;
+        }
+    }
     void Matchstick::OnRush(GPH)
     {
         if (Action == "衝刺")
@@ -228,9 +236,9 @@ namespace game_framework
 
     void Matchstick::GotoNormalAttack1(GPH)
     {
-        if (SP >= 4)
+        if (SP >= 2.5)
         {
-            SP -= 4;
+            SP -= 2.5;
             if (SP <= 0)
             {
                 SP = 0;
@@ -286,11 +294,12 @@ namespace game_framework
 
         }
     }
+
     void Matchstick::GotoNormalAttack2(GPH)
     {
-        if (SP >= 4)
+        if (SP >= 2.5)
         {
-            SP -= 4;
+            SP -= 2.5;
             if (SP <= 0)
             {
                 SP = 0;
@@ -346,6 +355,7 @@ namespace game_framework
 
         }
     }
+
     void Matchstick::GotoNormalAttack3(GPH)
     {
         if (SP >= 5)
@@ -406,9 +416,9 @@ namespace game_framework
 
     void Matchstick::GotoSkill1(GPH)
     {
-        if (SP >= 4)
+        if (SP >= 3)
         {
-            SP -= 4;
+            SP -= 3;
             if (SP <= 0)
             {
                 SP = 0;
@@ -496,9 +506,9 @@ namespace game_framework
 
     void Matchstick::GotoAirAttack1(GPH)
     {
-        if (SP >= 4)
+        if (SP >= 2.5)
         {
-            SP -= 4;
+            SP -= 2.5;
             if (SP <= 0)
             {
                 SP = 0;
@@ -566,6 +576,7 @@ namespace game_framework
                 CanToAirAttack2;
                 CanToSkill1;
                 CanToRush;
+                CanToAirDownAttack;
             }
             else if (NormalAttack1Timer >= 125 && Step >= 4)
             {
@@ -654,9 +665,164 @@ namespace game_framework
         }
     }
 
+    void Matchstick::GotoUpAttack(GPH)
+    {
+    }
+    void Matchstick::OnUpAttack(GPH)
+    {
+    }
 
+    void Matchstick::GotoDownAttack(GPH)
+    {
+    }
+    void Matchstick::OnDownAttack(GPH)
+    {
+    }
 
+    void Matchstick::GotoRushAttack(GPH)
+    {
+    }
+    void Matchstick::OnRushAttack(GPH)
+    {
+    }
 
+    void Matchstick::GotoAirUpAttack(GPH)
+    {
+    }
+    void Matchstick::OnAirUpAttack(GPH)
+    {
+    }
+
+    void Matchstick::GotoAirDownAttack(GPH)
+    {
+        if (SP >= 3.5)
+        {
+            SP -= 3.5;
+            if (SP <= 0)
+            {
+                SP = 0;
+            }
+            Action = "空下普";
+            Step = 0;
+            if (Velocity_Y > 0)
+            {
+                Velocity_Y = 0;
+            }
+            NormalAttack1Timer = 0;
+        }
+    }
+    void Matchstick::OnAirDownAttack(GPH)
+    {
+        if (Action == "空下普")
+        {
+            if (CanControl&&Button_now.button_Right == false && CanControl&&Button_now.button_Left == false)
+            {
+                ProduceFriction(0.15, 1);
+            }
+            else if (CanControl&&Button_now.button_Right == true)
+            {
+                IsRight = true;
+                RunAhead(0.5, RunSpeed / 2);
+            }
+            else if (CanControl&&Button_now.button_Left == true)
+            {
+                IsRight = false;
+                RunAhead(0.5, RunSpeed / 2);
+            }
+
+            if (Velocity_Y > 1)
+            {
+                Velocity_Y = 1;
+            }
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            if (NormalAttack1Timer >= 75 && Step == 0)
+            {
+                Step = 1;
+            }
+            if (NormalAttack1Timer >= 8 && Step >= 1 && Step <= 3)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+            }
+            else if (NormalAttack1Timer >= 20 && Step >= 4 && Step <= 6)
+            {
+                NormalAttack1Timer = 0;
+                if (Step == 4)
+                {
+                    Attacks.AttackReset
+                    (
+                        &(Attacks.AttackObjects["Normal4"]), GetName(),     //攻擊物件位置,發出者名稱
+                        20, 0,                                                                                        //傷害,削減SP
+                        IsRight, 2.5, -16, Rect.X + 90, Rect.X +2, Rect.Y + 45,         //左右,HitX,HitY,XR,XL,Y
+                        Velocity_X / 3, 0,                                                                   //VX,VY
+                        150, 30, -1, false, false, false, true, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
+                    );
+                }
+                Step += 1;
+            }
+            else if (NormalAttack1Timer >= 100 && Step == 6)
+            {
+                NormalAttack1Timer = 0;
+                Step = 6;
+            }
+            else if (NormalAttack1Timer < 100 && Step >= 7)
+            {
+                //到別的可能動作
+                CanToSkill1;
+                CanToRush;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 7)
+            {
+                //正常結束
+                if (OnGround)
+                {
+                    GotoStandby(GPP);
+                }
+                else
+                {
+                    Action = "跳躍";
+                    Step = 4;
+                    JumpTimer = 0;
+                }
+            }
+        }
+    }
+
+    void Matchstick::GotoUpSkill(GPH)
+    {
+    }
+    void Matchstick::OnUpSkill(GPH)
+    {
+    }
+
+    void Matchstick::GotoDownSkill(GPH)
+    {
+    }
+    void Matchstick::OnDownSkill(GPH)
+    {
+    }
+
+    void Matchstick::GotoRushSkill(GPH)
+    {
+    }
+    void Matchstick::OnRushSkill(GPH)
+    {
+    }
+
+    void Matchstick::GotoAirUpSkill(GPH)
+    {
+    }
+    void Matchstick::OnAirUpSkill(GPH)
+    {
+    }
+
+    void Matchstick::GotoAirDownSkill(GPH)
+    {
+    }
+    void Matchstick::OnAirDownSkill(GPH)
+    {
+    }
 
 
 
