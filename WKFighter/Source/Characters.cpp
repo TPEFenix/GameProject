@@ -98,6 +98,7 @@ namespace game_framework
         InsertAction("空普1", 4, color);
         InsertAction("空普2", 4, color);
         InsertAction("空下普", 7, color);
+        InsertAction("空上普", 7, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -113,6 +114,7 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal4", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal5", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
     }
 
@@ -137,6 +139,8 @@ namespace game_framework
         OnAirAttack1(GPP);
         OnAirAttack2(GPP);
         OnAirDownAttack(GPP);
+        OnAirUpAttack(GPP);
+
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
         for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
@@ -577,6 +581,9 @@ namespace game_framework
                 CanToSkill1;
                 CanToRush;
                 CanToAirDownAttack;
+                CanToAirUpAttack;
+                CanToJump;
+
             }
             else if (NormalAttack1Timer >= 125 && Step >= 4)
             {
@@ -633,7 +640,7 @@ namespace game_framework
                         35, 0,                                                                                        //傷害,削減SP
                         IsRight, 12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40,                   //左右,HitX,HitY,XR,XL,Y
                         Velocity_X / 3, 0,                                                                                          //VX,VY
-                        200, 50, -1, false, false, false, true, false, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        250, 50, -1, false, false, false, true, false, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -688,16 +695,111 @@ namespace game_framework
 
     void Matchstick::GotoAirUpAttack(GPH)
     {
+        if (SP >= 6)
+        {
+            SP -= 6;
+            if (SP <= 0)
+            {
+                SP = 0;
+            }
+            Action = "空上普";
+            Step = 0;
+            if (Velocity_Y > 0)
+            {
+                Velocity_Y = 0;
+            }
+            NormalAttack1Timer = 0;
+        }
     }
     void Matchstick::OnAirUpAttack(GPH)
     {
+        if (Action == "空上普")
+        {
+            if (CanControl&&Button_now.button_Right == false && CanControl&&Button_now.button_Left == false)
+            {
+                ProduceFriction(0.15, 1);
+            }
+            else if (CanControl&&Button_now.button_Right == true)
+            {
+                IsRight = true;
+                RunAhead(0.5, RunSpeed / 2);
+            }
+            else if (CanControl&&Button_now.button_Left == true)
+            {
+                IsRight = false;
+                RunAhead(0.5, RunSpeed / 2);
+            }
+
+            
+
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            if (NormalAttack1Timer >= 108 && Step == 0)
+            {
+                Step = 1;
+                if (Velocity_Y > 1)
+                    Velocity_Y = 1;
+            }
+            if (NormalAttack1Timer >= 16 && Step >= 1 && Step <= 3)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                Velocity_Y =-6;
+                if (Step == 2)
+                {
+                    Attacks.AttackReset
+                    (
+                        &(Attacks.AttackObjects["Normal5"]), GetName(),     //攻擊物件位置,發出者名稱
+                        20, 0,                                                                                        //傷害,削減SP
+                        IsRight, 2.5, 12, Rect.X + 20, Rect.X, Rect.Y,         //左右,HitX,HitY,XR,XL,Y
+                        Velocity_X / 4, 0,                                                                   //VX,VY
+                        250, 30, -1, false, false, false, true, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
+                    );
+                }
+            }
+            else if (NormalAttack1Timer >= 16 && Step >= 4 && Step <= 6)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+            }
+            else if (NormalAttack1Timer >= 100 && Step == 6)
+            {
+                if (Velocity_Y > 2)
+                    Velocity_Y = 2;
+                NormalAttack1Timer = 0;
+                Step = 7;
+            }
+            else if (NormalAttack1Timer < 100 && Step >= 7)
+            {
+                //到別的可能動作
+                CanToSkill1;
+                CanToRush;
+                CanToJump;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 7)
+            {
+                if (Velocity_Y > 1)
+                    Velocity_Y = 1;
+                //正常結束
+                if (OnGround)
+                {
+                    GotoStandby(GPP);
+                }
+                else
+                {
+                    Action = "跳躍";
+                    Step = 4;
+                    JumpTimer = 0;
+                }
+            }
+        }
     }
 
     void Matchstick::GotoAirDownAttack(GPH)
     {
-        if (SP >= 3.5)
+        if (SP >= 6)
         {
-            SP -= 3.5;
+            SP -= 6;
             if (SP <= 0)
             {
                 SP = 0;
@@ -729,14 +831,12 @@ namespace game_framework
                 IsRight = false;
                 RunAhead(0.5, RunSpeed / 2);
             }
-
-            if (Velocity_Y > 1)
-            {
-                Velocity_Y = 1;
-            }
+            
             NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
             if (NormalAttack1Timer >= 75 && Step == 0)
             {
+                if (Velocity_Y > 1)
+                    Velocity_Y = 1;
                 Step = 1;
             }
             if (NormalAttack1Timer >= 8 && Step >= 1 && Step <= 3)
@@ -753,24 +853,29 @@ namespace game_framework
                     (
                         &(Attacks.AttackObjects["Normal4"]), GetName(),     //攻擊物件位置,發出者名稱
                         20, 0,                                                                                        //傷害,削減SP
-                        IsRight, 2.5, -16, Rect.X + 90, Rect.X +2, Rect.Y + 45,         //左右,HitX,HitY,XR,XL,Y
-                        Velocity_X / 3, 0,                                                                   //VX,VY
-                        150, 30, -1, false, false, false, true, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        IsRight, 2.5, -16, Rect.X + 60, Rect.X, Rect.Y + 10,         //左右,HitX,HitY,XR,XL,Y
+                        Velocity_X / 2, Velocity_Y / 3,                                                                   //VX,VY
+                        200, 30, -1, false, false, false, true, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
                 Step += 1;
             }
-            else if (NormalAttack1Timer >= 100 && Step == 6)
+            else if (NormalAttack1Timer >= 150 && Step == 6)
             {
                 NormalAttack1Timer = 0;
-                Step = 6;
+                Step = 7;
             }
             else if (NormalAttack1Timer < 100 && Step >= 7)
             {
+
+                if (Velocity_Y > 1)
+                    Velocity_Y = 1;
                 //到別的可能動作
                 CanToSkill1;
                 CanToRush;
+                CanToAirAttack1;
+                CanToAirUpAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 7)
             {

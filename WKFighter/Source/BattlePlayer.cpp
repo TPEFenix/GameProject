@@ -91,11 +91,15 @@ namespace game_framework
         Rect.X += Velocity_X;
         Rect.Y += Velocity_Y;
         Velocity_X += Acceleration_X;
-        Velocity_Y += Acceleration_Y + Acceleration_gravity;
+        Velocity_Y += Acceleration_Y + (Acceleration_gravity*0.9);
+        if (Velocity_Y > MaxGravity)//如果大於最大正常下降速度，則不加重力加速度
+        {
+            Velocity_Y -= Acceleration_gravity;
+        }
         if (Rect.Y >= GroundPosition)
         {
             Rect.Y = GroundPosition;
-            if (this->Action == "受傷"&&OnGround == false&&this->Velocity_Y > 14)
+            if (this->Action == "受傷"&&OnGround == false && this->Velocity_Y > 14)
             {
                 this->Velocity_Y *= -0.5;
                 this->HP -= 12;
@@ -472,10 +476,24 @@ namespace game_framework
 
     void BattlePlayer::GotoJump(GPH)
     {
-        Action = "跳躍";
-        Step = 0;
-        RushTimer = 0;
-        JumpTimer = 0;
+        if (OnGround)
+        {
+            Action = "跳躍";
+            Step = 0;
+            RushTimer = 0;
+            JumpTimer = 0;
+        }
+        else
+        {
+            if (SP >= 10)
+            {
+                SP -= 10;
+                Action = "跳躍";
+                Step = 0;
+                RushTimer = 0;
+                JumpTimer = 0;
+            }
+        }
     }
     void BattlePlayer::OnJump(GPH)
     {
@@ -549,6 +567,8 @@ namespace game_framework
                 CanToRush;
                 CanToSkill1;
                 CanToAirDownAttack;
+                CanToAirUpAttack;
+                CanToJump;
 #pragma endregion
             }
 #pragma endregion       

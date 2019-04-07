@@ -34,7 +34,7 @@ namespace game_framework
 #define CanToAirAttack1  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack1(GPP);}
 #define CanToAirAttack2  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack2(GPP);}
 #define CanToAirDownAttack if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirDownAttack(GPP);}
-
+#define CanToAirUpAttack if (CanControl&&OnGround == false&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirUpAttack(GPP);}
 
 //Inputconfigure
 #define Player1_Left				    A 
@@ -59,6 +59,7 @@ namespace game_framework
 #define Player2_Guard			    P
 //共用設定
 #define GuardSPCost                0.15
+#define MaxGravity                8
 #pragma endregion
 
 
