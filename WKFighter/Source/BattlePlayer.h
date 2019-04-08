@@ -14,53 +14,55 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-#pragma region Defines
+    #pragma region Defines
     //程式編碼用定義
 
     //Game_Parameter_Header
-#define GPH BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds, COLORREF color
-    //Game_Parameter_Parameter
-#define GPP Enemy, Camera, KeyState_now, KeyState_last, Sounds,color
+    #define GPH BattlePlayer *Enemy, CameraPosition Camera, KeyBoardState KeyState_now, KeyBoardState KeyState_last, Audio_ID Sounds, COLORREF color
+        //Game_Parameter_Parameter
+    #define GPP Enemy, Camera, KeyState_now, KeyState_last, Sounds,color
 
-    //GameCanTo
-#define CanToStandby GotoStandby(GPP)
-#define CanToRunning GotoRunning(GPP)
-#define CanToJump if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false){GotoJump(GPP);}
-#define CanToRush if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false&&Button_now.button_Down == false){GotoRush(GPP);}
-#define CanToGuard  if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround){GotoGuard(GPP);}
-#define CanToCharge  if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround){GotoCharge(GPP);}
-#define CanToNormalAttack1  if (CanControl&&Button_now.button_Attack&&Button_now.button_Up == false && Button_now.button_Down == false&&Button_last.button_Attack == false && OnGround){GotoNormalAttack1(GPP);}
-#define CanToSkill1  if (CanControl&&Button_now.button_Skill&&Button_now.button_Up == false&& Button_now.button_Down == false&&Button_last.button_Skill == false){GotoSkill1(GPP);}
-#define CanToAirAttack1  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack1(GPP);}
-#define CanToAirAttack2  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack2(GPP);}
-#define CanToAirDownAttack if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirDownAttack(GPP);}
-#define CanToAirUpAttack if (CanControl&&OnGround == false&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirUpAttack(GPP);}
+        //GameCanTo
+    #define CanToStandby GotoStandby(GPP)
+    #define CanToRunning GotoRunning(GPP)
+    #define CanToJump if (CanControl&&Button_now.button_Jump&&Button_last.button_Jump == false){GotoJump(GPP);}
+    #define CanToRush if (CanControl&&Button_now.button_Rush&&Button_last.button_Rush == false&&Button_now.button_Down == false){GotoRush(GPP);}
+    #define CanToGuard  if (CanControl&&Button_now.button_Guard && Button_now.button_Down == false && OnGround){GotoGuard(GPP);}
+    #define CanToCharge  if (CanControl&&Button_now.button_Guard&&Button_last.button_Guard == false && Button_now.button_Down && OnGround){GotoCharge(GPP);}
+    #define CanToNormalAttack1  if (CanControl&&Button_now.button_Attack&&Button_now.button_Up == false && Button_now.button_Down == false&&Button_last.button_Attack == false && OnGround){GotoNormalAttack1(GPP);}
+    #define CanToSkill1  if (CanControl&&Button_now.button_Skill&&Button_now.button_Up == false&& Button_now.button_Down == false&&Button_last.button_Skill == false){GotoSkill1(GPP);}
+    #define CanToAirAttack1  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack1(GPP);}
+    #define CanToAirAttack2  if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirAttack2(GPP);}
+    #define CanToAirDownAttack if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirDownAttack(GPP);}
+    #define CanToAirUpAttack if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirUpAttack(GPP);}
+    #define CanToUpAttack if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoUpAttack(GPP);}
 
-//Inputconfigure
-#define Player1_Left				    A 
-#define Player1_Right			    D 
-#define Player1_Up				    W 
-#define Player1_Down			    S 
-#define Player1_Attack			    G 
-#define Player1_Skill			        T 
-#define Player1_Technique	    Y 
-#define Player1_Jump			    F 
-#define Player1_Rush			    R 
-#define Player1_Guard			    E 
-#define Player2_Left				    Left
-#define Player2_Right			    Right
-#define Player2_Up				    Up 
-#define Player2_Down			    Down 
-#define Player2_Attack			    K
-#define Player2_Skill			        L 
-#define Player2_Technique	    O 
-#define Player2_Jump			    J 
-#define Player2_Rush			    I 
-#define Player2_Guard			    P
-//共用設定
-#define GuardSPCost                0.15
-#define MaxGravity                8
-#pragma endregion
+    //Inputconfigure
+    #define Player1_Left				    A 
+    #define Player1_Right			    D 
+    #define Player1_Up				    W 
+    #define Player1_Down			    S 
+    #define Player1_Attack			    G 
+    #define Player1_Skill			        T 
+    #define Player1_Technique	    Y 
+    #define Player1_Jump			    F 
+    #define Player1_Rush			    R 
+    #define Player1_Guard			    E 
+    #define Player2_Left				    Left
+    #define Player2_Right			    Right
+    #define Player2_Up				    Up 
+    #define Player2_Down			    Down 
+    #define Player2_Attack			    K
+    #define Player2_Skill			        L 
+    #define Player2_Technique	    O 
+    #define Player2_Jump			    J 
+    #define Player2_Rush			    I 
+    #define Player2_Guard			    P
+
+    //共用設定
+    #define GuardSPCost                0.15
+    #define MaxGravity                8
+    #pragma endregion
 
 
     struct BattleInput

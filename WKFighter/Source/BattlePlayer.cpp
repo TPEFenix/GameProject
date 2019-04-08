@@ -406,6 +406,7 @@ namespace game_framework
             CanToJump;
             CanToNormalAttack1;
             CanToSkill1;
+            CanToUpAttack;
             #pragma endregion
 
         }
@@ -457,6 +458,7 @@ namespace game_framework
             CanToNormalAttack1;
             CanToRush;
             CanToSkill1;
+            CanToUpAttack;
 
             //正常結束(左右放開)
             if (Button_now.button_Right == false && Button_now.button_Left == false)
@@ -565,7 +567,7 @@ namespace game_framework
                 #pragma endregion
 
                 #pragma region 到別的動作
-                
+
                 CanToAirAttack1;
                 CanToRush;
                 CanToSkill1;

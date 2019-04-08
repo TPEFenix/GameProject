@@ -25,6 +25,7 @@ using namespace TypeConverter_namespace;
 
 namespace game_framework
 {
+    #pragma region 新增動作教學
     /*
     如何新增一個角色動作
     1.準備好圖片，圖片命名規則(動作向右):角色名稱\動作名稱_Step.bmp
@@ -43,9 +44,7 @@ namespace game_framework
 
     7.編寫On函式，動作的實體，以一個IF判斷是否在這個動作裡面，以STEP和TIMER控制動作流程，最後給予一段僵直時間讓角色可以到其他可行的動作(CanTo)。
     */
-
-
-
+    #pragma endregion
 
     Matchstick::Matchstick(int number) :BattlePlayer()
     {
@@ -119,6 +118,8 @@ namespace game_framework
         InsertAction("空普2", 4, color);
         InsertAction("空下普", 7, color);
         InsertAction("空上普", 7, color);
+        InsertAction("上普", 4, color);
+
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -160,6 +161,7 @@ namespace game_framework
         OnAirAttack2(GPP);
         OnAirDownAttack(GPP);
         OnAirUpAttack(GPP);
+        OnUpAttack(GPP);
 
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
@@ -278,7 +280,7 @@ namespace game_framework
             #pragma region 動作主體
             //處理摩擦力
             ProduceFriction(1, 1);
-            if (NormalAttack1Timer >= 16 && Step <= 2)
+            if (NormalAttack1Timer >= 20 && Step <= 2)
             {
                 NormalAttack1Timer = 0;
                 Step += 1;
@@ -294,7 +296,7 @@ namespace game_framework
                         20, 0,                                                                                        //傷害,削減SP
                         IsRight, 2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        180, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        150, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -302,7 +304,7 @@ namespace game_framework
 
 
             }
-            else if (NormalAttack1Timer >= 80 && Step == 3)
+            else if (NormalAttack1Timer >= 50 && Step == 3)
             {
                 NormalAttack1Timer = 0;
                 Step = 4;
@@ -317,6 +319,7 @@ namespace game_framework
                 CanToSkill1;
                 CanToJump;
                 CanToRush;
+                CanToUpAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -346,7 +349,7 @@ namespace game_framework
             #pragma region 動作主體
             //處理摩擦力
             ProduceFriction(1, 1);
-            if (NormalAttack1Timer >= 16 && Step <= 2)
+            if (NormalAttack1Timer >= 20 && Step <= 2)
             {
                 NormalAttack1Timer = 0;
                 Step += 1;
@@ -361,7 +364,7 @@ namespace game_framework
                         20, 0,                                                                                        //傷害,削減SP
                         IsRight, 3, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        180, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        150, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     #pragma endregion
@@ -382,6 +385,8 @@ namespace game_framework
                 CanToSkill1;
                 CanToJump;
                 CanToRush;
+                CanToUpAttack;
+
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -443,6 +448,7 @@ namespace game_framework
             {
                 CanToJump;
                 CanToRush;
+                CanToUpAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -478,7 +484,7 @@ namespace game_framework
                 ProduceFriction(1, 1);
             else
                 ProduceFriction(0.15, 0.75);
-            if (Shot1Timer >= 50 && Step == 0)
+            if (Shot1Timer >= 70 && Step == 0)
             {
                 Step = 1;
                 if (Velocity_Y > 0 && OnGround == false)
@@ -498,7 +504,7 @@ namespace game_framework
                         12, 0,                                                                                        //傷害,削減SP
                         IsRight, 2, 3.5, Rect.X + 50, Rect.X + 10, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         Ahead(3), 0,                                                                                          //VX,VY
-                        150, 1000, -1, false, true, true, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        120, 1000, -1, false, true, true, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     Shot1Current += 1;
@@ -525,6 +531,7 @@ namespace game_framework
                 CanToNormalAttack1;
                 CanToRush;
                 CanToJump;
+                CanToUpAttack;
             }
             else if (Shot1Timer >= 100 && Step >= 5)
             {
@@ -598,7 +605,7 @@ namespace game_framework
                     (
                         &(Attacks.AttackObjects["Normal3"]), GetName(),     //攻擊物件位置,發出者名稱
                         15, 0,                                                                                        //傷害,削減SP
-                        IsRight, 2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 70,         //左右,HitX,HitY,XR,XL,Y
+                        IsRight, 2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 60,         //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
                         150, 30, -1, false, false, false, true, false, false,              //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
@@ -699,9 +706,73 @@ namespace game_framework
 
     void Matchstick::GotoUpAttack(GPH)
     {
+        if (SP >= 5)
+        {
+            GainSP(-5);
+            Action = "上普";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
     }
     void Matchstick::OnUpAttack(GPH)
     {
+        if (Action == "上普")
+        {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 80&&Step == 0)
+            {
+                NormalAttack1Timer = 0;
+                Step = 1;
+            }
+            else if (NormalAttack1Timer >= 16 && Step >= 1 &&Step <= 2)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                #pragma region 產生攻擊物件
+                //出拳
+                if (Step == 3)
+                {
+                    Velocity_X += Ahead(7);
+                    Attacks.AttackReset
+                    (
+                        &(Attacks.AttackObjects["Normal2"]), GetName(),     //攻擊物件位置,發出者名稱
+                        35, 0,                                                                                        //傷害,削減SP
+                        IsRight, 2, 12, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
+                        0, 0,                                                                                          //VX,VY
+                        225, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
+                    );
+                }
+                #pragma endregion
+            }
+            else if (NormalAttack1Timer >= 40 && Step == 3)
+            {
+                NormalAttack1Timer = 0;
+                Step = 4;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer < 100 && Step >= 4)
+            {
+                //到別的動作
+                CanToNormalAttack1;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
+
+        }
     }
 
     void Matchstick::GotoDownAttack(GPH)
@@ -781,12 +852,12 @@ namespace game_framework
                 #pragma endregion
 
             }
-            else if (NormalAttack1Timer >= 100 && Step == 6)
+            else if (NormalAttack1Timer >= 16 &&Step>=4 &&Step <= 6)
             {
                 if (Velocity_Y > 2)
                     Velocity_Y = 2;
                 NormalAttack1Timer = 0;
-                Step = 7;
+                Step += 1;
             }
             #pragma endregion
 
@@ -866,7 +937,7 @@ namespace game_framework
                 NormalAttack1Timer = 0;
                 Step += 1;
                 #pragma region 產生攻擊物件
-                if (Step == 4)
+                if (Step == 5)
                 {
                     Attacks.AttackReset
                     (
