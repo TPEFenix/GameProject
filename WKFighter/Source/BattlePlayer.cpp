@@ -35,7 +35,7 @@ namespace game_framework
 
     void BattlePlayer::AnimationUpdate(CameraPosition Camera)
     {
-#pragma region 確定圖檔名稱
+        #pragma region 確定圖檔名稱
         //確定圖檔名稱
         if (IsRight)
         {
@@ -53,8 +53,8 @@ namespace game_framework
             DisplayBitmap = &BitmapPictures[cc];
             delete[] cc;
         }
-#pragma endregion 
-#pragma region 決定相對座標
+        #pragma endregion 
+        #pragma region 決定相對座標
         //決定相對座標
         Rect.Width = DisplayBitmap->Rect.Width;
         Rect.Height = DisplayBitmap->Rect.Height;
@@ -78,7 +78,7 @@ namespace game_framework
         BodyPicture.Rect.Y = BodyRect.Y;
         BodyPicture.OnUpdate(Camera);
         DisplayBitmap->OnUpdate();
-#pragma endregion 
+        #pragma endregion 
 
     }
     void BattlePlayer::OnUpdate(GPH)
@@ -87,7 +87,7 @@ namespace game_framework
     }
     void BattlePlayer::PhysicalMovement(GPH)
     {
-#pragma region 基礎移動
+        #pragma region 基礎移動
         Rect.X += Velocity_X;
         Rect.Y += Velocity_Y;
         Velocity_X += Acceleration_X;
@@ -181,7 +181,7 @@ namespace game_framework
         }
 
 
-#pragma endregion
+        #pragma endregion
 
     }
     void BattlePlayer::Draw(int i, int j, CameraPosition Camera)
@@ -368,12 +368,12 @@ namespace game_framework
             StandbyTimer += TIMER_TICK_MILLIDECOND;
             AddSP(StandbySPincrements);
 
-#pragma region 處理摩擦力
+            #pragma region 處理摩擦力
             if (Button_now.button_Left == false && Button_now.button_Right == false)
                 ProduceFriction(1, 1);
-#pragma endregion
+            #pragma endregion
 
-#pragma region 待機擺頭動作
+            #pragma region 待機擺頭動作
             if (StandbyTimer >= 250)
             {
                 StandbyTimer = 0;
@@ -382,10 +382,11 @@ namespace game_framework
                 else if (Step == 1)
                     Step = 0;
             }
-#pragma endregion
+            #pragma endregion
 
-#pragma region 到別的動作
+            #pragma region 到別的動作
 
+            #pragma region 左右移動
             if (CanControl&&Button_now.button_Right&&OnGround)
             {
                 IsRight = true;
@@ -396,13 +397,16 @@ namespace game_framework
                 IsRight = false;
                 GotoRunning(GPP);
             }
+            #pragma endregion
+
+
             CanToCharge;
             CanToGuard;
             CanToRush;
             CanToJump;
             CanToNormalAttack1;
             CanToSkill1;
-#pragma endregion
+            #pragma endregion
 
         }
     }
@@ -420,7 +424,7 @@ namespace game_framework
 
             AddSP(RunningSPincrements);
             RunningTimer += TIMER_TICK_MILLIDECOND;
-#pragma region 左右移動
+            #pragma region 左右移動
             if (CanControl&&IsRight&&OnGround && (Button_now.button_Right == true || Button_now.button_Left == true))
             {
                 if (Button_now.button_Left == true)
@@ -444,18 +448,20 @@ namespace game_framework
                 }
                 RunAhead(0.75, RunSpeed);
             }
-#pragma endregion
+            #pragma endregion
 
-#pragma region 到別的動作
-            if (Button_now.button_Right == false && Button_now.button_Left == false)
-                CanToStandby;
+            #pragma region 到別的動作
             CanToCharge;
             CanToGuard;
             CanToJump;
             CanToNormalAttack1;
             CanToRush;
             CanToSkill1;
-#pragma endregion
+
+            //正常結束(左右放開)
+            if (Button_now.button_Right == false && Button_now.button_Left == false)
+                CanToStandby;
+            #pragma endregion
 
         }
     }
@@ -487,7 +493,7 @@ namespace game_framework
         {
             if (SP >= 10)
             {
-                SP -= 10;
+                GainSP(-10);
                 Action = "跳躍";
                 Step = 0;
                 RushTimer = 0;
@@ -500,7 +506,7 @@ namespace game_framework
         if (Action == "跳躍")
         {
             JumpTimer += TIMER_TICK_MILLIDECOND;
-#pragma region 跳躍主程序
+            #pragma region 跳躍主程序
             if (JumpTimer >= 10 && Step < 2)
             {
                 ProduceFriction(0.15, 1);
@@ -527,11 +533,12 @@ namespace game_framework
                 JumpTimer = 0;
                 Step = 4;
             }
-#pragma endregion
-#pragma region 起跳後
+            #pragma endregion
+
+            #pragma region 起跳後
             if (Step >= 3)
             {
-#pragma region 空中移動
+                #pragma region 空中移動
                 if (CanControl&&Button_now.button_Right == false && CanControl&&Button_now.button_Left == false)
                 {
                     ProduceFriction(0.15, 1);
@@ -555,23 +562,24 @@ namespace game_framework
                         Velocity_Y = 12;
                     }
                 }
-#pragma endregion
+                #pragma endregion
 
-#pragma region 到別的動作
-                //正常落地
-                if (OnGround)
-                {
-                    CanToStandby;
-                }
+                #pragma region 到別的動作
+                
                 CanToAirAttack1;
                 CanToRush;
                 CanToSkill1;
                 CanToAirDownAttack;
                 CanToAirUpAttack;
                 CanToJump;
-#pragma endregion
+
+                //正常落地
+                if (OnGround)
+                    CanToStandby;
+
+                #pragma endregion
             }
-#pragma endregion       
+            #pragma endregion       
         }
     }
 
@@ -597,12 +605,12 @@ namespace game_framework
                 SP -= GuardSPCost;
             }
 
-#pragma region 到別的動作
+            #pragma region 到別的動作
             if (CanControl&&Button_now.button_Down == true && Button_last.button_Down == false)
             {
                 GotoCharge(GPP);
             }
-#pragma endregion
+            #pragma endregion
 
 
         }
@@ -613,7 +621,7 @@ namespace game_framework
         Action = "練氣";
         Step = 0;
         ChargeTimer = 0;
-        //特效
+        //啟動特效
         Effects.BootEffect(&Effects.Content["SPCharge"], Camera, Rect.X - 35, Rect.X - 30, Rect.Y - 45, 0, 0, false, IsRight);
     }
     void BattlePlayer::OnCharge(GPH)
@@ -623,6 +631,7 @@ namespace game_framework
             ProduceFriction(1, 1);
             ChargeTimer2 += TIMER_TICK_MILLIDECOND;
             ChargeTimer += TIMER_TICK_MILLIDECOND;
+
             if (ChargeTimer >= 50 && Step == 0)
             {
                 Step = 1;
@@ -650,7 +659,7 @@ namespace game_framework
                 }
                 ChargeTimer2 = 0;
             }
-            else if (ChargeTimer >= 100 && Step == 3)//正常結束
+            else if (ChargeTimer >= 90 && Step == 3)//正常結束
             {
                 ChargeTimer = 0;
                 if (Button_now.button_Guard == true)
@@ -924,6 +933,12 @@ namespace game_framework
         {
             Velocity_X += power;
         }
+    }
+    void BattlePlayer::GotoDrop(GPH)
+    {
+        Action = "跳躍";
+        Step = 4;
+        JumpTimer = 0;
     }
     void BattlePlayer::LoopStep(int maxstep)
     {

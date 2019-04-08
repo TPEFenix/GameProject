@@ -95,6 +95,8 @@ namespace game_framework
         virtual void CheckHit(GPH);//受傷觸發瞬間函式
         virtual void InputJudge(KeyBoardState, KeyBoardState);//輸入更新按鈕
         //待機動作
+
+
         virtual void GotoStandby(GPH);
         virtual void OnStandby(GPH);
         //跑步動作
@@ -150,6 +152,7 @@ namespace game_framework
         virtual void GainHP(double mathin);//增加HP
         virtual void GainSP(double mathin);//增加SP
         virtual void ProduceFriction(double, double);//處理摩擦力(讓角色漸漸慢下來)
+        virtual void GotoDrop(GPH);
         virtual void LoopStep(int);//(重複同樣動作)
         virtual void RunAhead(double, double);//(正確方向走)
         virtual void PhysicalMovement(GPH);//物理移動，全角色共用，除非特例
