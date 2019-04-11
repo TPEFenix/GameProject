@@ -21,7 +21,7 @@ namespace game_framework
 
     class Matchstick :public  BattlePlayer
     {
-        #define Matchstick_HP_Max 1000;
+        #define Matchstick_HP_Max 500;
         #define Matchstick_SP_Max 100;
         #define Matchstick_Rush_Cost 8;
         #define Matchstick_RunSpeed 6;

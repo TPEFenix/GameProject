@@ -274,7 +274,7 @@ namespace game_framework
             map<string, AttackObj>::iterator iter;
             for (iter = Enemy->Attacks.AttackObjects.begin(); iter != Enemy->Attacks.AttackObjects.end(); iter++)
             {
-                if (iter->second.IsHited == false || iter->second.CanCombo)
+                if (iter->second.visable && (iter->second.IsHited == false || iter->second.CanCombo))
                 {
                     if (PixelCollision(&(this->BodyPicture), iter->second.DisplayBitmap, 2))
                     {
@@ -482,6 +482,19 @@ namespace game_framework
     {
     }
 
+    void BattlePlayer::FastDrop(GPH)
+    {
+
+
+        if (SP >= 4)
+        {
+            SP -= 4;
+            PlaySounds(Sounds.Rush, false);
+            Velocity_Y = 12;
+        }
+
+    }
+
     void BattlePlayer::GotoJump(GPH)
     {
         if (OnGround)
@@ -555,15 +568,6 @@ namespace game_framework
                     IsRight = false;
                     RunAhead(0.5, RunSpeed / 2);
                 }
-                if (CanControl&&Button_now.button_Down == true && Button_now.button_Rush == true && Button_last.button_Rush == false)
-                {
-                    if (SP >= 8)
-                    {
-                        SP -= 8;
-                        PlaySounds(Sounds.Rush, false);
-                        Velocity_Y = 12;
-                    }
-                }
                 #pragma endregion
 
                 #pragma region 到別的動作
@@ -574,7 +578,7 @@ namespace game_framework
                 CanToAirDownAttack;
                 CanToAirUpAttack;
                 CanToJump;
-
+                CanToFastDrop;
                 //正常落地
                 if (OnGround)
                     CanToStandby;

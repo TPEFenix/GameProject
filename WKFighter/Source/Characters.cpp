@@ -280,7 +280,7 @@ namespace game_framework
             #pragma region 動作主體
             //處理摩擦力
             ProduceFriction(1, 1);
-            if (NormalAttack1Timer >= 20 && Step <= 2)
+            if (NormalAttack1Timer >= 16 && Step <= 2)
             {
                 NormalAttack1Timer = 0;
                 Step += 1;
@@ -296,7 +296,7 @@ namespace game_framework
                         20, 0,                                                                                        //傷害,削減SP
                         IsRight, 2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        150, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        120, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -304,7 +304,7 @@ namespace game_framework
 
 
             }
-            else if (NormalAttack1Timer >= 50 && Step == 3)
+            else if (NormalAttack1Timer >= 40 && Step == 3)
             {
                 NormalAttack1Timer = 0;
                 Step = 4;
@@ -349,7 +349,7 @@ namespace game_framework
             #pragma region 動作主體
             //處理摩擦力
             ProduceFriction(1, 1);
-            if (NormalAttack1Timer >= 20 && Step <= 2)
+            if (NormalAttack1Timer >= 16 && Step <= 2)
             {
                 NormalAttack1Timer = 0;
                 Step += 1;
@@ -364,13 +364,13 @@ namespace game_framework
                         20, 0,                                                                                        //傷害,削減SP
                         IsRight, 3, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        150, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        120, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     #pragma endregion
                 }
             }
-            else if (NormalAttack1Timer >= 80 && Step == 3)
+            else if (NormalAttack1Timer >= 50 && Step == 3)
             {
                 NormalAttack1Timer = 0;
                 Step = 4;
@@ -490,11 +490,11 @@ namespace game_framework
                 if (Velocity_Y > 0 && OnGround == false)
                     Velocity_Y = 0;
             }
-            if (Shot1Timer >= 16 && Step >= 1 && Step <= 4)
+            if (Shot1Timer >= 16 && Step >= 1 && Step <= 3)
             {
                 Shot1Timer = 0;
                 Step += 1;
-                if (Step == 4)
+                if (Step == 3)
                 {
                     #pragma region 產生攻擊物件
                     //出拳
@@ -513,8 +513,6 @@ namespace game_framework
                         Shot1Current = 0;
                     }
                     #pragma endregion
-
-
                 }
             }
             else if (Shot1Timer >= 50 && Step == 4)
@@ -528,10 +526,21 @@ namespace game_framework
             if (Shot1Timer < 100 && Step >= 5)
             {
                 //到別的可能動作
-                CanToNormalAttack1;
+                if (OnGround)
+                {
+                    CanToNormalAttack1;
+                    CanToUpAttack;
+                }
+                else
+                {
+                    CanToAirUpAttack;
+                    CanToAirDownAttack;
+                    CanToAirAttack1;
+                    CanToFastDrop;
+                }
+
                 CanToRush;
                 CanToJump;
-                CanToUpAttack;
             }
             else if (Shot1Timer >= 100 && Step >= 5)
             {
@@ -630,6 +639,7 @@ namespace game_framework
                 CanToAirDownAttack;
                 CanToAirUpAttack;
                 CanToJump;
+                CanToFastDrop;
             }
             else if (NormalAttack1Timer >= 125 && Step >= 4)
             {
@@ -723,12 +733,12 @@ namespace game_framework
             #pragma region 動作主體
             //處理摩擦力
             ProduceFriction(1, 1);
-            if (NormalAttack1Timer >= 80&&Step == 0)
+            if (NormalAttack1Timer >= 80 && Step == 0)
             {
                 NormalAttack1Timer = 0;
                 Step = 1;
             }
-            else if (NormalAttack1Timer >= 16 && Step >= 1 &&Step <= 2)
+            else if (NormalAttack1Timer >= 16 && Step >= 1 && Step <= 2)
             {
                 NormalAttack1Timer = 0;
                 Step += 1;
@@ -852,7 +862,7 @@ namespace game_framework
                 #pragma endregion
 
             }
-            else if (NormalAttack1Timer >= 16 &&Step>=4 &&Step <= 6)
+            else if (NormalAttack1Timer >= 16 && Step >= 4 && Step <= 6)
             {
                 if (Velocity_Y > 2)
                     Velocity_Y = 2;
@@ -870,6 +880,7 @@ namespace game_framework
                 CanToSkill1;
                 CanToRush;
                 CanToJump;
+                CanToFastDrop;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 7)
             {
@@ -951,15 +962,10 @@ namespace game_framework
                 }
                 #pragma endregion
             }
-            else if (NormalAttack1Timer >= 150 && Step == 6)
-            {
-                NormalAttack1Timer = 0;
-                Step = 7;
-            }
             #pragma endregion
 
             #pragma region 到別的動作
-            if (NormalAttack1Timer < 100 && Step >= 7)
+            if (NormalAttack1Timer>50&&NormalAttack1Timer < 120 && Step >= 7)
             {
                 if (Velocity_Y > 1)
                     Velocity_Y = 1;
@@ -967,8 +973,9 @@ namespace game_framework
                 CanToSkill1;
                 CanToRush;
                 CanToJump;
+                CanToFastDrop;
             }
-            else if (NormalAttack1Timer >= 100 && Step >= 7)
+            else if (NormalAttack1Timer >= 120 && Step >= 7)
             {
                 //正常結束
                 if (OnGround)

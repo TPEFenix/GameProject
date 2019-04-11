@@ -36,7 +36,7 @@ namespace game_framework
     #define CanToAirDownAttack if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirDownAttack(GPP);}
     #define CanToAirUpAttack if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirUpAttack(GPP);}
     #define CanToUpAttack if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoUpAttack(GPP);}
-
+    #define CanToFastDrop if (CanControl&&Button_now.button_Down == true && Button_now.button_Rush == true && Button_last.button_Rush == false){GotoDrop(GPP);FastDrop(GPP);}
     //Inputconfigure
     #define Player1_Left				    A 
     #define Player1_Right			    D 
@@ -107,6 +107,8 @@ namespace game_framework
         //衝刺動作
         virtual void GotoRush(GPH);
         virtual void OnRush(GPH);
+        //急墜動作
+        virtual void FastDrop(GPH);
         //跳躍動作
         virtual void GotoJump(GPH);
         virtual void OnJump(GPH);
