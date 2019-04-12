@@ -292,7 +292,7 @@ namespace game_framework
 					Velocity_X += Ahead(3.5);
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal1"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal1"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						20, 0,                                                                                        //傷害,削減SP
 						IsRight, 2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
 						0, 0,                                                                                          //VX,VY
@@ -360,7 +360,7 @@ namespace game_framework
 					//出拳
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal1"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal1"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						20, 0,                                                                                        //傷害,削減SP
 						IsRight, 3, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
 						0, 0,                                                                                          //VX,VY
@@ -426,7 +426,7 @@ namespace game_framework
 					//出拳
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal2"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal2"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						35, 0,                                                                                        //傷害,削減SP
 						IsRight, 12, 7.5, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
 						0, 0,                                                                                          //VX,VY
@@ -500,7 +500,7 @@ namespace game_framework
 					//出拳
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						12, 0,                                                                                        //傷害,削減SP
 						IsRight, 2, 3.5, Rect.X + 50, Rect.X + 10, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
 						Ahead(3), 0,                                                                                          //VX,VY
@@ -612,7 +612,7 @@ namespace game_framework
 					//出拳
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal3"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal3"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						15, 0,                                                                                        //傷害,削減SP
 						IsRight, 2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 60,         //左右,HitX,HitY,XR,XL,Y
 						0, 0,                                                                                          //VX,VY
@@ -684,7 +684,7 @@ namespace game_framework
 					//出拳
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal2"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal2"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						35, 0,                                                                                        //傷害,削減SP
 						IsRight, 12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40,                   //左右,HitX,HitY,XR,XL,Y
 						Velocity_X / 3, 0,                                                                                          //VX,VY
@@ -749,7 +749,7 @@ namespace game_framework
 					Velocity_X += Ahead(7);
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal2"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal2"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						35, 0,                                                                                        //傷害,削減SP
 						IsRight, 2, 12, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
 						0, 0,                                                                                          //VX,VY
@@ -851,7 +851,7 @@ namespace game_framework
 				{
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal5"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal5"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
 						20, 0,                                                                                        //傷害,削減SP
 						IsRight, 2.5, 12, Rect.X + 20, Rect.X, Rect.Y,         //左右,HitX,HitY,XR,XL,Y
 						Velocity_X / 4, 0,                                                                   //VX,VY
@@ -954,7 +954,7 @@ namespace game_framework
 				{
 					Attacks.AttackReset
 					(
-						&(Attacks.AttackObjects["Normal4"]), GetName(),     //攻擊物件位置,發出者名稱
+						&(Attacks.AttackObjects["Normal4"]), GetName(), this, Enemy,    //攻擊物件位置,發出者名稱
 						20, 0,                                                                                        //傷害,削減SP
 						IsRight, 2.5, -16, Rect.X + 60, Rect.X, Rect.Y + 10,         //左右,HitX,HitY,XR,XL,Y
 						Velocity_X / 2, Velocity_Y / 3,                                                                   //VX,VY

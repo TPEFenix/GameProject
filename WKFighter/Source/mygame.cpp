@@ -90,8 +90,8 @@ using namespace WKAudio_namespace;
 namespace game_framework
 {
 	//本遊戲全域變數
-#pragma region Global
-	//邏輯
+	#pragma region Global
+		//邏輯
 	int GameAction = 0;//遊戲場景
 	const bool DebugMode = true;//是否啟用Debug模式
 	const bool LoaddingBoost = true;//使否啟用讀取加速
@@ -127,20 +127,20 @@ namespace game_framework
 	const Keycode Keys;//鍵盤字典物件
 	KeyBoardState KeyState_now;//當前的鍵盤狀態
 	KeyBoardState KeyState_last;//前一瞬間的鍵盤狀態
-#pragma endregion 
+	#pragma endregion 
 
 
- //開頭畫面變數
-#pragma region GameAction_Title
+	 //開頭畫面變數
+	#pragma region GameAction_Title
 	BitmapPicture BackGround_Title;
 	BitmapPicture Title_Bitmap;
-#pragma endregion 
+	#pragma endregion 
 
 	//主選單變數
-#pragma region GameAction_Menu
+	#pragma region GameAction_Menu
 	BitmapPicture BackGround_Menu;
 	int TitleSelection = 0;
-#pragma endregion 
+	#pragma endregion 
 
 	BattlePlayer *Player1;
 	BattlePlayer *Player2;
@@ -149,7 +149,7 @@ namespace game_framework
 
 
 	//這些函式拿來優化程式編寫※(效率並不會因此提升)
-#pragma region RENEWAL Fuction And Objects
+	#pragma region RENEWAL Fuction And Objects
 	void ExitGame()
 	{
 		PostMessage(AfxGetMainWnd()->m_hWnd, WM_CLOSE, 0, 0);
@@ -175,7 +175,7 @@ namespace game_framework
 	{
 		int CameraMax_right = GAME_SIZE_X + ((BK.Rect.Width - GAME_SIZE_X) / 2) - GAME_SIZE_X;//鏡頭右邊界
 		int CameraMax_Left = -(((BK.Rect.Width - GAME_SIZE_X) / 2) - GAME_SIZE_X) - GAME_SIZE_X;//鏡頭左邊界
-#pragma region 地形傷害_X
+		#pragma region 地形傷害_X
 		if ((P1->Rect.X < CameraMax_Left))
 		{
 			if (P1->Action == "受傷"&&P1->Velocity_X < -9)
@@ -227,11 +227,11 @@ namespace game_framework
 				Sleep(100);
 			}
 		}
-#pragma endregion
+		#pragma endregion
 
 
 
-#pragma region 鏡頭控制
+		#pragma region 鏡頭控制
 
 
 		//
@@ -284,13 +284,13 @@ namespace game_framework
 		if (C->X < CameraMax_Left)
 			C->X = CameraMax_Left;
 		//
-		
+
 		if (P1->Rect.X_int < 0)
 		{
 			P1->Rect.X_int = 0;
 			P1->Rect.X = P1->Rect.X_int + C->X;
 		}
-		
+
 		//
 		if (P1->Rect.X_int > GAME_SIZE_X - P1->Rect.Width)
 		{
@@ -309,16 +309,16 @@ namespace game_framework
 			P2->Rect.X_int = GAME_SIZE_X - P2->Rect.Width;
 			P2->Rect.X = P2->Rect.X_int + C->X;
 		}
-#pragma endregion
+		#pragma endregion
 
 
 
 	}
 
-#pragma endregion 
+	#pragma endregion 
 
 	//程式開始
-#pragma region Program Initialize
+	#pragma region Program Initialize
 	CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 	{
 	}
@@ -332,16 +332,16 @@ namespace game_framework
 	{
 
 	}
-#pragma endregion 
+	#pragma endregion 
 
 	//遊戲開頭讀取畫面
-#pragma region Game Loading Progress
+	#pragma region Game Loading Progress
 	void CGameStateInit::OnInit()
 	{
 		//讀取開始
 		ShowInitProgress(0);	// 一開始的loading進度為0%
-#pragma region Loadding Effect
-		// 進入CGameStaterRun::OnInit()
+		#pragma region Loadding Effect
+				// 進入CGameStaterRun::OnInit()
 		for (int i = 0; i <= 40; i += 1)
 		{
 			ShowInitProgress(i);
@@ -350,7 +350,7 @@ namespace game_framework
 			else
 				i = 100;
 		}
-#pragma endregion 
+		#pragma endregion 
 		//讀取所有圖檔--Debug模式讀取檔案Begin
 		DebugmodeLoading();
 		//讀取所有圖檔--Debug模式讀取檔案End
@@ -366,7 +366,7 @@ namespace game_framework
 		BackGround_Menu.LoadTexture(TransparentColor);
 
 		//讀取所有圖檔--End
-#pragma region Loadding Effect
+		#pragma region Loadding Effect
 		ShowInitProgress(40);
 		for (int i = 40; i <= 50; i += 1)
 		{
@@ -385,7 +385,7 @@ namespace game_framework
 			else
 				i = 100;
 		}
-#pragma endregion 
+		#pragma endregion 
 		//讀取所有音效--Begin
 		LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
 		LoadSounds(Sounds.Rush, "Content\\Sounds\\rush.wav");
@@ -400,7 +400,7 @@ namespace game_framework
 	}
 	void CGameStateOver::OnInit()
 	{
-#pragma region Loadding Effect
+		#pragma region Loadding Effect
 		for (int i = 75; i <= 100; i += 1)
 		{
 			ShowInitProgress(i);
@@ -419,15 +419,15 @@ namespace game_framework
 				i = 100;
 		}
 		ShowInitProgress(100);
-#pragma endregion 
+		#pragma endregion 
 		PlaySounds(Sounds.Ding, false);
 		if (!LoaddingBoost)
 			Sleep(500);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
 	}
-#pragma endregion 
+	#pragma endregion 
 
 	//遊戲開頭畫面
-#pragma region Game start screen
+	#pragma region Game start screen
 	void CGameStateInit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		KeyState_now.UpdateState_Down(nChar);
@@ -469,11 +469,11 @@ namespace game_framework
 		DebugmodeOnMove();
 		KeyState_last = KeyState_now;
 	}
-#pragma endregion 
+	#pragma endregion 
 
 	//遊戲進行畫面
-#pragma region GameRunning
-//除了開頭以外的遊戲主體(將以GameAction切換遊戲視窗)
+	#pragma region GameRunning
+	//除了開頭以外的遊戲主體(將以GameAction切換遊戲視窗)
 	CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 	{
 
@@ -524,7 +524,7 @@ namespace game_framework
 	}
 
 	//滑鼠處理事件
-#pragma region MouseState
+	#pragma region MouseState
 	void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 	{
 
@@ -545,12 +545,12 @@ namespace game_framework
 	{
 
 	}
-#pragma endregion 
+	#pragma endregion 
 
-#pragma endregion 
+	#pragma endregion 
 
 	//Game End-遊戲結束畫面==退回開頭畫面
-#pragma region GameOverState
+	#pragma region GameOverState
 	CGameStateOver::CGameStateOver(CGame *g) : CGameState(g)
 	{
 	}
@@ -566,10 +566,10 @@ namespace game_framework
 	{
 
 	}
-#pragma endregion 
+	#pragma endregion 
 
 	//偵錯模式測試用
-#pragma region DebugValueable
+	#pragma region DebugValueable
 
 	void CGameStateInit::DebugmodeLoading()
 	{
@@ -672,6 +672,6 @@ namespace game_framework
 
 
 
-#pragma endregion 
+	#pragma endregion 
 
 }
