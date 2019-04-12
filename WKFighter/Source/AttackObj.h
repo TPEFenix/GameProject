@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "CollisionSensor.h"
 #include "TypeConverter.h"
+#include "EffectSprite.h"
 #include "WKAudio.h"
 
 
@@ -12,11 +13,11 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-#define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
+#define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege,int Mass, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
 
 
 	class BattlePlayer;
-
+    class EffectSprite;
 
     class AttackObj :public BitmapAnimation
     {
@@ -25,7 +26,8 @@ namespace game_framework
         AttackObj(string, int, int, bool, bool, bool);
         ~AttackObj();
 
-        virtual void OnUpdate(string, CameraPosition);//Effectfolder，在檔名前預加字串
+
+        virtual void OnUpdate(string, CameraPosition);
 
         //現狀變數
         double AliveTimer = 0;
@@ -43,6 +45,7 @@ namespace game_framework
         double HitVelocity_X;
         double HitVelocity_Y;
 
+        int Mass;
         int Attributes;//狀態屬性-1=無
         bool CanCombo;//可持續擊中
         bool Drawable;//是否需要繪製出來
@@ -54,6 +57,8 @@ namespace game_framework
         string HitEffect;//擊中特效名稱
         int HitSound;//擊中聲音ID
 
+
+        EffectSprite Effects;
         double Ahead(double move);
 
 		BattlePlayer *Belone;

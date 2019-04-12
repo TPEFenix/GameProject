@@ -61,7 +61,7 @@ namespace game_framework
 
 	//共用設定
 	#define GuardSPCost                0.15
-	#define MaxGravity                8
+	#define MaxGravity                   8
 	#pragma endregion
 
 
