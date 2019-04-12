@@ -15,6 +15,7 @@ namespace game_framework
 #define AttackObjPH AttackObj *Attack, string BeloneName, double Damage ,double SP_Damege, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
 
 
+	class BattlePlayer;
 
 
     class AttackObj :public BitmapAnimation
@@ -54,6 +55,10 @@ namespace game_framework
         int HitSound;//À»¤¤Án­µID
 
         double Ahead(double move);
+
+		BattlePlayer *Belong;
+		BattlePlayer *Target;
+
     };
 
 
