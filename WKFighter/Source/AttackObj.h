@@ -12,7 +12,7 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-#define AttackObjPH AttackObj *Attack, string BeloneName, double Damage ,double SP_Damege, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
+#define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
 
 
 	class BattlePlayer;
@@ -56,7 +56,7 @@ namespace game_framework
 
         double Ahead(double move);
 
-		BattlePlayer *Belong;
+		BattlePlayer *Belone;
 		BattlePlayer *Target;
 
     };
