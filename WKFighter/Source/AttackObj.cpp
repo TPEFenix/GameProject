@@ -47,7 +47,7 @@ namespace game_framework
     void AttackObj::OnUpdate(string unsingfolder, CameraPosition Camera)
     {
         #pragma region 尋找敵人
-        if (this->visable && (this->IsHited == false || this->CanCombo))
+        if (this->visable && (this->IsHited == false ))
         {
             if (PixelCollision(&(this->Target->BodyPicture), this->DisplayBitmap, 2))
             {
@@ -135,15 +135,13 @@ namespace game_framework
 
         #pragma region 尋找敵人的攻擊物件
 
-        if (this->visable)
+        if (this->visable&&this->CanBeDisappear)
         {
             map<string, AttackObj>::iterator iter;
             for (iter = Target->Attacks.AttackObjects.begin(); iter != Target->Attacks.AttackObjects.end(); iter++)
             {
-
-                if (iter->second.visable)
+                if (iter->second.visable&&iter->second.CanCrackOther)
                 {
-
                     if (PixelCollision(iter->second.DisplayBitmap, this->DisplayBitmap, 2))
                     {
 
@@ -168,14 +166,19 @@ namespace game_framework
                             double HY = 0;
                             HY = this->Rect.Y + (this->Rect.Height / 2) - (Effects.Content[this->HitEffect].Rect.Height / 2);
                             Effects.BootEffect(&(Effects.Content["Disable"]), Camera, HX, HX, HY, 0, 0, false, this->BitmapisRight);
+                            
+                            
                             this->visable = false;
                             this->DisplayBitmap->visable = false;
                             this->Drawable = false;
                             this->IsHited = true;
-                            iter->second.visable = false;
-                            iter->second.DisplayBitmap->visable = false;
-                            iter->second.Drawable = false;
-                            iter->second.IsHited = true;
+                            if (iter->second.CanBeDisappear)
+                            {
+                                iter->second.visable = false;
+                                iter->second.DisplayBitmap->visable = false;
+                                iter->second.Drawable = false;
+                                iter->second.IsHited = true;
+                            }
                             Audio_ID sounds;
                             PlaySounds(sounds.Disable, false);
                         }
@@ -258,8 +261,9 @@ namespace game_framework
             if (Attack->IsHited&&Attack->CanCombo)
             {
                 Attack->ComboTimer += TIMER_TICK_MILLIDECOND;
-                if (Attack->ComboTimer > TIMER_TICK_MILLIDECOND * 4)
+                if (Attack->ComboTimer > TIMER_TICK_MILLIDECOND * 5)
                 {
+                    Attack->ComboTimer = 0;
                     Attack->IsHited = false;
                 }
             }
@@ -317,6 +321,8 @@ namespace game_framework
         Attack->Belone = Belone;
         Attack->Target = Target;
         Attack->Mass = Mass;
+        Attack->CanBeDisappear = CanBeDisappear;
+        Attack->CanCrackOther = CanCrackOther;
 
         //初次更新
         Attack->OnUpdate(BeloneName + "\\Attacks", Camera);

@@ -602,7 +602,7 @@ namespace game_framework
 
     void BattlePlayer::GotoGuard(GPH)
     {
-        if (this->SP > 0)
+        if (this->SP > 5)
         {
             Action = "¨¾¿m";
             Step = 0;

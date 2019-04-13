@@ -13,7 +13,7 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-#define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege,int Mass, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,string HitEffect,int HitSound,CameraPosition Camera
+#define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege,int Mass, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,bool CanBeDisappear,bool CanCrackOther,string HitEffect,int HitSound,CameraPosition Camera
 
 
 	class BattlePlayer;
@@ -32,6 +32,7 @@ namespace game_framework
         //現狀變數
         double AliveTimer = 0;
         double ComboTimer = 0;
+
         double Timer1 = 0;
         double Timer2 = 0;
         bool IsHited;//已經擊中
@@ -45,7 +46,7 @@ namespace game_framework
         double HitVelocity_X;
         double HitVelocity_Y;
 
-        int Mass;
+        int Mass;//武器力度
         int Attributes;//狀態屬性-1=無
         bool CanCombo;//可持續擊中
         bool Drawable;//是否需要繪製出來
@@ -53,6 +54,8 @@ namespace game_framework
         bool HitNoon;//是否攻擊完就消失
         bool HitBreak;//是否破防
         bool CanHitFly;//是否可擊飛
+        bool CanBeDisappear;//可被抵銷
+        bool CanCrackOther;//可抵銷別的攻擊
 
         string HitEffect;//擊中特效名稱
         int HitSound;//擊中聲音ID

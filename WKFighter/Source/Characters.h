@@ -81,7 +81,7 @@ namespace game_framework
         double NormalAttack1Timer = 0;
         double Shot1Timer = 0;
         int Shot1Current = 0;
-
+        bool IsRushAttack = false;
 
     };
 }

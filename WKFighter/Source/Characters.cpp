@@ -119,6 +119,8 @@ namespace game_framework
         InsertAction("空下普", 7, color);
         InsertAction("空上普", 7, color);
         InsertAction("上普", 4, color);
+        InsertAction("衝刺普", 0, color);
+
 
         //LoadEffects
         Effects.AutoLoadEffections(color);
@@ -136,6 +138,7 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal4", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal5", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal6", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
     }
 
@@ -162,6 +165,7 @@ namespace game_framework
         OnAirDownAttack(GPP);
         OnAirUpAttack(GPP);
         OnUpAttack(GPP);
+        OnRushAttack(GPP);
 
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
@@ -231,6 +235,7 @@ namespace game_framework
                     Velocity_X = 0;
                 else if (IsRight == false && Velocity_X > 0)
                     Velocity_X = 0;
+                CanToRushAttack;
             }
             #pragma endregion
 
@@ -292,12 +297,12 @@ namespace game_framework
                     Velocity_X += Ahead(3.5);
                     Attacks.AttackReset
                     (
-                        &(Attacks.AttackObjects["Normal1"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        20, 0, 10,                                                                                        //傷害,削減SP
-                        IsRight, 2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                          //VX,VY
-                        120, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
+                        &(Attacks.AttackObjects["Normal1"]), GetName(), this, Enemy,      //攻擊物件位置,發出者名稱
+                        20, 0, 10,                                                                                                          //傷害,削減SP
+                        IsRight, 2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                                  //左右,HitX,HitY,XR,XL,Y
+                        0, 0,                                                                                                                  //VX,VY
+                        120, 30, -1, false, false, false, true, false, false, false, false,                             //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                                                //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
                 #pragma endregion
@@ -364,7 +369,7 @@ namespace game_framework
                         20, 0, 10,                                                                        //傷害,削減SP
                         IsRight, 3, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        120, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        120, 30, -1, false, false, false, true, false, false, false, false,                     //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     #pragma endregion
@@ -430,7 +435,7 @@ namespace game_framework
                         35, 0, 10,                                                                                  //傷害,削減SP
                         IsRight, 12, 7.5, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        200, 30, -1, false, false, false, true, false, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        200, 30, -1, false, false, false, true, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     #pragma endregion
@@ -504,7 +509,7 @@ namespace game_framework
                         15, 0, 2,                                                                            //傷害,削減SP
                         IsRight, 2, 3.5, Rect.X + 50, Rect.X + 10, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         Ahead(3), 0,                                                                                          //VX,VY
-                        120, 1000, -1, false, true, true, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        120, 1000, -1, false, true, true, true, false, false, true, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                     Shot1Current += 1;
@@ -616,7 +621,7 @@ namespace game_framework
                         15, 0, 10,                                                                                 //傷害,削減SP
                         IsRight, 2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 60,         //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        150, 30, -1, false, false, false, true, false, false,              //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        150, 30, -1, false, false, false, true, false, false, false, false,              //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -688,7 +693,7 @@ namespace game_framework
                         35, 0, 10,                                                                                //傷害,削減SP
                         IsRight, 12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40,                   //左右,HitX,HitY,XR,XL,Y
                         Velocity_X / 3, 0,                                                                                          //VX,VY
-                        250, 50, -1, false, false, false, true, false, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        250, 50, -1, false, false, false, true, false, true, false, false,                     //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -753,7 +758,7 @@ namespace game_framework
                         35, 0, 10,                                                                            //傷害,削減SP
                         IsRight, 2, 12, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
                         0, 0,                                                                                          //VX,VY
-                        225, 30, -1, false, false, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        225, 30, -1, false, false, false, true, false, false, false, false,                //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -794,9 +799,83 @@ namespace game_framework
 
     void Matchstick::GotoRushAttack(GPH)
     {
+        if (SP >= 4)
+        {
+            GainSP(-4);
+            if (Velocity_Y > 0 && OnGround == false)
+                Velocity_Y = 0;
+            RushTimer = 0;
+            IsRushAttack = false;
+            Throughing = false;
+            Invincible = false;
+            Velocity_X = 0;
+            Acceleration_X = 0;
+            Action = "衝刺普";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
     }
     void Matchstick::OnRushAttack(GPH)
     {
+        if (Action == "衝刺普")
+        {
+
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            if (NormalAttack1Timer <= 140 && Step == 0)
+            {
+                Velocity_Y = 0;
+                Acceleration_X = Ahead(1.2);
+                if (abs(Velocity_X) > 12)
+                {
+                    Velocity_X = Ahead(12);
+                }
+                if(IsRight)
+                    Attacks.AttackObjects["Normal6"].Rect.X = Rect.X+60;
+                else
+                    Attacks.AttackObjects["Normal6"].Rect.X = Rect.X-10;
+                Attacks.AttackObjects["Normal6"].Rect.Y = Rect.Y + 35;
+                if (Attacks.AttackObjects["Normal6"].IsHited&&Attacks.AttackObjects["Normal6"].ComboTimer > TIMER_TICK_MILLIDECOND*2)
+                {
+                    Attacks.AttackObjects["Normal6"].ComboTimer = 0;
+                    Attacks.AttackObjects["Normal6"].IsHited = false;
+                }
+                
+                if (IsRushAttack == false)
+                {
+                    IsRushAttack = true;
+                    #pragma region 產生攻擊物件
+                    //出拳
+                    Attacks.AttackReset
+                    (
+                        &(Attacks.AttackObjects["Normal6"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
+                        7, 0, 2,                                                                            //傷害,削減SP
+                        IsRight, 8.5, 1, 0, 0, 0,                   //左右,HitX,HitY,XR,XL,Y
+                        0, 0,                                                                                          //VX,VY
+                        50, 100, -1, true, false, true, false, false, false, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
+                    );
+                    #pragma endregion
+                }
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer > 140 && Step ==0)
+            {
+                Acceleration_X = 0;
+                Velocity_X = 0;
+                #pragma region 判斷應該回到哪個動作
+                if (OnGround)
+                    GotoStandby(GPP);
+                else
+                    GotoDrop(GPP);
+                #pragma endregion
+            }
+            #pragma endregion
+
+        }
     }
 
     void Matchstick::GotoAirUpAttack(GPH)
@@ -855,7 +934,7 @@ namespace game_framework
                         20, 0, 10,                                                                   //傷害,削減SP武器力度
                         IsRight, 2.5, 12, Rect.X + 20, Rect.X, Rect.Y,         //左右,HitX,HitY,XR,XL,Y
                         Velocity_X / 4, 0,                                                                   //VX,VY
-                        250, 30, -1, false, false, false, true, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        250, 30, -1, false, false, false, true, false, false, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
@@ -958,7 +1037,7 @@ namespace game_framework
                         20, 0, 10,                                                                                        //傷害,削減SP
                         IsRight, 2.5, -16, Rect.X + 60, Rect.X, Rect.Y + 10,         //左右,HitX,HitY,XR,XL,Y
                         Velocity_X / 2, Velocity_Y / 3,                                                                   //VX,VY
-                        200, 30, -1, false, false, false, true, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
+                        200, 30, -1, false, false, false, true, false, false, false, false,          //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
                         "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
                     );
                 }
