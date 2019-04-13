@@ -501,7 +501,7 @@ namespace game_framework
                     Attacks.AttackReset
                     (
                         &(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        12, 0, 2,                                                                            //傷害,削減SP
+                        15, 0, 2,                                                                            //傷害,削減SP
                         IsRight, 2, 3.5, Rect.X + 50, Rect.X + 10, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
                         Ahead(3), 0,                                                                                          //VX,VY
                         120, 1000, -1, false, true, true, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛

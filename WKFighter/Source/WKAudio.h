@@ -13,6 +13,7 @@ namespace WKAudio_namespace
         const int BKMusic = 4;
         const int NormalHit = 5;
         const int HitWall = 6;
+        const int Disable = 7;
     };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);

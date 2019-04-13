@@ -55,6 +55,8 @@ namespace game_framework
 
                 if ((Target->Action == "¨¾¿m" || Target->Action == "¨¾¿m¨ü¶Ë") && (this->BitmapisRight != Target->IsRight) && this->HitBreak == false)
                 {
+                    Target->Throughing = false;
+                    Target->Invincible = false;
                     this->IsHited = true;
                     if (this->HitNoon == true)
                     {
@@ -70,6 +72,7 @@ namespace game_framework
                     Target->GainSP(-(this->Damage / 10));
                     Target->GainSP(-(this->SP_Damege / 2));
 
+                    Target->Acceleration_X = 0;
                     Target->Velocity_X = this->Ahead(this->HitVelocity_X) / 3;
                     Target->Velocity_Y -= 0;
 
@@ -86,6 +89,8 @@ namespace game_framework
                 #pragma region «D¨¾¿mª¬ºA©ÎµLªk¨¾¿m
                 if (!((Target->Action == "¨¾¿m" || Target->Action == "¨¾¿m¨ü¶Ë") && (this->BitmapisRight != Target->IsRight) && this->HitBreak == false))
                 {
+                    Target->Throughing = false;
+                    Target->Invincible = false;
                     Target->IsRight = !(this->BitmapisRight);
                     this->IsHited = true;
                     if (this->HitNoon == true)
@@ -109,7 +114,7 @@ namespace game_framework
                     if (this->Attributes >= 0)
                         Target->AttributeState[this->Attributes] = true;
 
-
+                    Target->Acceleration_X = 0;
                     Target->Velocity_X = this->Ahead(this->HitVelocity_X);
                     Target->Velocity_Y = -(this->HitVelocity_Y);
 
@@ -145,17 +150,24 @@ namespace game_framework
                         if (Mass < iter->second.Mass)
                         {
                             double HX = 0;
-                            HX= this->Rect.X + (this->Rect.Width / 2) - (Effects.Content[this->HitEffect].Rect.Width / 2);
+                            HX = this->Rect.X + (this->Rect.Width / 2) - (Effects.Content[this->HitEffect].Rect.Width / 2);
                             double HY = 0;
-                            HY= this->Rect.Y + (this->Rect.Height / 2) - (Effects.Content[this->HitEffect].Rect.Height / 2);
-                            Effects.BootEffect(&(Effects.Content[this->HitEffect]), Camera, HX,HX,HY , 0, 0, false, this->BitmapisRight);
+                            HY = this->Rect.Y + (this->Rect.Height / 2) - (Effects.Content[this->HitEffect].Rect.Height / 2);
+                            Effects.BootEffect(&(Effects.Content["Disable"]), Camera, HX, HX, HY, 0, 0, false, this->BitmapisRight);
                             this->visable = false;
                             this->DisplayBitmap->visable = false;
                             this->Drawable = false;
                             this->IsHited = true;
+                            Audio_ID sounds;
+                            PlaySounds(sounds.Disable, false);
                         }
                         else if (Mass == iter->second.Mass)
                         {
+                            double HX = 0;
+                            HX = this->Rect.X + (this->Rect.Width / 2) - (Effects.Content[this->HitEffect].Rect.Width / 2);
+                            double HY = 0;
+                            HY = this->Rect.Y + (this->Rect.Height / 2) - (Effects.Content[this->HitEffect].Rect.Height / 2);
+                            Effects.BootEffect(&(Effects.Content["Disable"]), Camera, HX, HX, HY, 0, 0, false, this->BitmapisRight);
                             this->visable = false;
                             this->DisplayBitmap->visable = false;
                             this->Drawable = false;
@@ -164,6 +176,8 @@ namespace game_framework
                             iter->second.DisplayBitmap->visable = false;
                             iter->second.Drawable = false;
                             iter->second.IsHited = true;
+                            Audio_ID sounds;
+                            PlaySounds(sounds.Disable, false);
                         }
 
                     }
@@ -205,9 +219,7 @@ namespace game_framework
         DisplayBitmap->visable = visable;
         delete[] cc;
 
-        map<string, BitmapAnimation>::iterator Iter_Effect;
-        for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
-            Effects.EffectAutoUpdate(&(Iter_Effect->second), (int)(((Iter_Effect->second).PreAutoFrequence)), false, Camera);
+
 
         #pragma endregion
     }
@@ -238,26 +250,34 @@ namespace game_framework
     }
     void AttackManager::AttackAutoUpdate(AttackObj * Attack, string BeloneName, int tick, bool replay, CameraPosition Camera)
     {
-        if (Attack->IsHited&&Attack->CanCombo)
+        map<string, BitmapAnimation>::iterator Iter_Effect;
+        for (Iter_Effect = Attack->Effects.Content.begin(); Iter_Effect != Attack->Effects.Content.end(); Iter_Effect++)
+            Attack->Effects.EffectAutoUpdate(&(Iter_Effect->second), (int)(((Iter_Effect->second).PreAutoFrequence)), false, Camera);
+        if (Attack->visable)
         {
-            Attack->ComboTimer += TIMER_TICK_MILLIDECOND;
-            if (Attack->ComboTimer > TIMER_TICK_MILLIDECOND * 4)
+            if (Attack->IsHited&&Attack->CanCombo)
             {
-                Attack->IsHited = false;
+                Attack->ComboTimer += TIMER_TICK_MILLIDECOND;
+                if (Attack->ComboTimer > TIMER_TICK_MILLIDECOND * 4)
+                {
+                    Attack->IsHited = false;
+                }
             }
-        }
 
-        if (Attack->visable = true)
-            Attack->AliveTimer += TIMER_TICK_MILLIDECOND;
-        if (Attack->AliveTimer >= Attack->MaxAliveTime)
-        {
-            Attack->visable = false;
-            Attack->DisplayBitmap->visable = false;
+            if (Attack->visable = true)
+                Attack->AliveTimer += TIMER_TICK_MILLIDECOND;
+            if (Attack->AliveTimer >= Attack->MaxAliveTime)
+            {
+                Attack->visable = false;
+                Attack->DisplayBitmap->visable = false;
+            }
+            Attack->AutoPlay(tick, replay);
+            Attack->Rect.X += Attack->Velocity_X;
+            Attack->Rect.Y += Attack->Velocity_Y;
+            Attack->OnUpdate(BeloneName + "\\Attacks", Camera);
+
+
         }
-        Attack->AutoPlay(tick, replay);
-        Attack->Rect.X += Attack->Velocity_X;
-        Attack->Rect.Y += Attack->Velocity_Y;
-        Attack->OnUpdate(BeloneName + "\\Attacks", Camera);
 
     }
     void AttackManager::AttackReset(AttackObjPH)
@@ -312,7 +332,7 @@ namespace game_framework
             }
             iter->second.Effects.DrawAllEffection(i);
         }
-        
+
     }
     void AttackManager::InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category, COLORREF color, CameraPosition Camera)
     {
