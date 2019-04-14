@@ -105,6 +105,8 @@ namespace game_framework
     Bar Bar_SP2;
     Bar Bar_RE1;
     Bar Bar_RE2;
+    Bar Bar_Player1Break;
+    Bar Bar_Player2Break;
     BitmapPicture Bar_HP1_MaskTop;
     BitmapPicture Bar_HP1_MaskBottom;
     BitmapPicture Bar_SP1_MaskTop;
@@ -185,10 +187,15 @@ namespace game_framework
             if (P1->Action == "受傷"&&P1->Velocity_X < -9)
             {
                 P1->Velocity_X *= -1;
-                P1->HP -= 12;
+                P1->HP -= 15;
                 P1->HitFly = true;
                 P1->BeHitTimeMax += 200;
                 PlaySounds(Sounds.HitWall, false);
+                P1->BreakPoint += 30;
+                if (P1->BreakPoint > 90)
+                {
+                    P1->BreakPoint = 90;
+                }
                 Sleep(100);
             }
 
@@ -198,10 +205,15 @@ namespace game_framework
             if (P1->Action == "受傷"&&P1->Velocity_X > 9)
             {
                 P1->Velocity_X *= -1;
-                P1->HP -= 12;
+                P1->HP -= 15;
                 P1->HitFly = true;
                 P1->BeHitTimeMax += 200;
                 PlaySounds(Sounds.HitWall, false);
+                P1->BreakPoint += 30;
+                if (P1->BreakPoint > 90)
+                {
+                    P1->BreakPoint = 90;
+                }
                 Sleep(100);
             }
 
@@ -211,10 +223,15 @@ namespace game_framework
             if (P2->Action == "受傷"&&P2->Velocity_X < -9)
             {
                 P2->Velocity_X *= -1;
-                P2->HP -= 20;
+                P2->HP -= 15;
                 P2->HitFly = true;
                 P2->BeHitTimeMax += 200;
                 PlaySounds(Sounds.HitWall, false);
+                P2->BreakPoint += 30;
+                if (P2->BreakPoint > 90)
+                {
+                    P2->BreakPoint = 90;
+                }
                 Sleep(100);
             }
 
@@ -224,10 +241,15 @@ namespace game_framework
             if (P2->Action == "受傷"&&P2->Velocity_X > 9)
             {
                 P2->Velocity_X *= -1;
-                P2->HP -= 20;
+                P2->HP -= 15;
                 P2->HitFly = true;
                 P2->BeHitTimeMax += 200;
                 PlaySounds(Sounds.HitWall, false);
+                P2->BreakPoint += 30;
+                if (P2->BreakPoint > 90)
+                {
+                    P2->BreakPoint = 90;
+                }
                 Sleep(100);
             }
         }
@@ -403,6 +425,7 @@ namespace game_framework
         LoadSounds(Sounds.NormalHit, "Content\\Sounds\\NormalHit.wav");
         LoadSounds(Sounds.HitWall, "Content\\Sounds\\HitWall.wav");
         LoadSounds(Sounds.Disable, "Content\\Sounds\\Disable.wav");
+        LoadSounds(Sounds.Stoned, "Content\\Sounds\\Stoned.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -607,6 +630,11 @@ namespace game_framework
             Bar_RE1.LoadTexture(TransparentColor);
             Bar_RE2 = Bar("Content\\Bitmaps\\gray_bar.bmp", 2, 525, 25, true);
             Bar_RE2.LoadTexture(TransparentColor);
+            Bar_Player1Break = Bar("Content\\Bitmaps\\BreakBar.bmp", 1, 0, 0, true);
+            Bar_Player1Break.LoadTexture(TransparentColor);
+            Bar_Player2Break = Bar("Content\\Bitmaps\\BreakBar.bmp", 1, 0, 0, true);
+            Bar_Player2Break.LoadTexture(TransparentColor);
+
             Player1->CanControl = true;
             Player2->CanControl = true;
             Bar_HP1_MaskTop = BitmapPicture("Content\\Bitmaps\\Red_BarMaskTop.bmp", 20, 25, true, false, false);
@@ -645,6 +673,9 @@ namespace game_framework
                 Bar_SP1.Draw(i, 4, Player1->SP, Player1->SP_Max);
                 Bar_SP2.Draw(i, 4, Player2->SP, Player2->SP_Max);
 
+                Bar_Player1Break.Draw(i, 5,Player1->BreakPoint,90,Camera);
+                Bar_Player2Break.Draw(i, 5, Player2->BreakPoint, 90, Camera);
+
                 Bar_HP1_MaskTop.Draw(i, 5);
                 Bar_HP1_MaskBottom.Draw(i, 3);
                 Bar_SP1_MaskTop.Draw(i, 5);
@@ -653,8 +684,6 @@ namespace game_framework
                 Bar_HP2_MaskBottom.Draw(i, 3);
                 Bar_SP2_MaskTop.Draw(i, 5);
                 Bar_SP2_MaskBottom.Draw(i, 3);
-                //Player1->BodyPicture.Draw(i,5);
-                //Player2->BodyPicture.Draw(i, 5);
                 Bar_RE1.Draw(i, 4, Player1->HP + Player1->recovery, Player1->HP_Max);
                 Bar_RE2.Draw(i, 4, Player2->HP + Player2->recovery, Player2->HP_Max);
                 Player1_Name.Draw(i, 4);
@@ -678,6 +707,14 @@ namespace game_framework
             Bar_HP2_MaskBottom.OnUpdate();
             Bar_SP2_MaskTop.OnUpdate();
             Bar_SP2_MaskBottom.OnUpdate();
+
+            Bar_Player1Break.Rect.X = Player1->Rect.X + 30;
+            Bar_Player1Break.Rect.Y = Player1->Rect.Y + 125;
+            Bar_Player2Break.Rect.X = Player2->Rect.X + 30;
+            Bar_Player2Break.Rect.Y = Player2->Rect.Y + 125;
+
+            Bar_Player1Break.OnUpdate(Camera);
+            Bar_Player2Break.OnUpdate(Camera);
             Player1_Name.Rect.X = Player1->Rect.X + 35;
             Player1_Name.Rect.Y = Player1->Rect.Y - 20;
             Player2_Name.Rect.X = Player2->Rect.X + 35;

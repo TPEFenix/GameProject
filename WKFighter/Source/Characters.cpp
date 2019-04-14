@@ -85,7 +85,7 @@ namespace game_framework
         Acceleration_Y = 0;//Y加速度
         Throughing = false;
         HitFly = false;
-
+        BreakPoint = 60;
         Acceleration_gravity = 0.5;
 
 
@@ -108,19 +108,19 @@ namespace game_framework
         InsertAction("跳躍", 4, color);
         InsertAction("防禦", 0, color);
         InsertAction("練氣", 3, color);
+        InsertAction("受傷", 2, color);
+        InsertAction("防禦受傷", 0, color);
         InsertAction("普攻1", 4, color);
         InsertAction("普攻2", 4, color);
         InsertAction("普攻3", 4, color);
-        InsertAction("受傷", 2, color);
-        InsertAction("防禦受傷", 0, color);
+        InsertAction("上普", 4, color);
+        InsertAction("下普", 5, color);
         InsertAction("特技1", 5, color);
         InsertAction("空普1", 4, color);
         InsertAction("空普2", 4, color);
         InsertAction("空下普", 7, color);
         InsertAction("空上普", 7, color);
-        InsertAction("上普", 4, color);
         InsertAction("衝刺普", 0, color);
-
 
         //LoadEffects
         Effects.AutoLoadEffections(color);
@@ -164,6 +164,7 @@ namespace game_framework
         OnAirAttack2(GPP);
         OnAirDownAttack(GPP);
         OnAirUpAttack(GPP);
+        OnDownAttack(GPP);
         OnUpAttack(GPP);
         OnRushAttack(GPP);
 
@@ -181,11 +182,36 @@ namespace game_framework
         this->PhysicalMovement(GPP);
         AnimationUpdate(Camera);
 
+        //雜項
+        #pragma region 失衡值
+        if (BreakPoint > 0 && BreakPoint < 90)
+        {
+            BreakPoint -= 0.1;
+        }
+        if (BreakPoint > 90)
+        {
+            BreakPoint = 90;
+            BreakPointTimer = 0;
+        }
+        if (BreakPoint == 90)
+        {
+            BreakPoint = 90;
+            BreakPointTimer += TIMER_TICK_MILLIDECOND;
+            if (BreakPointTimer > 2000)
+            {
+                BreakPointTimer = 0;
+                BreakPoint = 0;
+            }
+        }
+        #pragma endregion
+
+        #pragma region 回復血量
         if (recovery > 0)
         {
             GainHP(0.1);
             recovery -= 0.1;
         }
+        #pragma endregion
     }
 
 
@@ -268,9 +294,9 @@ namespace game_framework
 
     void Matchstick::GotoNormalAttack1(GPH)
     {
-        if (SP >= 2.5)
+        if (SP >= Matchstick_NormalAttack1_Cost)
         {
-            GainSP(-2.5);
+            GainSP(-Matchstick_NormalAttack1_Cost);
             Action = "普攻1";
             Step = 0;
             NormalAttack1Timer = 0;
@@ -295,15 +321,11 @@ namespace game_framework
                 if (Step >= 3)
                 {
                     Velocity_X += Ahead(3.5);
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal1"]), GetName(), this, Enemy,      //攻擊物件位置,發出者名稱
-                        20, 0, 10,                                                                                                          //傷害,削減SP
-                        IsRight, 2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                                  //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                                                  //VX,VY
-                        120, 30, -1, false, false, false, true, false, false, false, false,                             //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                                                //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Matchstick_NormalAttack1_Damage,
+                        2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        120, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
 
@@ -325,6 +347,7 @@ namespace game_framework
                 CanToJump;
                 CanToRush;
                 CanToUpAttack;
+                CanToDownAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -338,9 +361,9 @@ namespace game_framework
 
     void Matchstick::GotoNormalAttack2(GPH)
     {
-        if (SP >= 2.5)
+        if (SP >= Matchstick_NormalAttack2_Cost)
         {
-            GainSP(-2.5);
+            GainSP(-Matchstick_NormalAttack2_Cost);
             Action = "普攻2";
             Step = 0;
             NormalAttack1Timer = 0;
@@ -363,15 +386,11 @@ namespace game_framework
                     Velocity_X += Ahead(3.5);
                     #pragma region 產生攻擊物件
                     //出拳
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal1"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        20, 0, 10,                                                                        //傷害,削減SP
-                        IsRight, 3, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                          //VX,VY
-                        120, 30, -1, false, false, false, true, false, false, false, false,                     //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Matchstick_NormalAttack2_Damage,
+                        3.5, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        120, 30, "PunchHit", Sounds.NormalHit, Camera);
                     #pragma endregion
                 }
             }
@@ -391,6 +410,7 @@ namespace game_framework
                 CanToJump;
                 CanToRush;
                 CanToUpAttack;
+                CanToDownAttack;
 
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
@@ -405,9 +425,9 @@ namespace game_framework
 
     void Matchstick::GotoNormalAttack3(GPH)
     {
-        if (SP >= 5)
+        if (SP >= Matchstick_NormalAttack3_Cost)
         {
-            GainSP(-5);
+            GainSP(-Matchstick_NormalAttack3_Cost);
             Velocity_X += Ahead(5);
             Velocity_Y -= 5;
             Action = "普攻3";
@@ -428,16 +448,15 @@ namespace game_framework
                 if (Step >= 3)
                 {
                     #pragma region 產生攻擊物件
-                    //出拳
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal2"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        35, 0, 10,                                                                                  //傷害,削減SP
-                        IsRight, 12, 7.5, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                          //VX,VY
-                        200, 30, -1, false, false, false, true, false, true, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    //基本設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal2"]), this, Enemy,
+                        Matchstick_NormalAttack3_Damage,
+                        12, 7.5, Rect.X + 98, Rect.X - 7, Rect.Y + 17, 0, 0,
+                        200, 30, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["Normal2"].CanHitFly = true;
+
                     #pragma endregion
                 }
             }
@@ -453,7 +472,6 @@ namespace game_framework
             {
                 CanToJump;
                 CanToRush;
-                CanToUpAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -467,9 +485,9 @@ namespace game_framework
 
     void Matchstick::GotoSkill1(GPH)
     {
-        if (SP >= 3)
+        if (SP >= Matchstick_Skill1_Cost)
         {
-            GainSP(-3);
+            GainSP(-Matchstick_Skill1_Cost);
             if (Velocity_Y > 0 && OnGround == false)
                 Velocity_Y = 0;
             Action = "特技1";
@@ -489,7 +507,7 @@ namespace game_framework
                 ProduceFriction(1, 1);
             else
                 ProduceFriction(0.15, 0.75);
-            if (Shot1Timer >= 70 && Step == 0)
+            if (Shot1Timer >= 50 && Step == 0)
             {
                 Step = 1;
                 if (Velocity_Y > 0 && OnGround == false)
@@ -503,20 +521,17 @@ namespace game_framework
                 {
                     #pragma region 產生攻擊物件
                     //出拳
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        15, 0, 2,                                                                            //傷害,削減SP
-                        IsRight, 2, 3.5, Rect.X + 50, Rect.X + 10, Rect.Y + 35,                   //左右,HitX,HitY,XR,XL,Y
-                        Ahead(3), 0,                                                                                          //VX,VY
-                        120, 1000, -1, false, true, true, true, false, false, true, true,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    Attacks.AttackReset_Shot(&(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), this, Enemy,
+                        Matchstick_Skill1_Damage,
+                        2, 3.5,
+                        Rect.X + 50, Rect.X + 10, Rect.Y + 35, Ahead(4.5), 0,
+                        120, 1000, 2,
+                        true, true, false,
+                        "PunchHit", Sounds.NormalHit, Camera);
                     Shot1Current += 1;
-                    if (Shot1Current == 5)
-                    {
+                    if (Shot1Current >= 5)
                         Shot1Current = 0;
-                    }
+
                     #pragma endregion
                 }
             }
@@ -535,6 +550,7 @@ namespace game_framework
                 {
                     CanToNormalAttack1;
                     CanToUpAttack;
+                    CanToDownAttack;
                 }
                 else
                 {
@@ -562,13 +578,9 @@ namespace game_framework
 
     void Matchstick::GotoAirAttack1(GPH)
     {
-        if (SP >= 2.5)
+        if (SP >= Matchstick_AirAttack1_Cost)
         {
-            SP -= 2.5;
-            if (SP <= 0)
-            {
-                SP = 0;
-            }
+            GainSP(-Matchstick_AirAttack1_Cost);
             Action = "空普1";
             Step = 0;
             if (Velocity_Y > 0)
@@ -615,15 +627,11 @@ namespace game_framework
                 if (Step == 3)
                 {
                     //出拳
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal3"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        15, 0, 10,                                                                                 //傷害,削減SP
-                        IsRight, 2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 60,         //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                          //VX,VY
-                        150, 30, -1, false, false, false, true, false, false, false, false,              //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal3"]), this, Enemy,
+                        Matchstick_AirAttack1_Damage,
+                        2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 60, Velocity_X / 3, 0,
+                        150, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
             }
@@ -661,13 +669,9 @@ namespace game_framework
 
     void Matchstick::GotoAirAttack2(GPH)
     {
-        if (SP >= 5)
+        if (SP >= Matchstick_AirAttack2_Cost)
         {
-            SP -= 5;
-            if (SP <= 0)
-            {
-                SP = 0;
-            }
+            GainSP(-Matchstick_AirAttack2_Cost);
             Action = "空普2";
             Step = 0;
             Velocity_X += Ahead(4);
@@ -686,16 +690,14 @@ namespace game_framework
                 Step += 1;
                 if (Step >= 3)
                 {
-                    //出拳
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal2"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        35, 0, 10,                                                                                //傷害,削減SP
-                        IsRight, 12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40,                   //左右,HitX,HitY,XR,XL,Y
-                        Velocity_X / 3, 0,                                                                                          //VX,VY
-                        250, 50, -1, false, false, false, true, false, true, false, false,                     //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal2"]), this, Enemy,
+                        Matchstick_AirAttack2_Damage,
+                        12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40, Velocity_X / 3, 0,
+                        250, 50, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["Normal2"].CanHitFly = true;
                 }
             }
             else if (NormalAttack1Timer >= 150 && Step == 3)
@@ -721,9 +723,9 @@ namespace game_framework
 
     void Matchstick::GotoUpAttack(GPH)
     {
-        if (SP >= 5)
+        if (SP >= Matchstick_UpAttack_Cost)
         {
-            GainSP(-5);
+            GainSP(-Matchstick_UpAttack_Cost);
             Action = "上普";
             Step = 0;
             NormalAttack1Timer = 0;
@@ -752,15 +754,12 @@ namespace game_framework
                 if (Step == 3)
                 {
                     Velocity_X += Ahead(7);
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal2"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        35, 0, 10,                                                                            //傷害,削減SP
-                        IsRight, 2, 12, Rect.X + 98, Rect.X - 7, Rect.Y + 17,                   //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                          //VX,VY
-                        225, 30, -1, false, false, false, true, false, false, false, false,                //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal2"]), this, Enemy,
+                        Matchstick_UpAttack_Damage,
+                        2, 12, Rect.X + 98, Rect.X - 7, Rect.Y + 17, 0, 0,
+                        220, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
             }
@@ -779,6 +778,7 @@ namespace game_framework
                 CanToSkill1;
                 CanToJump;
                 CanToRush;
+                CanToDownAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -792,16 +792,77 @@ namespace game_framework
 
     void Matchstick::GotoDownAttack(GPH)
     {
+        if (SP >= Matchstick_DownAttack_Cost)
+        {
+            GainSP(-Matchstick_DownAttack_Cost);
+            Action = "下普";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
     }
     void Matchstick::OnDownAttack(GPH)
     {
+        if (Action == "下普")
+        {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 150 && Step == 0)
+            {
+                NormalAttack1Timer = 0;
+                Step = 1;
+            }
+            else if (NormalAttack1Timer >= 16 && Step >= 1 && Step <= 3)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                #pragma region 產生攻擊物件
+                //出拳
+                if (Step >= 4)
+                {
+                    Velocity_X += Ahead(3.5);
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Matchstick_DownAttack_Damage,
+                        2, 3, Rect.X + 74, Rect.X, Rect.Y + 35, 0, 0,
+                        200, 30, "PunchHit", Sounds.NormalHit, Camera);
+                    Attacks.AttackObjects["Normal1"].HitBreak = true;
+                }
+                #pragma endregion
+            }
+            else if (NormalAttack1Timer >= 40 && Step == 4)
+            {
+                NormalAttack1Timer = 0;
+                Step = 5;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer < 100 && Step >= 5)
+            {
+                //到別的動作
+                CanToNormalAttack1;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 5)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
+
+        }
     }
 
     void Matchstick::GotoRushAttack(GPH)
     {
-        if (SP >= 4)
+        if (SP >= Matchstick_RushAttack_Cost)
         {
-            GainSP(-4);
+            GainSP(-Matchstick_RushAttack_Cost);
             if (Velocity_Y > 0 && OnGround == false)
                 Velocity_Y = 0;
             RushTimer = 0;
@@ -831,38 +892,39 @@ namespace game_framework
                 {
                     Velocity_X = Ahead(12);
                 }
-                if(IsRight)
-                    Attacks.AttackObjects["Normal6"].Rect.X = Rect.X+60;
+                #pragma region 更新攻擊物件位置
+                if (IsRight)
+                    Attacks.AttackObjects["Normal6"].Rect.X = Rect.X + 60;
                 else
-                    Attacks.AttackObjects["Normal6"].Rect.X = Rect.X-10;
+                    Attacks.AttackObjects["Normal6"].Rect.X = Rect.X - 10;
                 Attacks.AttackObjects["Normal6"].Rect.Y = Rect.Y + 35;
-                if (Attacks.AttackObjects["Normal6"].IsHited&&Attacks.AttackObjects["Normal6"].ComboTimer > TIMER_TICK_MILLIDECOND*2)
+                if (Attacks.AttackObjects["Normal6"].IsHited&&Attacks.AttackObjects["Normal6"].ComboTimer > TIMER_TICK_MILLIDECOND * 2)
                 {
                     Attacks.AttackObjects["Normal6"].ComboTimer = 0;
                     Attacks.AttackObjects["Normal6"].IsHited = false;
                 }
-                
+                #pragma endregion
+
+                #pragma region 產生攻擊物件
                 if (IsRushAttack == false)
                 {
                     IsRushAttack = true;
-                    #pragma region 產生攻擊物件
-                    //出拳
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal6"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        7, 0, 2,                                                                            //傷害,削減SP
-                        IsRight, 8.5, 1, 0, 0, 0,                   //左右,HitX,HitY,XR,XL,Y
-                        0, 0,                                                                                          //VX,VY
-                        50, 100, -1, true, false, true, false, false, false, false, false,                      //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                         //擊中特效名稱,擊中音效名稱,Camera
-                    );
-                    #pragma endregion
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal6"]), this, Enemy,
+                        Matchstick_RushAttack_Damage,
+                        8.5, 1, Rect.X + 98, 0, 0, 0, 0,
+                        50, 100, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["Normal6"].CanCombo = true;//可連擊
+                    Attacks.AttackObjects["Normal6"].HitNoon = false;
                 }
+                #pragma endregion
             }
             #pragma endregion
 
             #pragma region 到別的動作
-            if (NormalAttack1Timer > 140 && Step ==0)
+            if (NormalAttack1Timer > 140 && Step == 0)
             {
                 Acceleration_X = 0;
                 Velocity_X = 0;
@@ -880,9 +942,9 @@ namespace game_framework
 
     void Matchstick::GotoAirUpAttack(GPH)
     {
-        if (SP >= 5)
+        if (SP >= Matchstick_AirUpAttack_Cost)
         {
-            GainSP(-5);
+            GainSP(-Matchstick_AirUpAttack_Cost);
             Action = "空上普";
             Step = 0;
             if (Velocity_Y > 0)
@@ -928,15 +990,12 @@ namespace game_framework
                 #pragma region 產生攻擊物件
                 if (Step == 2)
                 {
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal5"]), GetName(), this, Enemy,     //攻擊物件位置,發出者名稱
-                        20, 0, 10,                                                                   //傷害,削減SP武器力度
-                        IsRight, 2.5, 12, Rect.X + 20, Rect.X, Rect.Y,         //左右,HitX,HitY,XR,XL,Y
-                        Velocity_X / 4, 0,                                                                   //VX,VY
-                        250, 30, -1, false, false, false, true, false, false, false, false,            //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal5"]), this, Enemy,
+                        Matchstick_AirUpAttack_Damage,
+                        2.5, 12, Rect.X + 20, Rect.X, Rect.Y, Velocity_X / 4, 0,
+                        250, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
 
@@ -977,15 +1036,13 @@ namespace game_framework
 
     void Matchstick::GotoAirDownAttack(GPH)
     {
-        if (SP >= 6)
+        if (SP >= Matchstick_AirDownAttack_Cost)
         {
-            GainSP(-6);
+            GainSP(-Matchstick_AirDownAttack_Cost);
             Action = "空下普";
             Step = 0;
             if (Velocity_Y > 0)
-            {
                 Velocity_Y = 0;
-            }
             NormalAttack1Timer = 0;
         }
     }
@@ -1031,15 +1088,12 @@ namespace game_framework
                 #pragma region 產生攻擊物件
                 if (Step == 5)
                 {
-                    Attacks.AttackReset
-                    (
-                        &(Attacks.AttackObjects["Normal4"]), GetName(), this, Enemy,    //攻擊物件位置,發出者名稱
-                        20, 0, 10,                                                                                        //傷害,削減SP
-                        IsRight, 2.5, -16, Rect.X + 60, Rect.X, Rect.Y + 10,         //左右,HitX,HitY,XR,XL,Y
-                        Velocity_X / 2, Velocity_Y / 3,                                                                   //VX,VY
-                        200, 30, -1, false, false, false, true, false, false, false, false,          //僵直時間,攻擊最大存活時間,附加屬性,多段攻擊,繪製,重複播放,擊中後消失,可破防,可擊飛
-                        "PunchHit", Sounds.NormalHit, Camera                       //擊中特效名稱,擊中音效名稱,Camera
-                    );
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal4"]), this, Enemy,
+                        Matchstick_AirDownAttack_Damage,
+                        2.5, -16, Rect.X + 60, Rect.X, Rect.Y + 10, Velocity_X / 2, Velocity_Y / 3,
+                        200, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
             }

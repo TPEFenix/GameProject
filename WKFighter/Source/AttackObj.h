@@ -13,10 +13,11 @@ using namespace CollisionSensor_namespace;
 
 namespace game_framework
 {
-#define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege,int Mass, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,bool CanBeDisappear,bool CanCrackOther,string HitEffect,int HitSound,CameraPosition Camera
+    #define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege,int Mass, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,bool CanBeDisappear,bool CanCrackOther,string HitEffect,int HitSound,CameraPosition Camera
+    #define AttackObjPH_Normal AttackObj *Attack, BattlePlayer *Belone, BattlePlayer *Target, double Damage,  double HitVelocity_X, double HitVelocity_Y, double XR, double XL, double Y, double VX, double VY, double HitTime, double MaxAliveTime, string HitEffect,const int HitSound, CameraPosition Camera
+    #define AttackObjPH_Shot AttackObj *Attack, BattlePlayer *Belone, BattlePlayer *Target, double Damage,  double HitVelocity_X, double HitVelocity_Y, double XR, double XL, double Y, double VX, double VY, double HitTime, double MaxAliveTime,int Mass,bool HitNoon,bool CanBeDisappear,bool CanCrackOther, string HitEffect,const int HitSound, CameraPosition Camera
 
-
-	class BattlePlayer;
+    class BattlePlayer;
     class EffectSprite;
 
     class AttackObj :public BitmapAnimation
@@ -64,8 +65,8 @@ namespace game_framework
         EffectSprite Effects;
         double Ahead(double move);
 
-		BattlePlayer *Belone;
-		BattlePlayer *Target;
+        BattlePlayer *Belone;
+        BattlePlayer *Target;
 
     };
 
@@ -81,6 +82,8 @@ namespace game_framework
         map<string, AttackObj> AttackObjects;//儲存所有攻擊物件
         virtual void AttackAutoUpdate(AttackObj * Attack, string BeloneName, int tick, bool replay, CameraPosition Camera);
         virtual void AttackReset(AttackObjPH);
+        virtual void AttackReset_Normal(AttackObjPH_Normal);
+        virtual void AttackReset_Shot(AttackObjPH_Shot);
         virtual void DrawAllAttacks(int);
         virtual void InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category, COLORREF color, CameraPosition Camera);
         virtual void InsertAttacks(string BeloneName, string name, int maxstep, int drawlayer, double pre, int category, int current, COLORREF color, CameraPosition Camera);

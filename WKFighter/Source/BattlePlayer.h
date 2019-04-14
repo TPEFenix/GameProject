@@ -36,6 +36,7 @@ namespace game_framework
 	#define CanToAirDownAttack if (CanControl&&OnGround == false&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirDownAttack(GPP);}
 	#define CanToAirUpAttack if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoAirUpAttack(GPP);}
 	#define CanToUpAttack if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoUpAttack(GPP);}
+    #define CanToDownAttack if (CanControl&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoDownAttack(GPP);}
 	#define CanToFastDrop if (CanControl&&Button_now.button_Down == true && Button_now.button_Rush == true && Button_last.button_Rush == false){GotoDrop(GPP);FastDrop(GPP);}
     #define CanToRushAttack if (CanControl&& Button_now.button_Attack == true){GotoRushAttack(GPP);}
         
@@ -180,6 +181,7 @@ namespace game_framework
 		int PlayerNumber;//玩家編號
 		double HP;//當前生命
 		double SP;//當前氣力
+        double BreakPoint;//失衡值
 		bool CanControl;//可以控制
 		bool Invincible;//無敵狀態
 		bool visable;//是否可見
@@ -201,6 +203,7 @@ namespace game_framework
 		double JumpTimer = 0;
 		double ChargeTimer = 0;
 		double ChargeTimer2 = 0;
+        double BreakPointTimer = 0;
 		int Chargecount = 0;
 		double BeHitTimer = 0;
 		double BeHitTimeMax = 0;

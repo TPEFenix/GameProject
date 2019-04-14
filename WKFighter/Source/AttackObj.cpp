@@ -47,7 +47,7 @@ namespace game_framework
     void AttackObj::OnUpdate(string unsingfolder, CameraPosition Camera)
     {
         #pragma region 尋找敵人
-        if (this->visable && (this->IsHited == false ))
+        if (this->visable && this->IsHited == false && this->Target->Invincible == false)
         {
             if (PixelCollision(&(this->Target->BodyPicture), this->DisplayBitmap, 2))
             {
@@ -55,33 +55,44 @@ namespace game_framework
 
                 if ((Target->Action == "防禦" || Target->Action == "防禦受傷") && (this->BitmapisRight != Target->IsRight) && this->HitBreak == false)
                 {
+                    #pragma region 確保穿越狀態跟無敵狀態
                     Target->Throughing = false;
                     Target->Invincible = false;
+                    #pragma endregion
+                    #pragma region 控制方向
+                    Target->IsRight = !(this->BitmapisRight);
                     this->IsHited = true;
+                    #pragma endregion
+                    #pragma region 消失物件
                     if (this->HitNoon == true)
                     {
                         this->visable = false;
                         this->DisplayBitmap->visable = false;
                         this->Drawable = false;
                     }
-
+                    #pragma endregion
+                    #pragma region 特效與音效
                     PlaySounds(this->HitSound, false);
                     Target->Effects.BootEffect(&(Target->Effects.Content[this->HitEffect]), Camera, Target->BodyRect.X + 3, Target->BodyRect.X - 6, Target->Rect.Y + 30, 0, 0, false, this->BitmapisRight);
-
-                    Target->GainHP(-(this->Damage / 3));
-                    Target->GainSP(-(this->Damage / 10));
-                    Target->GainSP(-(this->SP_Damege / 2));
-
+                    #pragma endregion
+                    #pragma region 生命值與體力值的增減
+                    Target->GainHP(-(this->Damage / 4));
+                    Target->GainSP(-(this->Damage / 30));
+                    Target->GainSP(-this->SP_Damege);
+                    #pragma endregion
+                    #pragma region 物理狀態控制
                     Target->Acceleration_X = 0;
-                    Target->Velocity_X = this->Ahead(this->HitVelocity_X) / 3;
-                    Target->Velocity_Y -= 0;
-
+                    Target->Acceleration_Y = 0;
+                    Target->Velocity_X = (this->Ahead(this->HitVelocity_X)) / 2;
+                    Target->Velocity_Y = 0;
                     Target->BeHitTimer = 0;
-                    Target->BeHitTimeMax = (this->HitTime / 2.5);
-
-                    Sleep(25);
-                    Target->Action = "防禦受傷";
+                    Target->BeHitTimeMax = 0;
                     Target->Step = 0;
+                    Target->Action = "防禦受傷";
+                    #pragma endregion
+
+                    //延遲
+                    Sleep(25);
                 }
                 #pragma endregion
 
@@ -89,20 +100,28 @@ namespace game_framework
                 #pragma region 非防禦狀態或無法防禦
                 if (!((Target->Action == "防禦" || Target->Action == "防禦受傷") && (this->BitmapisRight != Target->IsRight) && this->HitBreak == false))
                 {
+
+                    #pragma region 確保穿越狀態跟無敵狀態
                     Target->Throughing = false;
                     Target->Invincible = false;
+                    #pragma endregion
+                    #pragma region 控制方向
                     Target->IsRight = !(this->BitmapisRight);
                     this->IsHited = true;
+                    #pragma endregion
+                    #pragma region 消失物件
                     if (this->HitNoon == true)
                     {
                         this->visable = false;
                         this->DisplayBitmap->visable = false;
                         this->Drawable = false;
                     }
-
+                    #pragma endregion
+                    #pragma region 特效與音效
                     PlaySounds(this->HitSound, false);
                     Target->Effects.BootEffect(&(Target->Effects.Content[this->HitEffect]), Camera, Target->BodyRect.X + 3, Target->BodyRect.X - 6, Target->Rect.Y + 30, 0, 0, false, this->BitmapisRight);
-
+                    #pragma endregion
+                    #pragma region 生命值與體力值的增減
                     Target->GainHP(-(this->Damage));
                     Target->GainSP(+(this->Damage / 15));
                     Target->GainSP(-this->SP_Damege);
@@ -110,22 +129,46 @@ namespace game_framework
                         Target->recovery = Target->recovery + (this->Damage / 1.5);
                     else
                         Target->recovery = 0;
-
+                    #pragma endregion
+                    #pragma region 屬性
                     if (this->Attributes >= 0)
                         Target->AttributeState[this->Attributes] = true;
-
+                    #pragma endregion
+                    #pragma region 物理狀態控制
                     Target->Acceleration_X = 0;
+                    Target->Acceleration_Y = 0;
                     Target->Velocity_X = this->Ahead(this->HitVelocity_X);
                     Target->Velocity_Y = -(this->HitVelocity_Y);
-
                     Target->BeHitTimer = 0;
                     Target->BeHitTimeMax = this->HitTime;
-
-                    Sleep(25);
                     Target->HitFly = this->CanHitFly;
                     Target->Step = 0;
-
                     Target->Action = "受傷";
+                    #pragma endregion
+                    #pragma region 失衡崩解
+                    if (Target->HitFly)
+                    {
+                        Target->BreakPoint += 20;
+                        if (Target->BreakPoint > 90)
+                        {
+                            Target->BreakPoint = 90;
+                            Target->BreakPointTimer = 0;
+                        }
+                    }
+                    if (HitBreak&&Target->BreakPoint>=90)
+                    {
+                        Audio_ID Sounds;
+                        PlaySounds(Sounds.Stoned, false);
+                        Target->BeHitTimer = 0;
+                        Target->BeHitTimeMax += 800;
+                        Target->BreakPoint = 0;
+                        Target->BreakPointTimer = 0;
+                    }
+
+                    #pragma endregion
+
+                    //延遲
+                    Sleep(25);
                 }
                 #pragma endregion
             }
@@ -166,8 +209,8 @@ namespace game_framework
                             double HY = 0;
                             HY = this->Rect.Y + (this->Rect.Height / 2) - (Effects.Content[this->HitEffect].Rect.Height / 2);
                             Effects.BootEffect(&(Effects.Content["Disable"]), Camera, HX, HX, HY, 0, 0, false, this->BitmapisRight);
-                            
-                            
+
+
                             this->visable = false;
                             this->DisplayBitmap->visable = false;
                             this->Drawable = false;
@@ -327,6 +370,90 @@ namespace game_framework
         //初次更新
         Attack->OnUpdate(BeloneName + "\\Attacks", Camera);
     }
+    void AttackManager::AttackReset_Normal(AttackObjPH_Normal)
+    {
+        //屬性設定
+        Attack->Belone = Belone;
+        Attack->Target = Target;
+        Attack->Damage = Damage;
+        Attack->SP_Damege = 0;
+        Attack->HitVelocity_X = HitVelocity_X;
+        Attack->HitVelocity_Y = HitVelocity_Y;
+        Attack->BitmapisRight = Belone->IsRight;
+        if (Attack->BitmapisRight)
+            Attack->Rect.X = XR;
+        else
+            Attack->Rect.X = XL;
+        Attack->Rect.Y = Y;
+        Attack->Velocity_X = VX;
+        Attack->Velocity_Y = VY;
+        Attack->HitTime = HitTime;
+        Attack->MaxAliveTime = MaxAliveTime;
+        Attack->Attributes = -1;
+        Attack->CanCombo = false;
+        Attack->Drawable = false;
+        Attack->Replay = true;
+        Attack->HitNoon = true;
+        Attack->HitBreak = false;
+        Attack->CanHitFly = false;
+        Attack->HitEffect = HitEffect;
+        Attack->HitSound = HitSound;
+        Attack->visable = true;
+        Attack->IsHited = false;
+        Attack->AutoPlayTimer = 0;
+        Attack->Step = 0;
+        Attack->AliveTimer = 0;
+        Attack->Timer1 = 0;
+        Attack->Timer2 = 0;
+        Attack->ComboTimer = 0;
+        Attack->Mass = 10;
+        Attack->CanBeDisappear = false;
+        Attack->CanCrackOther = false;
+        //初次更新
+        Attack->OnUpdate(Belone->GetName() + "\\Attacks", Camera);
+    }
+    void AttackManager::AttackReset_Shot(AttackObjPH_Shot)
+    {
+        //屬性設定
+        Attack->Belone = Belone;
+        Attack->Target = Target;
+        Attack->Damage = Damage;
+        Attack->SP_Damege = 0;
+        Attack->HitVelocity_X = HitVelocity_X;
+        Attack->HitVelocity_Y = HitVelocity_Y;
+        Attack->BitmapisRight = Belone->IsRight;
+        if (Attack->BitmapisRight)
+            Attack->Rect.X = XR;
+        else
+            Attack->Rect.X = XL;
+        Attack->Rect.Y = Y;
+        Attack->Velocity_X = VX;
+        Attack->Velocity_Y = VY;
+        Attack->HitTime = HitTime;
+        Attack->MaxAliveTime = MaxAliveTime;
+        Attack->Attributes = -1;
+        Attack->CanCombo = false;
+        Attack->Drawable = true;
+        Attack->Replay = true;
+        Attack->HitNoon = HitNoon;
+        Attack->HitBreak = false;
+        Attack->CanHitFly = false;
+        Attack->HitEffect = HitEffect;
+        Attack->HitSound = HitSound;
+        Attack->visable = true;
+        Attack->IsHited = false;
+        Attack->AutoPlayTimer = 0;
+        Attack->Step = 0;
+        Attack->AliveTimer = 0;
+        Attack->Timer1 = 0;
+        Attack->Timer2 = 0;
+        Attack->ComboTimer = 0;
+        Attack->Mass = Mass;
+        Attack->CanBeDisappear = CanBeDisappear;
+        Attack->CanCrackOther = CanCrackOther;
+        //初次更新
+        Attack->OnUpdate(Belone->GetName() + "\\Attacks", Camera);
+    }
     void AttackManager::DrawAllAttacks(int i)
     {
         map<string, AttackObj>::iterator iter;
@@ -361,9 +488,4 @@ namespace game_framework
             AttackObjects[name + "_" + IntToString(i)].OnUpdate(BeloneName + "\\Attacks", Camera);
         }
     }
-
-
-
-
-
 }

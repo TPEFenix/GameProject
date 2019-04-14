@@ -102,12 +102,17 @@ namespace game_framework
             if (this->Action == "¨ü¶Ë"&&OnGround == false && this->Velocity_Y > 14)
             {
                 this->Velocity_Y *= -0.5;
-                this->HP -= 12;
+                this->HP -= 15;
                 this->HitFly = true;
                 this->BeHitTimeMax += 200;
                 PlaySounds(Sounds.HitWall, false);
                 Sleep(100);
                 OnGround = false;
+                BreakPoint += 30;
+                if (BreakPoint > 90)
+                {
+                    BreakPoint = 90;
+                }
             }
             else
             {
@@ -360,7 +365,6 @@ namespace game_framework
     }
 
 
-
     void BattlePlayer::GotoStandby(GPH)
     {
         Action = "«Ý¾÷";
@@ -415,6 +419,7 @@ namespace game_framework
             CanToNormalAttack1;
             CanToSkill1;
             CanToUpAttack;
+            CanToDownAttack;
             #pragma endregion
 
         }
@@ -913,5 +918,6 @@ namespace game_framework
         }
         return returner;
     }
+
 }
 
