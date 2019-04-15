@@ -186,7 +186,7 @@ namespace game_framework
         {
             if (P1->Action == "受傷"&&P1->Velocity_X < -9)
             {
-                P1->Velocity_X *= -1;
+                P1->Velocity_X *= -0.75;
                 P1->HP -= 15;
                 P1->HitFly = true;
                 P1->BeHitTimeMax += 200;
@@ -204,7 +204,7 @@ namespace game_framework
         {
             if (P1->Action == "受傷"&&P1->Velocity_X > 9)
             {
-                P1->Velocity_X *= -1;
+                P1->Velocity_X *= -0.75;
                 P1->HP -= 15;
                 P1->HitFly = true;
                 P1->BeHitTimeMax += 200;
@@ -222,7 +222,7 @@ namespace game_framework
         {
             if (P2->Action == "受傷"&&P2->Velocity_X < -9)
             {
-                P2->Velocity_X *= -1;
+                P2->Velocity_X *= -0.75;
                 P2->HP -= 15;
                 P2->HitFly = true;
                 P2->BeHitTimeMax += 200;
@@ -240,7 +240,7 @@ namespace game_framework
         {
             if (P2->Action == "受傷"&&P2->Velocity_X > 9)
             {
-                P2->Velocity_X *= -1;
+                P2->Velocity_X *= -0.75;
                 P2->HP -= 15;
                 P2->HitFly = true;
                 P2->BeHitTimeMax += 200;
@@ -426,6 +426,7 @@ namespace game_framework
         LoadSounds(Sounds.HitWall, "Content\\Sounds\\HitWall.wav");
         LoadSounds(Sounds.Disable, "Content\\Sounds\\Disable.wav");
         LoadSounds(Sounds.Stoned, "Content\\Sounds\\Stoned.wav");
+        LoadSounds(Sounds.Fire1, "Content\\Sounds\\Fire1.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%

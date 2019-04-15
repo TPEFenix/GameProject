@@ -160,7 +160,7 @@ namespace game_framework
                         Audio_ID Sounds;
                         PlaySounds(Sounds.Stoned, false);
                         Target->BeHitTimer = 0;
-                        Target->BeHitTimeMax += 800;
+                        Target->BeHitTimeMax =1000;
                         Target->BreakPoint = 0;
                         Target->BreakPointTimer = 0;
                     }

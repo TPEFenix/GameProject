@@ -121,7 +121,7 @@ namespace game_framework
         InsertAction("空下普", 7, color);
         InsertAction("空上普", 7, color);
         InsertAction("衝刺普", 0, color);
-
+        InsertAction("衝刺特技", 1, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -139,6 +139,7 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal4", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal5", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal6", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "RushSkill", 2, 5, 8, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
     }
 
@@ -167,7 +168,7 @@ namespace game_framework
         OnDownAttack(GPP);
         OnUpAttack(GPP);
         OnRushAttack(GPP);
-
+        OnRushSkill(GPP);
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
         for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
@@ -186,7 +187,7 @@ namespace game_framework
         #pragma region 失衡值
         if (BreakPoint > 0 && BreakPoint < 90)
         {
-            BreakPoint -= 0.1;
+            BreakPoint -= 0.075;
         }
         if (BreakPoint > 90)
         {
@@ -261,7 +262,9 @@ namespace game_framework
                     Velocity_X = 0;
                 else if (IsRight == false && Velocity_X > 0)
                     Velocity_X = 0;
+
                 CanToRushAttack;
+                CanToRushSkill;
             }
             #pragma endregion
 
@@ -1138,9 +1141,94 @@ namespace game_framework
 
     void Matchstick::GotoRushSkill(GPH)
     {
+        if (SP >= Matchstick_RushSkill_Cost)
+        {
+            GainSP(-Matchstick_RushSkill_Cost);
+            if (Velocity_Y > 0 && OnGround == false)
+                Velocity_Y = 0;
+            RushTimer = 0;
+            IsRushAttack = false;
+            Throughing = true;
+            Invincible = false;
+            Velocity_X = 0;
+            Acceleration_X = 0;
+            Action = "衝刺特技";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
     }
     void Matchstick::OnRushSkill(GPH)
     {
+        if (Action == "衝刺特技")
+        {
+
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            if (NormalAttack1Timer <= 150 && Step == 0)
+            {
+                Velocity_Y = -4;
+                Velocity_X = Ahead(2.5);
+            }
+            else if (NormalAttack1Timer > 150 && Step == 0)
+            {
+                Step = 1;
+                NormalAttack1Timer = 0;
+            }
+            if (NormalAttack1Timer <= 200 && Step == 1)
+            {
+                Velocity_Y = 0;
+                Acceleration_X = Ahead(4);
+                if (abs(Velocity_X) > 15)
+                {
+                    Velocity_X = Ahead(15);
+                }
+                #pragma region 更新攻擊物件位置
+                if (IsRight)
+                    Attacks.AttackObjects["RushSkill"].Rect.X = Rect.X-47;
+                else
+                    Attacks.AttackObjects["RushSkill"].Rect.X = Rect.X-15;
+                Attacks.AttackObjects["RushSkill"].Rect.Y = Rect.Y + 0;
+               
+                #pragma endregion
+
+                #pragma region 產生攻擊物件
+                if (IsRushAttack == false)
+                {
+                    IsRushAttack = true;
+                    PlaySounds(Sounds.Fire1, false);
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["RushSkill"]), this, Enemy,
+                        Matchstick_RushSkill_Damage,
+                        18, 5, Rect.X - 47, Rect.X - 15, Rect.Y, 0, 0,
+                        250, 200, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["RushSkill"].Drawable = true;
+                    Attacks.AttackObjects["RushSkill"].HitBreak = true;
+                    Attacks.AttackObjects["RushSkill"].HitNoon = false;
+                }
+                #pragma endregion
+            }
+
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if ((NormalAttack1Timer > 200) && Step == 1)
+            {
+                Throughing = false;
+                Acceleration_X = 0;
+                Velocity_X /= 2;
+                #pragma region 判斷應該回到哪個動作
+                if (OnGround)
+                    GotoStandby(GPP);
+                else
+                    GotoDrop(GPP);
+                #pragma endregion
+            }
+            #pragma endregion
+
+        }
     }
 
     void Matchstick::GotoAirUpSkill(GPH)

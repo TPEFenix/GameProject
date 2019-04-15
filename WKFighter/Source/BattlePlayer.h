@@ -39,6 +39,7 @@ namespace game_framework
     #define CanToDownAttack if (CanControl&&Button_now.button_Up == false && Button_now.button_Down == true &&Button_now.button_Attack&& Button_last.button_Attack == false){GotoDownAttack(GPP);}
 	#define CanToFastDrop if (CanControl&&Button_now.button_Down == true && Button_now.button_Rush == true && Button_last.button_Rush == false){GotoDrop(GPP);FastDrop(GPP);}
     #define CanToRushAttack if (CanControl&& Button_now.button_Attack == true){GotoRushAttack(GPP);}
+    #define CanToRushSkill if (CanControl&& Button_now.button_Skill == true){GotoRushSkill(GPP);}
         
     //Inputconfigure
 	#define Player1_Left				    A 

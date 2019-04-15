@@ -30,27 +30,29 @@ namespace game_framework
         #define Matchstick_ChargeSPincrements 13
 
         #define Matchstick_NormalAttack1_Cost 2.5
-        #define Matchstick_NormalAttack1_Damage 35
+        #define Matchstick_NormalAttack1_Damage 30
         #define Matchstick_NormalAttack2_Cost 2.5
-        #define Matchstick_NormalAttack2_Damage 35
+        #define Matchstick_NormalAttack2_Damage 30
         #define Matchstick_NormalAttack3_Cost 5
-        #define Matchstick_NormalAttack3_Damage 75
+        #define Matchstick_NormalAttack3_Damage 70
         #define Matchstick_AirAttack1_Cost 2.5
-        #define Matchstick_AirAttack1_Damage 35
+        #define Matchstick_AirAttack1_Damage 30
         #define Matchstick_AirAttack2_Cost 5
-        #define Matchstick_AirAttack2_Damage 75
+        #define Matchstick_AirAttack2_Damage 70
         #define Matchstick_UpAttack_Cost 4
-        #define Matchstick_UpAttack_Damage 55
+        #define Matchstick_UpAttack_Damage 50
         #define Matchstick_DownAttack_Cost 8
         #define Matchstick_DownAttack_Damage 80
         #define Matchstick_RushAttack_Cost 4
         #define Matchstick_RushAttack_Damage 12
+        #define Matchstick_RushSkill_Cost 8
+        #define Matchstick_RushSkill_Damage 80
         #define Matchstick_AirUpAttack_Cost 4
-        #define Matchstick_AirUpAttack_Damage 55
+        #define Matchstick_AirUpAttack_Damage 50
         #define Matchstick_AirDownAttack_Cost 4
-        #define Matchstick_AirDownAttack_Damage 55
+        #define Matchstick_AirDownAttack_Damage 50
         #define Matchstick_Skill1_Cost 4
-        #define Matchstick_Skill1_Damage 30
+        #define Matchstick_Skill1_Damage 25
 
     public:
         Matchstick(int);

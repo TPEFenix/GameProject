@@ -888,10 +888,7 @@ namespace game_framework
             {
                 Velocity_X += Addspeed;
             }
-            else
-            {
-                Velocity_X = Maxspeed;
-            }
+
         }
         else
         {
@@ -899,10 +896,7 @@ namespace game_framework
             {
                 Velocity_X -= Addspeed;
             }
-            else
-            {
-                Velocity_X = -Maxspeed;
-            }
+
         }
     }
     double BattlePlayer::Ahead(double move)
