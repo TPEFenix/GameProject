@@ -148,7 +148,7 @@ namespace game_framework
                     #pragma region ¥¢¿Å±Y¸Ñ
                     if (Target->HitFly)
                     {
-                        Target->BreakPoint += 20;
+                        Target->BreakPoint += 30;
                         if (Target->BreakPoint > 90)
                         {
                             Target->BreakPoint = 90;

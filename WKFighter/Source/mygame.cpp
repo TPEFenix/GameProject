@@ -193,9 +193,8 @@ namespace game_framework
                 PlaySounds(Sounds.HitWall, false);
                 P1->BreakPoint += 30;
                 if (P1->BreakPoint > 90)
-                {
                     P1->BreakPoint = 90;
-                }
+                
                 Sleep(100);
             }
 
@@ -211,9 +210,8 @@ namespace game_framework
                 PlaySounds(Sounds.HitWall, false);
                 P1->BreakPoint += 30;
                 if (P1->BreakPoint > 90)
-                {
                     P1->BreakPoint = 90;
-                }
+                
                 Sleep(100);
             }
 
@@ -229,9 +227,8 @@ namespace game_framework
                 PlaySounds(Sounds.HitWall, false);
                 P2->BreakPoint += 30;
                 if (P2->BreakPoint > 90)
-                {
                     P2->BreakPoint = 90;
-                }
+                
                 Sleep(100);
             }
 
@@ -247,9 +244,8 @@ namespace game_framework
                 PlaySounds(Sounds.HitWall, false);
                 P2->BreakPoint += 30;
                 if (P2->BreakPoint > 90)
-                {
                     P2->BreakPoint = 90;
-                }
+                
                 Sleep(100);
             }
         }

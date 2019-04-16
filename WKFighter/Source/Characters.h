@@ -41,12 +41,14 @@ namespace game_framework
         #define Matchstick_AirAttack2_Damage 70
         #define Matchstick_UpAttack_Cost 4
         #define Matchstick_UpAttack_Damage 50
+        #define Matchstick_UpSkill_Cost 8
+        #define Matchstick_UpSkill_Damage 15
         #define Matchstick_DownAttack_Cost 8
         #define Matchstick_DownAttack_Damage 80
         #define Matchstick_RushAttack_Cost 4
         #define Matchstick_RushAttack_Damage 12
         #define Matchstick_RushSkill_Cost 8
-        #define Matchstick_RushSkill_Damage 80
+        #define Matchstick_RushSkill_Damage 20
         #define Matchstick_AirUpAttack_Cost 4
         #define Matchstick_AirUpAttack_Damage 50
         #define Matchstick_AirDownAttack_Cost 4
@@ -105,6 +107,7 @@ namespace game_framework
         double NormalAttack1Timer = 0;
         double Shot1Timer = 0;
         int Shot1Current = 0;
+        int UpSkillCurrent = 0;
         bool IsRushAttack = false;
 
     };

@@ -420,6 +420,7 @@ namespace game_framework
             CanToSkill1;
             CanToUpAttack;
             CanToDownAttack;
+            CanToUpSkill;
             #pragma endregion
 
         }
@@ -472,6 +473,7 @@ namespace game_framework
             CanToRush;
             CanToSkill1;
             CanToUpAttack;
+            CanToUpSkill;
 
             //正常結束(左右放開)
             if (Button_now.button_Right == false && Button_now.button_Left == false)

@@ -114,6 +114,7 @@ namespace game_framework
         InsertAction("普攻2", 4, color);
         InsertAction("普攻3", 4, color);
         InsertAction("上普", 4, color);
+        InsertAction("上特技", 3, color);
         InsertAction("下普", 5, color);
         InsertAction("特技1", 5, color);
         InsertAction("空普1", 4, color);
@@ -140,6 +141,7 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal5", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal6", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "RushSkill", 2, 5, 8, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "UpSkill", 2, 5, 8, 0, 1, color, Camera);
         Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
     }
 
@@ -169,6 +171,7 @@ namespace game_framework
         OnUpAttack(GPP);
         OnRushAttack(GPP);
         OnRushSkill(GPP);
+        OnUpSkill(GPP);
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
         for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
@@ -351,6 +354,7 @@ namespace game_framework
                 CanToRush;
                 CanToUpAttack;
                 CanToDownAttack;
+                CanToUpSkill;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -414,6 +418,7 @@ namespace game_framework
                 CanToRush;
                 CanToUpAttack;
                 CanToDownAttack;
+                CanToUpSkill;
 
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
@@ -554,6 +559,7 @@ namespace game_framework
                     CanToNormalAttack1;
                     CanToUpAttack;
                     CanToDownAttack;
+                    CanToUpSkill;
                 }
                 else
                 {
@@ -782,6 +788,7 @@ namespace game_framework
                 CanToJump;
                 CanToRush;
                 CanToDownAttack;
+                CanToUpSkill;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 4)
             {
@@ -850,6 +857,7 @@ namespace game_framework
                 CanToSkill1;
                 CanToJump;
                 CanToRush;
+                CanToUpSkill;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 5)
             {
@@ -1127,9 +1135,73 @@ namespace game_framework
 
     void Matchstick::GotoUpSkill(GPH)
     {
+        if (SP >= Matchstick_UpSkill_Cost)
+        {
+            GainSP(-Matchstick_UpSkill_Cost);
+            Action = "上特技";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
     }
     void Matchstick::OnUpSkill(GPH)
     {
+        if (Action == "上特技")
+        {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 150 && Step == 0)
+            {
+                NormalAttack1Timer = 0;
+                Step = 1;
+            }
+            else if (NormalAttack1Timer >= 16 && Step >= 1 && Step <= 2)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+
+                #pragma region 產生攻擊物件
+                //出拳
+                if (Step == 3)
+                {
+                    PlaySounds(Sounds.Fire1, false);
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["UpSkill_" + IntToString(UpSkillCurrent)]), this, Enemy,
+                        Matchstick_UpSkill_Damage,
+                        1, 13, Rect.X, Rect.X, Rect.Y + 17, 0, -9,
+                        50, 400, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["UpSkill_" + IntToString(UpSkillCurrent)].Drawable = true;
+                    Attacks.AttackObjects["UpSkill_" + IntToString(UpSkillCurrent)].HitBreak = false;
+                    Attacks.AttackObjects["UpSkill_" + IntToString(UpSkillCurrent)].HitNoon = false;
+                    Attacks.AttackObjects["UpSkill_" + IntToString(UpSkillCurrent)].CanCombo = true;
+                    UpSkillCurrent = 0;
+                }
+                #pragma endregion
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer >= 40 && NormalAttack1Timer < 100 && Step >= 3)
+            {
+                //到別的動作
+                CanToNormalAttack1;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
+                CanToDownAttack;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 3)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
+
+        }
     }
 
     void Matchstick::GotoDownSkill(GPH)
@@ -1185,11 +1257,17 @@ namespace game_framework
                 }
                 #pragma region 更新攻擊物件位置
                 if (IsRight)
-                    Attacks.AttackObjects["RushSkill"].Rect.X = Rect.X-47;
+                    Attacks.AttackObjects["RushSkill"].Rect.X = Rect.X - 47;
                 else
-                    Attacks.AttackObjects["RushSkill"].Rect.X = Rect.X-15;
+                    Attacks.AttackObjects["RushSkill"].Rect.X = Rect.X - 15;
                 Attacks.AttackObjects["RushSkill"].Rect.Y = Rect.Y + 0;
-               
+
+                if (Attacks.AttackObjects["RushSkill"].IsHited&&Attacks.AttackObjects["RushSkill"].ComboTimer > TIMER_TICK_MILLIDECOND * 4)
+                {
+                    Attacks.AttackObjects["RushSkill"].ComboTimer = 0;
+                    Attacks.AttackObjects["RushSkill"].IsHited = false;
+                }
+
                 #pragma endregion
 
                 #pragma region 產生攻擊物件
@@ -1201,12 +1279,13 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["RushSkill"]), this, Enemy,
                         Matchstick_RushSkill_Damage,
-                        18, 5, Rect.X - 47, Rect.X - 15, Rect.Y, 0, 0,
+                        12, 5, Rect.X - 47, Rect.X - 15, Rect.Y, 0, 0,
                         250, 200, "PunchHit", Sounds.NormalHit, Camera);
                     //額外設定
                     Attacks.AttackObjects["RushSkill"].Drawable = true;
-                    Attacks.AttackObjects["RushSkill"].HitBreak = true;
+                    Attacks.AttackObjects["RushSkill"].HitBreak = false;
                     Attacks.AttackObjects["RushSkill"].HitNoon = false;
+                    Attacks.AttackObjects["RushSkill"].CanCombo = true;
                 }
                 #pragma endregion
             }
