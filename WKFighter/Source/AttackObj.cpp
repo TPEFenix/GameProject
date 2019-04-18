@@ -55,6 +55,24 @@ namespace game_framework
 
                 if ((Target->Action == "防禦" || Target->Action == "防禦受傷") && (this->BitmapisRight != Target->IsRight) && this->HitBreak == false)
                 {
+                    bool IsPerfectBlock = false;
+                    #pragma region 完美格檔
+                    if (Target->ClickDefendTimer < PerfectBlockTime)
+                    {
+                        Audio_ID Sounds;
+                        this->Target->Attacks.AttackReset_Normal(
+                            &(this->Target->Attacks.AttackObjects["Counterattact"]), this->Target, this->Belone,
+                            30,
+                            10, 8, this->Target->Rect.X + 0, this->Target->Rect.X - 0, this->Target->Rect.Y, 0, 0,
+                            120, 130, "PunchHit", Sounds.NormalHit, Camera);
+                        this->Target->Attacks.AttackObjects["Counterattact"].Drawable = true;
+                        this->Target->Attacks.AttackObjects["Counterattact"].HitNoon = false;
+                        this->Target->Attacks.AttackObjects["Counterattact"].CanHitFly = true;
+                        IsPerfectBlock = true;
+                    }
+                    #pragma endregion
+                    
+
                     #pragma region 確保穿越狀態跟無敵狀態
                     Target->Throughing = false;
                     Target->Invincible = false;
@@ -76,9 +94,12 @@ namespace game_framework
                     Target->Effects.BootEffect(&(Target->Effects.Content[this->HitEffect]), Camera, Target->BodyRect.X + 3, Target->BodyRect.X - 6, Target->Rect.Y + 30, 0, 0, false, this->BitmapisRight);
                     #pragma endregion
                     #pragma region 生命值與體力值的增減
-                    Target->GainHP(-(this->Damage / 4));
-                    Target->GainSP(-(this->Damage / 30));
-                    Target->GainSP(-this->SP_Damege);
+                    if (IsPerfectBlock == false)
+                    {
+                        Target->GainHP(-(this->Damage / 4));
+                        Target->GainSP(-(this->Damage / 30));
+                        Target->GainSP(-this->SP_Damege);
+                    }
                     #pragma endregion
                     #pragma region 物理狀態控制
                     Target->Acceleration_X = 0;
@@ -92,7 +113,7 @@ namespace game_framework
                     #pragma endregion
 
                     //延遲
-                    Sleep(25);
+                    Sleep(10);
                 }
                 #pragma endregion
 
@@ -155,12 +176,12 @@ namespace game_framework
                             Target->BreakPointTimer = 0;
                         }
                     }
-                    if (HitBreak&&Target->BreakPoint>=90)
+                    if (HitBreak&&Target->BreakPoint >= 90)
                     {
                         Audio_ID Sounds;
                         PlaySounds(Sounds.Stoned, false);
                         Target->BeHitTimer = 0;
-                        Target->BeHitTimeMax =1000;
+                        Target->BeHitTimeMax = 1000;
                         Target->BreakPoint = 0;
                         Target->BreakPointTimer = 0;
                     }
@@ -168,7 +189,7 @@ namespace game_framework
                     #pragma endregion
 
                     //延遲
-                    Sleep(25);
+                    Sleep(10);
                 }
                 #pragma endregion
             }

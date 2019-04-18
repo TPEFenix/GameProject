@@ -55,6 +55,9 @@ namespace game_framework
         #define Matchstick_AirDownAttack_Damage 50
         #define Matchstick_Skill1_Cost 4
         #define Matchstick_Skill1_Damage 25
+        #define Matchstick_UltimateSkill_Cost 0
+        #define Matchstick_UltimateSkill_Damage1 5
+        #define Matchstick_UltimateSkill_Damage2 200
 
     public:
         Matchstick(int);
@@ -100,15 +103,18 @@ namespace game_framework
         virtual void OnAirUpSkill(GPH);
         virtual void GotoAirDownSkill(GPH);
         virtual void OnAirDownSkill(GPH);
-
+        virtual void GotoUltimateSkill(GPH);
+        virtual void OnUltimateSkill(GPH);
 
 
         //TimerのΩ计北把计------------------------------------------------------------------------------------------------------
         double NormalAttack1Timer = 0;
+        double UltraSkillTimer1 = 0;
         double Shot1Timer = 0;
         int Shot1Current = 0;
         int UpSkillCurrent = 0;
         bool IsRushAttack = false;
+        double UltraSkillcostSP = 0;
 
     };
 }

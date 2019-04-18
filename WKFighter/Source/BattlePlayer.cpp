@@ -26,6 +26,7 @@ namespace game_framework
         AttributeState = vector<bool>(10, false);
         Effects = EffectSprite();
         Attacks = AttackManager();
+        NeedCutIn = false;
     }
     BattlePlayer::~BattlePlayer()
     {
@@ -421,6 +422,7 @@ namespace game_framework
             CanToUpAttack;
             CanToDownAttack;
             CanToUpSkill;
+            CanToUltimateSkill;
             #pragma endregion
 
         }
@@ -708,6 +710,12 @@ namespace game_framework
             OnHitTimer += TIMER_TICK_MILLIDECOND;
             ProduceFriction(0.25, 0.35);
             BeHitTimer += TIMER_TICK_MILLIDECOND;
+            if (Effects.Content["stun_star"].visable == true)
+            {
+                Effects.Content["stun_star"].Rect.X = Rect.X;
+                Effects.Content["stun_star"].Rect.Y = Rect.Y;
+                Effects.Content["stun_star"].loop = true;
+            }
             if (HitFly)
             {
                 Acceleration_Y = -0.075;
@@ -719,6 +727,7 @@ namespace game_framework
                 OnGround = false;
                 HitFly = false;
                 GotoStandby(GPP);
+                Effects.Content["stun_star"].loop = false;
             }
             else if (HitFly == true)
             {
@@ -735,6 +744,7 @@ namespace game_framework
                         JumpTimer = 0;
                         Velocity_Y = -10;
                         OnGround = false;
+                        Effects.Content["stun_star"].loop = false;
                         Effects.BootEffect(&Effects.Content["Airboost2"], Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80, 0, 0, false, IsRight);
                         PlaySounds(Sounds.Jump, false);
                     }
@@ -758,6 +768,7 @@ namespace game_framework
             {
                 GainSP(8);
                 GotoJump(GPP);
+                Effects.Content["stun_star"].loop = false;
                 Step = 3;
                 JumpTimer = 0;
                 Velocity_Y = -1;
@@ -779,6 +790,7 @@ namespace game_framework
                 Throughing = false;
                 HitFly = false;
                 GotoStandby(GPP);
+                Effects.Content["stun_star"].loop = false;
                 Acceleration_Y = 0;
             }
             if (NotHitTimer - OnHitTimer > 1500)

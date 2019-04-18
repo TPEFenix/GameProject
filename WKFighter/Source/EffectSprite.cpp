@@ -31,6 +31,10 @@ namespace game_framework
         InsertEffection("PunchHit", 3, 4, 16, color);
         InsertEffection("ResetBody", 4, 4, 16, color);
         InsertEffection("Disable", 4, 4, 16, color);
+        InsertEffection("stun_star", 3, 4, 16, color);
+        InsertEffection("HitWall", 3, 4, 16, color);
+        InsertEffection("Matchstick_US",0, 6, 16, color);
+        InsertEffection("OraOraFire", 4, 4, 30, color);
     }
 
     void EffectSprite::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)

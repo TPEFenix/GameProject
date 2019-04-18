@@ -123,6 +123,8 @@ namespace game_framework
         InsertAction("空上普", 7, color);
         InsertAction("衝刺普", 0, color);
         InsertAction("衝刺特技", 1, color);
+        InsertAction("大絕", 6, color);
+
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -140,8 +142,10 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal4", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal5", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal6", 0, 5, 16, 0, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Normal7", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "RushSkill", 2, 5, 8, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "UpSkill", 2, 5, 8, 0, 1, color, Camera);
+        Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Skill1", 2, 5, 20, 0, 5, color, Camera);//多一個參數是具有編號的
     }
 
@@ -172,10 +176,11 @@ namespace game_framework
         OnRushAttack(GPP);
         OnRushSkill(GPP);
         OnUpSkill(GPP);
+        OnUltimateSkill(GPP);
         //更新所有Effect的動作
         map<string, BitmapAnimation>::iterator Iter_Effect;
         for (Iter_Effect = Effects.Content.begin(); Iter_Effect != Effects.Content.end(); Iter_Effect++)
-            Effects.EffectAutoUpdate(&(Iter_Effect->second), (int)(((Iter_Effect->second).PreAutoFrequence)), false, Camera);
+            Effects.EffectAutoUpdate(&(Iter_Effect->second), (int)(((Iter_Effect->second).PreAutoFrequence)), (Iter_Effect->second).loop, Camera);
 
         //更新所有Attacks的動作
         map<string, AttackObj>::iterator Iter_Attack;
@@ -216,6 +221,24 @@ namespace game_framework
             recovery -= 0.1;
         }
         #pragma endregion
+
+        #pragma region 完美格檔判定
+        if (Button_now.button_Guard == Button_last.button_Guard && Button_now.button_Guard == true)
+        {
+            BetweenTwiceClickTimer = 0;
+            ClickDefendTimer += TIMER_TICK_MILLIDECOND;
+        }
+        if (Button_now.button_Guard == false)
+        {
+            BetweenTwiceClickTimer += TIMER_TICK_MILLIDECOND;
+        }
+        if (BetweenTwiceClickTimer > 100)
+        {
+            BetweenTwiceClickTimer = 0;
+            ClickDefendTimer = 0;
+        }
+        #pragma endregion
+
     }
 
 
@@ -1322,6 +1345,86 @@ namespace game_framework
     }
     void Matchstick::OnAirDownSkill(GPH)
     {
+    }
+
+    void Matchstick::GotoUltimateSkill(GPH)
+    {
+        if (SP > (SP_Max / 3))
+        {
+            UltraSkillcostSP = SP - (SP_Max / 3);
+            SP = 0;
+            Action = "大絕";
+            Step = 0;
+            NormalAttack1Timer = 0;
+            UltraSkillTimer1 = 0;
+        }
+    }
+
+    void Matchstick::OnUltimateSkill(GPH)
+    {
+        if (Action == "大絕")
+        {
+
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            UltraSkillTimer1 += TIMER_TICK_MILLIDECOND;
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 300 && Step == 0)
+            {
+                PlaySounds(Sounds.CutIn, false);
+                NeedCutIn = true;
+                NormalAttack1Timer = 0;
+                Step = 1;
+                Effects.BootEffect(&Effects.Content["Matchstick_US"], Camera, 800, 800, 0, 0, 0, false, true);
+                Effects.BootEffect(&Effects.Content["OraOraFire"], Camera, Rect.X + 60, Rect.X - 60, Rect.Y, 0, 0, false, IsRight);
+                Effects.Content["OraOraFire"].loop = true;
+            }
+            if (Step >= 1 && Step <= 5 && NormalAttack1Timer >= 40)
+            {
+                if (IsRight)
+                    Effects.Content["OraOraFire"].Rect.X = Rect.X + 60;
+                else
+                    Effects.Content["OraOraFire"].Rect.X = Rect.X - 60;
+                Effects.Content["OraOraFire"].Rect.Y = Rect.Y;
+                Effects.Content["OraOraFire"].visable = true;
+                NormalAttack1Timer = 0;
+                Step += 1;
+                if (Step > 5)
+                {
+                    Step = 1;
+                }
+                #pragma region 產生攻擊物件
+                Attacks.AttackReset_Normal(
+                    &(Attacks.AttackObjects["Normal7"]), this, Enemy,
+                    Matchstick_UltimateSkill_Damage1*(1 + (UltraSkillcostSP / SP_Max)),
+                    0, 0, Rect.X + 60, Rect.X - 60, Rect.Y, 0, 0,
+                    100, 30, "PunchHit", Sounds.NormalHit2, Camera);
+                #pragma endregion
+            }
+            if (UltraSkillTimer1 >= 1200 && Step < 6)
+            {
+                Step = 6;
+                Attacks.AttackReset_Normal(
+                    &(Attacks.AttackObjects["Normal7"]), this, Enemy,
+                    Matchstick_UltimateSkill_Damage2*(1 + (UltraSkillcostSP / SP_Max)),
+                    15, 10, Rect.X + 60, Rect.X - 60, Rect.Y, 0, 0,
+                    200, 30, "PunchHit", Sounds.Stoned, Camera);
+                Attacks.AttackObjects["Normal7"].CanHitFly = true;
+                Attacks.AttackObjects["Normal7"].HitBreak = true;
+                Effects.Content["OraOraFire"].visable = false;
+                Effects.Content["OraOraFire"].loop = false;
+            }
+
+            if (Step == 6 && UltraSkillTimer1 > 1700)
+            {
+                GotoStandby(GPP);
+            }
+
+            #pragma endregion
+
+
+        }
     }
 
 

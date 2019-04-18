@@ -117,6 +117,7 @@ namespace game_framework
     BitmapPicture Bar_SP2_MaskBottom;
     BitmapPicture Player1_Name;
     BitmapPicture Player2_Name;
+    BitmapPicture CutInMask;
     bool played = false;
 
     //顯示
@@ -154,7 +155,7 @@ namespace game_framework
 
 
 
-    //這些函式拿來優化程式編寫※(效率並不會因此提升)
+    //這些函式拿來作套裝程式編寫※
     #pragma region RENEWAL Fuction And Objects
     void ExitGame()
     {
@@ -176,6 +177,45 @@ namespace game_framework
             CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
         }
     }
+    
+    void CutInFunction(BitmapPicture *Cover,BattlePlayer *Player)
+    {
+        Cover->visable = true;
+        string EffectName = Player->GetName() + "_US";
+        Player->Effects.Content[Player->GetName() + "_US"].visable = true;
+        if (Player->Effects.Content[Player->GetName() + "_US"].Rect.X > 100 || Player->Effects.Content[Player->GetName() + "_US"].Rect.X < -100)
+        {
+            Player->Effects.Content[Player->GetName() + "_US"].Rect.X -= 65;
+        }
+        else
+        {
+            Player->Effects.Content[Player->GetName() + "_US"].Rect.X -= 5;
+        }
+        if (Player->Effects.Content[Player->GetName() + "_US"].Rect.X < -800)
+        {
+            Cover->visable = false;
+            Player->Effects.Content[Player->GetName() + "_US"].visable = false;
+            Player->NeedCutIn = false;
+        }
+        Player->Effects.Content[Player->GetName() + "_US"].OnUpdate("Effects", Camera);
+    }
+    
+    
+    
+    //撞擊牆壁
+    void GotTerrainHit(CameraPosition *C, BattlePlayer *Player, BitmapPicture BK)
+    {
+        Player->Velocity_X *= -0.75;
+        Player->HP -= 15;
+        Player->HitFly = true;
+        Player->BeHitTimeMax += 200;
+        PlaySounds(Sounds.HitWall, false);
+        Player->BreakPoint += 30;
+        if (Player->BreakPoint > 90)
+            Player->BreakPoint = 90;
+        Player->Effects.BootEffect(&(Player->Effects.Content["HitWall"]), Camera, Player->BodyRect.X, Player->BodyRect.X - 60, Player->Rect.Y + 10, 0, 0, false, Player->IsRight);
+        Sleep(100);
+    }
     //地形環境
     void ProduceTerrain(CameraPosition *C, BattlePlayer *P1, BattlePlayer *P2, BitmapPicture BK)
     {
@@ -186,16 +226,7 @@ namespace game_framework
         {
             if (P1->Action == "受傷"&&P1->Velocity_X < -9)
             {
-                P1->Velocity_X *= -0.75;
-                P1->HP -= 15;
-                P1->HitFly = true;
-                P1->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                P1->BreakPoint += 30;
-                if (P1->BreakPoint > 90)
-                    P1->BreakPoint = 90;
-                
-                Sleep(100);
+                GotTerrainHit(C, P1, BK);
             }
 
         }
@@ -203,16 +234,7 @@ namespace game_framework
         {
             if (P1->Action == "受傷"&&P1->Velocity_X > 9)
             {
-                P1->Velocity_X *= -0.75;
-                P1->HP -= 15;
-                P1->HitFly = true;
-                P1->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                P1->BreakPoint += 30;
-                if (P1->BreakPoint > 90)
-                    P1->BreakPoint = 90;
-                
-                Sleep(100);
+                GotTerrainHit(C, P1, BK);
             }
 
         }
@@ -220,16 +242,7 @@ namespace game_framework
         {
             if (P2->Action == "受傷"&&P2->Velocity_X < -9)
             {
-                P2->Velocity_X *= -0.75;
-                P2->HP -= 15;
-                P2->HitFly = true;
-                P2->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                P2->BreakPoint += 30;
-                if (P2->BreakPoint > 90)
-                    P2->BreakPoint = 90;
-                
-                Sleep(100);
+                GotTerrainHit(C, P2, BK);
             }
 
         }
@@ -237,16 +250,7 @@ namespace game_framework
         {
             if (P2->Action == "受傷"&&P2->Velocity_X > 9)
             {
-                P2->Velocity_X *= -0.75;
-                P2->HP -= 15;
-                P2->HitFly = true;
-                P2->BeHitTimeMax += 200;
-                PlaySounds(Sounds.HitWall, false);
-                P2->BreakPoint += 30;
-                if (P2->BreakPoint > 90)
-                    P2->BreakPoint = 90;
-                
-                Sleep(100);
+                GotTerrainHit(C, P2, BK);
             }
         }
         #pragma endregion
@@ -423,6 +427,8 @@ namespace game_framework
         LoadSounds(Sounds.Disable, "Content\\Sounds\\Disable.wav");
         LoadSounds(Sounds.Stoned, "Content\\Sounds\\Stoned.wav");
         LoadSounds(Sounds.Fire1, "Content\\Sounds\\Fire1.wav");
+        LoadSounds(Sounds.CutIn, "Content\\Sounds\\CutIn.wav");
+        LoadSounds(Sounds.NormalHit2, "Content\\Sounds\\NormalHit2.wav");
         //讀取所有音效--End
         ShowInitProgress(75);
         // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
@@ -605,6 +611,8 @@ namespace game_framework
     {
         if (DebugMode)
         {
+            delete Player1;
+            delete Player2;
             Player1 = new Matchstick(1);
             Player2 = new Matchstick(2);
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
@@ -654,37 +662,43 @@ namespace game_framework
             Player1_Name.LoadTexture(TransparentColor);
             Player2_Name = BitmapPicture("Content\\Bitmaps\\2P.bmp", 620, GroundPosition - 220, true, false, true);
             Player2_Name.LoadTexture(TransparentColor);
+
+            CutInMask = BitmapPicture("Content\\Bitmaps\\UltimateSkill.bmp", 0, 0, false, false, false);
+            CutInMask.LoadTexture(TransparentColor);
+
         }
     }
     void CGameStateInit::DebugmodeOnShow()
     {
         if (DebugMode&&CloseingDebug == false)
         {
-            for (int i = 0; i <= 6; i++)
+            for (int i = 0; i <= 7; i++)
             {
                 BK.Draw(i, 1);
                 Player1->Draw(i, 3, Camera);
                 Player2->Draw(i, 3, Camera);
-                Bar_HP1.Draw(i, 5, Player1->HP, Player1->HP_Max);
-                Bar_HP2.Draw(i, 5, Player2->HP, Player2->HP_Max);
-                Bar_SP1.Draw(i, 4, Player1->SP, Player1->SP_Max);
-                Bar_SP2.Draw(i, 4, Player2->SP, Player2->SP_Max);
+                Bar_HP1.Draw(i, 6, Player1->HP, Player1->HP_Max);
+                Bar_HP2.Draw(i, 6, Player2->HP, Player2->HP_Max);
+                Bar_SP1.Draw(i, 6, Player1->SP, Player1->SP_Max);
+                Bar_SP2.Draw(i, 6, Player2->SP, Player2->SP_Max);
 
-                Bar_Player1Break.Draw(i, 5,Player1->BreakPoint,90,Camera);
-                Bar_Player2Break.Draw(i, 5, Player2->BreakPoint, 90, Camera);
+                Bar_Player1Break.Draw(i, 3, Player1->BreakPoint, 90, Camera);
+                Bar_Player2Break.Draw(i, 3, Player2->BreakPoint, 90, Camera);
 
-                Bar_HP1_MaskTop.Draw(i, 5);
-                Bar_HP1_MaskBottom.Draw(i, 3);
-                Bar_SP1_MaskTop.Draw(i, 5);
-                Bar_SP1_MaskBottom.Draw(i, 3);
-                Bar_HP2_MaskTop.Draw(i, 5);
-                Bar_HP2_MaskBottom.Draw(i, 3);
-                Bar_SP2_MaskTop.Draw(i, 5);
-                Bar_SP2_MaskBottom.Draw(i, 3);
-                Bar_RE1.Draw(i, 4, Player1->HP + Player1->recovery, Player1->HP_Max);
-                Bar_RE2.Draw(i, 4, Player2->HP + Player2->recovery, Player2->HP_Max);
-                Player1_Name.Draw(i, 4);
-                Player2_Name.Draw(i, 4);
+                Bar_HP1_MaskTop.Draw(i, 7);
+                Bar_HP1_MaskBottom.Draw(i, 5);
+                Bar_SP1_MaskTop.Draw(i, 7);
+                Bar_SP1_MaskBottom.Draw(i, 5);
+                Bar_HP2_MaskTop.Draw(i, 7);
+                Bar_HP2_MaskBottom.Draw(i, 5);
+                Bar_SP2_MaskTop.Draw(i, 7);
+                Bar_SP2_MaskBottom.Draw(i, 5);
+                Bar_RE1.Draw(i, 5, Player1->HP + Player1->recovery, Player1->HP_Max);
+                Bar_RE2.Draw(i, 5, Player2->HP + Player2->recovery, Player2->HP_Max);
+                Player1_Name.Draw(i, 3);
+                Player2_Name.Draw(i, 3);
+
+                CutInMask.Draw(i,5);
             }
         }
     }
@@ -693,9 +707,19 @@ namespace game_framework
         if (DebugMode)
         {
             BK.OnUpdate(Camera);
-            Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-            Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-            ProduceTerrain(&Camera, Player1, Player2, BK);
+            if (Player1->NeedCutIn == false && Player2->NeedCutIn == false)
+            {
+                Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+                Player2->OnUpdate(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+                ProduceTerrain(&Camera, Player1, Player2, BK);
+            }
+            if (Player1->NeedCutIn)
+                CutInFunction(&CutInMask, Player1);
+            if (Player2->NeedCutIn)
+                CutInFunction(&CutInMask, Player2);
+
+
+
             Bar_HP1_MaskTop.OnUpdate();
             Bar_HP1_MaskBottom.OnUpdate();
             Bar_SP1_MaskTop.OnUpdate();
@@ -704,12 +728,10 @@ namespace game_framework
             Bar_HP2_MaskBottom.OnUpdate();
             Bar_SP2_MaskTop.OnUpdate();
             Bar_SP2_MaskBottom.OnUpdate();
-
             Bar_Player1Break.Rect.X = Player1->Rect.X + 30;
             Bar_Player1Break.Rect.Y = Player1->Rect.Y + 125;
             Bar_Player2Break.Rect.X = Player2->Rect.X + 30;
             Bar_Player2Break.Rect.Y = Player2->Rect.Y + 125;
-
             Bar_Player1Break.OnUpdate(Camera);
             Bar_Player2Break.OnUpdate(Camera);
             Player1_Name.Rect.X = Player1->Rect.X + 35;

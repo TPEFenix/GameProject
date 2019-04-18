@@ -100,6 +100,7 @@ namespace game_framework
         bool InSideCamera;//是否受到鏡頭影響
         bool BitmapisRight;//是否向右
         bool TrackPoint;//是否持續追蹤某一點
+        bool loop = false;//是否重複("預設=否")
 
         //現狀變數
         double AutoPlayTimer;//使用自動播放時的計時器

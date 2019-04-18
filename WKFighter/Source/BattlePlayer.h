@@ -41,6 +41,7 @@ namespace game_framework
     #define CanToRushAttack if (CanControl&& Button_now.button_Attack == true){GotoRushAttack(GPP);}
     #define CanToRushSkill if (CanControl&& Button_now.button_Skill == true){GotoRushSkill(GPP);}
     #define CanToUpSkill if (CanControl&&Button_now.button_Up == true && Button_now.button_Down == false &&Button_now.button_Skill&& Button_last.button_Skill == false){GotoUpSkill(GPP);}
+    #define CanToUltimateSkill if (CanControl&&Button_now.button_Technique == true && Button_last.button_Technique == false&&OnGround){GotoUltimateSkill(GPP);}
         
     //Inputconfigure
 	#define Player1_Left				    A 
@@ -155,6 +156,9 @@ namespace game_framework
 		virtual void OnAirUpSkill(GPH) = 0;//需要每個角色個別撰寫
 		virtual void GotoAirDownSkill(GPH) = 0;//需要每個角色個別撰寫
 		virtual void OnAirDownSkill(GPH) = 0;//需要每個角色個別撰寫
+        virtual void GotoUltimateSkill(GPH) = 0;//需要每個角色個別撰寫
+        virtual void OnUltimateSkill(GPH) = 0;//需要每個角色個別撰寫
+
 
 		//套裝函式------------------------------------------------------------------------------------------------------
 		virtual void AddSP(double mathin);//增加SP
@@ -193,6 +197,7 @@ namespace game_framework
 		bool OnGround;//是否在地面上
 		bool Throughing;//可否穿越
 		bool HitFly;//被擊非
+        bool NeedCutIn;//是否需要大絕進場特效
 		string Action;//動作狀態
 		int Step;//當前步驟數
 		vector<bool> AttributeState;//異常狀態
@@ -211,6 +216,8 @@ namespace game_framework
 		double BeHitTimeMax = 0;
 		double NotHitTimer = 0;
 		double OnHitTimer = 0;
+        double ClickDefendTimer = 0;
+        double BetweenTwiceClickTimer = 0;
 		//輸入按鍵參數------------------------------------------------------------------------------------------------------
 		BattleInput Button_now;//現在的鍵盤狀態
 		BattleInput Button_last;//上一瞬間的鍵盤狀態

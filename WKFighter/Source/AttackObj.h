@@ -16,6 +16,9 @@ namespace game_framework
     #define AttackObjPH AttackObj *Attack, string BeloneName,BattlePlayer *Belone,BattlePlayer *Target,double Damage ,double SP_Damege,int Mass, bool IsRight,double HitVelocity_X, double HitVelocity_Y,double XR,double XL, double Y,double VX,double VY,double HitTime,double MaxAliveTime,int Attributes, bool CanCombo ,bool Drawable,bool Replay ,bool HitNoon,bool HitBreak,bool CanHitFly,bool CanBeDisappear,bool CanCrackOther,string HitEffect,int HitSound,CameraPosition Camera
     #define AttackObjPH_Normal AttackObj *Attack, BattlePlayer *Belone, BattlePlayer *Target, double Damage,  double HitVelocity_X, double HitVelocity_Y, double XR, double XL, double Y, double VX, double VY, double HitTime, double MaxAliveTime, string HitEffect,const int HitSound, CameraPosition Camera
     #define AttackObjPH_Shot AttackObj *Attack, BattlePlayer *Belone, BattlePlayer *Target, double Damage,  double HitVelocity_X, double HitVelocity_Y, double XR, double XL, double Y, double VX, double VY, double HitTime, double MaxAliveTime,int Mass,bool HitNoon,bool CanBeDisappear,bool CanCrackOther, string HitEffect,const int HitSound, CameraPosition Camera
+    ////
+    #define PerfectBlockTime 100
+    ////
 
     class BattlePlayer;
     class EffectSprite;
@@ -38,7 +41,7 @@ namespace game_framework
         double Timer2 = 0;
         bool IsHited;//已經擊中
 
-        //屬性變數
+                     //屬性變數
         double Damage;//傷害
         double SP_Damege;//對SP造成減少
         double HitTime;//使敵人僵直時間

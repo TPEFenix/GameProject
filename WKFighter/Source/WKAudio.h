@@ -16,6 +16,8 @@ namespace WKAudio_namespace
         const int Disable = 7;
         const int Stoned = 8;
         const int Fire1 = 9;
+        const int CutIn = 10;
+        const int NormalHit2 = 11;
     };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);
