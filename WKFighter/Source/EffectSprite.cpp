@@ -39,11 +39,14 @@ namespace game_framework
 
     void EffectSprite::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)
     {
-        Effection->InSideCamera = true;
-        Effection->AutoPlay(tick, replay);
-        Effection->Rect.X += Effection->Velocity_X;
-        Effection->Rect.Y += Effection->Velocity_Y;
-        Effection->OnUpdate("Effects", Camera);
+		if (Effection->visable)
+		{
+			Effection->InSideCamera = true;
+			Effection->AutoPlay(tick, replay);
+			Effection->Rect.X += Effection->Velocity_X;
+			Effection->Rect.Y += Effection->Velocity_Y;
+			Effection->OnUpdate("Effects", Camera);
+		}
     }
     void EffectSprite::BootEffect(BitmapAnimation *Effection, CameraPosition Camera, double XR, double XL, double Y, double VX, double VY, bool Track, bool IsRight)
     {
@@ -65,7 +68,8 @@ namespace game_framework
     {
         map<string, BitmapAnimation>::iterator iter;
         for (iter = Content.begin(); iter != Content.end(); iter++)
-            iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
+			if(iter->second.visable)
+				iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
     }
     void EffectSprite::InsertEffection(string name, int maxstep, int drawlayer, double pre, COLORREF color)
     {
