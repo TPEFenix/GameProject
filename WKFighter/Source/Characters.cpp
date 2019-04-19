@@ -239,6 +239,20 @@ namespace game_framework
 		}
 		#pragma endregion
 
+		#pragma region 例外狀況
+
+		if (!(Action == "大絕"))
+		{
+			Effects.Content["OraOraFire"].visable = false;
+		}
+		if (!(Action == "衝刺特技"))
+		{
+			Attacks.AttackObjects["RushSkill"].visable = false;
+		}
+		#pragma endregion
+
+
+
 	}
 
 
@@ -1411,7 +1425,7 @@ namespace game_framework
 					15, 10, Rect.X + 60, Rect.X - 60, Rect.Y, 0, 0,
 					200, 30, "PunchHit", Sounds.Stoned, Camera);
 				Attacks.AttackObjects["Normal7"].CanHitFly = true;
-				Attacks.AttackObjects["Normal7"].HitBreak = true;
+				Attacks.AttackObjects["Normal7"].HitBreak = false;
 				Effects.Content["OraOraFire"].visable = false;
 				Effects.Content["OraOraFire"].loop = false;
 			}
