@@ -77,7 +77,7 @@
 #include "WKAudio.h"
 #include "Bar.h"
 #include "Characters.h"
-
+#include "FunctionUser.h"
 #pragma endregion 
 
 //命名空間引入
@@ -86,6 +86,7 @@ using namespace std;
 using namespace CollisionSensor_namespace;
 using namespace TypeConverter_namespace;
 using namespace WKAudio_namespace;
+using namespace FunctionUser_namespace;
 #pragma endregion 
 
 namespace game_framework
@@ -156,7 +157,9 @@ namespace game_framework
 
     BattlePlayer *Player1;
     BattlePlayer *Player2;
-    thread *LoadingThread;
+    thread LoadingThread;
+
+
     //這些函式拿來作套裝程式編寫※
     #pragma region RENEWAL Fuction And Objects
     void ExitGame()
@@ -349,6 +352,9 @@ namespace game_framework
 
     #pragma endregion 
 
+
+
+
     //偵錯模式測試用
     #pragma region DebugValueable
 
@@ -416,25 +422,9 @@ namespace game_framework
     }
     void DebugmodeOnShow()
     {
-        if (DebugLoadingDone == false)
-        {
-            if (DebugLoadingStart == false)
-            {
-                DebugLoadingStart = true;
-                LoadingThread = new thread(DebugmodeLoading);
-            }
-            LoadingPicture.OnUpdate();
-            LoadingPicture.Draw(1, 1);
-        }
-
+        LoadingResource(DebugmodeLoading, &LoadingThread, &DebugLoadingStart, &DebugLoadingDone);
         if (DebugMode&&CloseingDebug == false && DebugLoadingDone == true)
         {
-            if (DebugLoadingStart)
-            {
-                DebugLoadingStart = false;
-                LoadingThread->join();
-                delete LoadingThread;
-            }
 
             for (int i = 0; i <= 7; i++)
             {
@@ -610,7 +600,7 @@ namespace game_framework
             if (played == false)
             {
                 played = true;
-                //PlaySounds(Sounds.BKMusic, true);
+
             }
         }
         else
@@ -655,8 +645,6 @@ namespace game_framework
     //GameState LogicUpdate
     void CGameStateRun::OnMove()
     {
-        // 如果希望修改cursor的樣式，則將下面程式的commment取消即可
-        // SetCursor(AfxGetApp()->LoadCursor(IDC_GAMECURSOR));
         if (GameAction == 0)
         {
             BackGround_Menu.OnUpdate();
@@ -667,20 +655,15 @@ namespace game_framework
     //GameState ShowBitmaps
     void CGameStateRun::OnShow()
     {
-        //  注意：Show裡面千萬不要移動任何物件的座標，移動座標的工作應由Move做才對，
-        //        否則當視窗重新繪圖時(OnDraw)，物件就會移動，看起來會很怪。換個術語
-        //        說，Move負責MVC中的Model，Show負責View，而View不應更動Model。
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
             if (GameAction == 0)
             {
                 BackGround_Menu.Draw(i, 1);
+                DebugmodeOnShow();
             }
         }
-        DebugmodeOnShow();
     }
-
-
     void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     {
         KeyState_now.UpdateState_Down(nChar);
@@ -735,6 +718,7 @@ namespace game_framework
 
     }
     #pragma endregion 
+
 
 
 
