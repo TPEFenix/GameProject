@@ -64,6 +64,7 @@
 #include <sstream>
 #include <list>
 #include <vector>
+#include <thread>
 #include "audio.h"
 #include "gamelib.h"
 #include "mygame.h"
@@ -97,6 +98,9 @@ namespace game_framework
     const bool DebugMode = true;//是否啟用Debug模式
     const bool LoaddingBoost = true;//使否啟用讀取加速
     bool CloseingDebug = false;
+    BitmapPicture LoadingPicture;
+
+
     //偵錯
     BitmapPicture BK;
     Bar Bar_HP1;
@@ -119,6 +123,8 @@ namespace game_framework
     BitmapPicture Player2_Name;
     BitmapPicture CutInMask;
     bool played = false;
+    bool DebugLoadingStart = false;
+    bool DebugLoadingDone = false;
 
     //顯示
     CameraPosition Camera;//遊戲鏡頭
@@ -150,7 +156,7 @@ namespace game_framework
 
     BattlePlayer *Player1;
     BattlePlayer *Player2;
-
+    thread *LoadingThread;
     //這些函式拿來作套裝程式編寫※
     #pragma region RENEWAL Fuction And Objects
     void ExitGame()
@@ -346,9 +352,11 @@ namespace game_framework
     //偵錯模式測試用
     #pragma region DebugValueable
 
+
+
     void DebugmodeLoading()
     {
-        if (DebugMode)
+        if (DebugMode&&DebugLoadingDone == false)
         {
             delete Player1;
             delete Player2;
@@ -401,16 +409,33 @@ namespace game_framework
             Player1_Name.LoadTexture(TransparentColor);
             Player2_Name = BitmapPicture("Content\\Bitmaps\\2P.bmp", 620, GroundPosition - 220, true, false, true);
             Player2_Name.LoadTexture(TransparentColor);
-
             CutInMask = BitmapPicture("Content\\Bitmaps\\UltimateSkill.bmp", 0, 0, false, false, false);
             CutInMask.LoadTexture(TransparentColor);
-
+            DebugLoadingDone = true;
         }
     }
     void DebugmodeOnShow()
     {
-        if (DebugMode&&CloseingDebug == false)
+        if (DebugLoadingDone == false)
         {
+            if (DebugLoadingStart == false)
+            {
+                DebugLoadingStart = true;
+                LoadingThread = new thread(DebugmodeLoading);
+            }
+            LoadingPicture.OnUpdate();
+            LoadingPicture.Draw(1, 1);
+        }
+
+        if (DebugMode&&CloseingDebug == false && DebugLoadingDone == true)
+        {
+            if (DebugLoadingStart)
+            {
+                DebugLoadingStart = false;
+                LoadingThread->join();
+                delete LoadingThread;
+            }
+
             for (int i = 0; i <= 7; i++)
             {
                 BK.Draw(i, 1);
@@ -442,8 +467,10 @@ namespace game_framework
     }
     void DebugmodeOnMove()
     {
-        if (DebugMode)
+
+        if (DebugMode&&DebugLoadingDone == true)
         {
+
             BK.OnUpdate(Camera);
             if (Player1->NeedCutIn == false && Player2->NeedCutIn == false)
             {
@@ -500,7 +527,6 @@ namespace game_framework
     {
         delete Player1;
         delete Player2;
-
     }
     void CGameStateInit::OnBeginState()
     {
@@ -513,20 +539,9 @@ namespace game_framework
     void CGameStateInit::OnInit()
     {
         //讀取開始
-        ShowInitProgress(0);	// 一開始的loading進度為0%
-        #pragma region Loadding Effect
-                // 進入CGameStaterRun::OnInit()
-        for (int i = 0; i <= 40; i += 1)
-        {
-            ShowInitProgress(i);
-            if (!LoaddingBoost)
-                Sleep(10);
-            else
-                i = 100;
-        }
-        #pragma endregion 
-        //讀取所有圖檔--Debug模式讀取檔案Begin
-        //讀取所有圖檔--Debug模式讀取檔案End
+        ShowInitProgress(0);
+        LoadingPicture = BitmapPicture("Content\\Bitmaps\\Loading.bmp", 150, 200, true, false, false);
+        LoadingPicture.LoadTexture(TransparentColor);
     }
     void CGameStateRun::OnInit()// 讀取檔案
     {
@@ -537,28 +552,6 @@ namespace game_framework
         Title_Bitmap.LoadTexture(TransparentColor);
         BackGround_Menu = BitmapPicture("Content\\Bitmaps\\BackGround_Menu.bmp", 0, 0, true, false, false);
         BackGround_Menu.LoadTexture(TransparentColor);
-
-        //讀取所有圖檔--End
-        #pragma region Loadding Effect
-        ShowInitProgress(40);
-        for (int i = 40; i <= 50; i += 1)
-        {
-            ShowInitProgress(i);
-            if (!LoaddingBoost)
-                Sleep(4);
-            else
-                i = 100;
-        }
-        ShowInitProgress(50);	// 接個前一個狀態的進度，此處進度視為33%
-        for (int i = 50; i <= 75; i += 1)
-        {
-            ShowInitProgress(i);
-            if (!LoaddingBoost)
-                Sleep(1);
-            else
-                i = 100;
-        }
-        #pragma endregion 
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
         LoadSounds(Sounds.Rush, "Content\\Sounds\\rush.wav");
@@ -572,9 +565,6 @@ namespace game_framework
         LoadSounds(Sounds.Fire1, "Content\\Sounds\\Fire1.wav");
         LoadSounds(Sounds.CutIn, "Content\\Sounds\\CutIn.wav");
         LoadSounds(Sounds.NormalHit2, "Content\\Sounds\\NormalHit2.wav");
-        //讀取所有音效--End
-        ShowInitProgress(75);
-        // 此OnInit動作會接到CGameStaterOver::OnInit()，所以進度還沒到100%
     }
     void CGameStateOver::OnInit()
     {
@@ -599,8 +589,7 @@ namespace game_framework
         ShowInitProgress(100);
         #pragma endregion 
         PlaySounds(Sounds.Ding, false);
-        if (!LoaddingBoost)
-            Sleep(500);				// 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
+
     }
     #pragma endregion 
 
@@ -641,7 +630,6 @@ namespace game_framework
         if (KeyState_now.Space == true && KeyState_last.Space == false)
         {
             GameAction = 0;
-            DebugmodeLoading();
             GotoGameState(GAME_STATE_RUN);
         }
         KeyState_last = KeyState_now;

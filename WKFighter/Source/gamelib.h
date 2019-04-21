@@ -78,7 +78,7 @@
 #define GAME_TIMER_FIX		 0.5			// GAMECYCLETIME的校正參數，當不是每次更新都跑GAME_CYCLE_TIME毫秒的時候使用
 #define TIMER_TICK_MILLIDECOND		 GAME_CYCLE_TIME*	GAME_TIMER_FIX		// 使用到遊戲內計時器的時候，可使每次計時器增加此數可得到正確毫秒
 #define SHOW_GAME_CYCLE_TIME false		// 是否在debug mode顯示cycle time
-#define ENABLE_GAME_PAUSE	 true		// 是否允許以 Ctrl-Q 暫停遊戲
+#define ENABLE_GAME_PAUSE	 false		// 是否允許以 Ctrl-Q 暫停遊戲
 #define ENABLE_AUDIO		 true		// 啟動音效介面
 
 /////////////////////////////////////////////////////////////////////////////
