@@ -16,8 +16,6 @@ namespace game_framework
     EffectSprite::EffectSprite()
     {
     }
-
-
     EffectSprite::~EffectSprite()
     {
     }
@@ -27,26 +25,27 @@ namespace game_framework
         Content = map<string, BitmapAnimation>();
         InsertEffection("Airboost", 5, 4, 10, color);
         InsertEffection("Airboost2", 5, 4, 10, color);
+        InsertEffection("Airboost3", 5, 4, 10, color);
         InsertEffection("SPCharge", 12, 4, 10, color);
         InsertEffection("PunchHit", 3, 4, 16, color);
         InsertEffection("ResetBody", 4, 4, 16, color);
         InsertEffection("Disable", 4, 4, 16, color);
         InsertEffection("stun_star", 3, 4, 16, color);
         InsertEffection("HitWall", 3, 4, 16, color);
-        InsertEffection("Matchstick_US",0, 6, 16, color);
+        InsertEffection("Matchstick_US", 0, 6, 16, color);
         InsertEffection("OraOraFire", 4, 4, 30, color);
     }
 
     void EffectSprite::EffectAutoUpdate(BitmapAnimation * Effection, int tick, bool replay, CameraPosition Camera)
     {
-		if (Effection->visable)
-		{
-			Effection->InSideCamera = true;
-			Effection->AutoPlay(tick, replay);
-			Effection->Rect.X += Effection->Velocity_X;
-			Effection->Rect.Y += Effection->Velocity_Y;
-			Effection->OnUpdate("Effects", Camera);
-		}
+        if (Effection->visable)
+        {
+            Effection->InSideCamera = true;
+            Effection->AutoPlay(tick, replay);
+            Effection->Rect.X += Effection->Velocity_X;
+            Effection->Rect.Y += Effection->Velocity_Y;
+            Effection->OnUpdate("Effects", Camera);
+        }
     }
     void EffectSprite::BootEffect(BitmapAnimation *Effection, CameraPosition Camera, double XR, double XL, double Y, double VX, double VY, bool Track, bool IsRight)
     {
@@ -68,8 +67,8 @@ namespace game_framework
     {
         map<string, BitmapAnimation>::iterator iter;
         for (iter = Content.begin(); iter != Content.end(); iter++)
-			if(iter->second.visable)
-				iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
+            if (iter->second.visable)
+                iter->second.DisplayBitmap->Draw(i, iter->second.drawlayer);
     }
     void EffectSprite::InsertEffection(string name, int maxstep, int drawlayer, double pre, COLORREF color)
     {

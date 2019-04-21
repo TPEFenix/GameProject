@@ -61,9 +61,7 @@ namespace game_framework {
 		void OnKeyDown(UINT, UINT, UINT); 				// 處理鍵盤Up的動作
         void OnKeyUp(UINT, UINT, UINT);
         //提供一個與正式遊戲完全隔絕的練習語法空間
-        void DebugmodeLoading();
-        void DebugmodeOnShow();
-        void DebugmodeOnMove();
+
 
 
 	protected:
