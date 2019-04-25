@@ -386,6 +386,7 @@ namespace game_framework
         }
         #pragma endregion
     }
+    //戰鬥讀取
     void BattleLoading()
     {
         if (LoadingDone == false)
@@ -460,6 +461,7 @@ namespace game_framework
             LoadingDone = true;
         }
     }
+    //戰鬥OnMove
     void BattleOnMove()
     {
         BK.OnUpdate(Camera);
@@ -498,6 +500,7 @@ namespace game_framework
         Player2_Name.OnUpdate(Camera);
 
     }
+    //戰鬥OnShow
     void BattleOnShow(int i)
     {
         BK.Draw(i, 1);
@@ -673,7 +676,6 @@ namespace game_framework
         }
     }
     #pragma endregion
-
     #pragma endregion
 
     #pragma region 底層mygame.cpp的運作程序(基本上不用更改)
