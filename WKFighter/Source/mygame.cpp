@@ -123,9 +123,6 @@ namespace game_framework
     BitmapPicture Player1_Name;
     BitmapPicture Player2_Name;
     BitmapPicture CutInMask;
-
-
-
     bool played = false;
     bool DebugLoadingStart = false;
     bool DebugLoadingDone = false;
@@ -185,6 +182,7 @@ namespace game_framework
             CDDraw::ReleaseBackCDC();					// ©ñ±¼ Back Plain ªº CDC
         }
     }
+
     void CutInFunction(BitmapPicture *Cover, BattlePlayer *Player)
     {
         Cover->visable = true;
@@ -207,6 +205,9 @@ namespace game_framework
         CameraPosition C;
         Player->Effects.Content[Player->GetName() + "_US"].OnUpdate("Effects", C);
     }
+
+
+
     //¼²À»Àð¾À
     void GotTerrainHit(CameraPosition *C, BattlePlayer *Player, BitmapPicture BK)
     {
@@ -359,7 +360,7 @@ namespace game_framework
 
 
 
-    void BattleLoading()
+    void DebugmodeLoading()
     {
         if (DebugMode&&DebugLoadingDone == false)
         {
@@ -421,7 +422,7 @@ namespace game_framework
     }
     void DebugmodeOnShow()
     {
-        LoadingResource(BattleLoading, &LoadingThread, &DebugLoadingStart, &DebugLoadingDone);
+        LoadingResource(DebugmodeLoading, &LoadingThread, &DebugLoadingStart, &DebugLoadingDone);
         if (DebugMode&&CloseingDebug == false && DebugLoadingDone == true)
         {
 
