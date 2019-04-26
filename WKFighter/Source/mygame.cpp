@@ -104,9 +104,10 @@ namespace game_framework
 	thread LoadingThread;//讀取執行序
 	bool LoadingStart = false;//開始讀取布林值
 	bool LoadingDone = false;//讀取完成布林值
+	bool LoadingTemp = false;//放大縮小
+	double Loadingfactor = 1;//放大縮小Double
 
-
-							 //顯示
+	//顯示
 	CameraPosition Camera;//遊戲鏡頭
 	const COLORREF TransparentColor = RGB(100, 120, 0);//透明色設定
 	const int left = 1;
@@ -114,7 +115,7 @@ namespace game_framework
 
 
 	//戰鬥
-	BattlePlayer *Player1;//1P戰鬥者
+	BattlePlayer *Player1;//1P戰鬥者k
 	BattlePlayer *Player2;//2P戰鬥者
 	int Player1Character = 0;//Player1選擇的角色ID
 	int Player2Character = 0;//Player1選擇的角色ID
@@ -224,6 +225,7 @@ namespace game_framework
 	#pragma endregion
 
 	#pragma region 遊戲內容
+
 	//戰鬥畫面
 	#pragma region 戰鬥環境
 	//大絕招Cover
@@ -531,6 +533,7 @@ namespace game_framework
 	#pragma endregion 
 	//各大GameAction的Show跟Move
 	#pragma region GameActions
+
 	void GameAction0_initialization()
 	{
 	}
@@ -646,8 +649,23 @@ namespace game_framework
 	{
 		if (GameAction == 5)
 		{
-
-			LoadingPicture.Draw(i, 2, 1);
+			if (LoadingTemp == false)
+			{
+				Loadingfactor += 0.0025;
+				if (Loadingfactor > 1.1)
+				{
+					LoadingTemp = true;
+				}
+			}
+			else
+			{
+				Loadingfactor -= 0.0025;
+				if (Loadingfactor < 0.9)
+				{
+					LoadingTemp = false;
+				}
+			}
+			LoadingPicture.Draw(i, 2, Loadingfactor);
 		}
 	}
 	void GameAction6_OnMove()
@@ -676,7 +694,9 @@ namespace game_framework
 		{
 		}
 	}
+	
 	#pragma endregion
+
 	#pragma endregion
 
 	#pragma region 底層mygame.cpp的運作程序(基本上不用更改)

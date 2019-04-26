@@ -898,6 +898,7 @@ void CDDraw::BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor)
 	CheckDDFail("Blt Bitmap to Back Failed");
 }
 
+
 void CDDraw::BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y)
 {
 	GAME_ASSERT((SourceID < lpDDS.size()) && (TargetID < lpDDS.size()) && (SourceID != TargetID), "Internal Error: Incorrect SourceID in BltBitmapToBitmap");

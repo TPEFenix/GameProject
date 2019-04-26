@@ -163,6 +163,7 @@ namespace game_framework {
         static void  BltBitmapToBack(unsigned SurfaceID, int x, int y);
         static void  BltBitmapToBack(unsigned SurfaceID, int x, int y, int, int, int, int);
         static void  BltBitmapToBack(unsigned SurfaceID, int x, int y, double factor);
+
         static void  BltBitmapToBitmap(unsigned SourceID, unsigned TargetID, int x, int y);
         static void	 CheckDDFail(char *s);
         static bool  CreateSurface();

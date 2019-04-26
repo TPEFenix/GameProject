@@ -251,12 +251,19 @@ namespace game_framework
 			ShowBitmap();
 		}
 	}
-	void BitmapPicture::Draw(int CurrentLayer, int TargetLayer,double fra)
+	void BitmapPicture::Draw(int CurrentLayer, int TargetLayer, double fra)
 	{
 		if (CurrentLayer == TargetLayer&&this->visable == true)//直到他的圖片層級才可以顯示
 		{
 			SetTopLeft(Rect.X_int, Rect.Y_int);
-			ShowBitmap(fra);
+			int xl,xr,yt,yb;
+			xl = (int)(this->Rect.X+(this->Rect.Width*(1-fra)*0.5));
+			yt = (int)(this->Rect.Y + (this->Rect.Height*(1 - fra)*0.5));
+			xr = (int)((this->Rect.X + this->Rect.Width) - (this->Rect.Width*(1 - fra)*0.5));
+			yb = (int)((this->Rect.Y + this->Rect.Height) - (this->Rect.Height*(1 - fra)*0.5));
+
+
+			ShowBitmap(xl,yt,xr,yb);
 		}
 	}
 	void BitmapPicture::SetResourcePath(string namein)
