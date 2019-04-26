@@ -78,6 +78,7 @@
 #include "Bar.h"
 #include "Characters.h"
 #include "FunctionUser.h"
+#include "SelectionBitmap.h"
 #pragma endregion 
 
 //命名空間引入
@@ -148,7 +149,10 @@ namespace game_framework
 	KeyBoardState KeyState_now;//當前的鍵盤狀態
 	KeyBoardState KeyState_last;//前一瞬間的鍵盤狀態
 	#pragma endregion 
-								//開頭畫面變數
+
+
+
+	//開頭畫面變數
 	#pragma region GameAction_Title
 	BitmapPicture BackGround_Title;
 	BitmapPicture Title_Bitmap;
@@ -156,7 +160,12 @@ namespace game_framework
 	//主選單變數
 	#pragma region GameAction_Menu
 	BitmapPicture BackGround_Menu;
+	vector <SelectionBitmap> TitleSelects;
 	int TitleSelection = 0;
+
+
+
+
 	#pragma endregion 
 	#pragma endregion
 
@@ -225,7 +234,7 @@ namespace game_framework
 	#pragma endregion
 
 	#pragma region 遊戲內容
-
+	
 	//戰鬥畫面
 	#pragma region 戰鬥環境
 	//大絕招Cover
@@ -536,6 +545,17 @@ namespace game_framework
 
 	void GameAction0_initialization()
 	{
+		GameAction = 0;
+		TitleSelects = vector<SelectionBitmap>();
+		TitleSelects.push_back(SelectionBitmap());
+		TitleSelects[0].SetName("Title_Start");
+		TitleSelects[0].AutoLoadBitmaps(TitleSelects[0].GetName(), TransparentColor);
+		TitleSelects.push_back(SelectionBitmap());
+		TitleSelects[1].SetName("Title_SkillList");
+		TitleSelects[1].AutoLoadBitmaps(TitleSelects[1].GetName(), TransparentColor);
+		TitleSelects.push_back(SelectionBitmap());
+		TitleSelects[2].SetName("Title_Exit");
+		TitleSelects[2].AutoLoadBitmaps(TitleSelects[2].GetName(), TransparentColor);
 	}
 	void GameAction1_initialization()
 	{
@@ -567,14 +587,27 @@ namespace game_framework
 	{
 		if (GameAction == 0)
 		{
-
+			TitleSelects[0].Rect.X = 100;
+			TitleSelects[0].Rect.Y = 100;
+			TitleSelects[1].Rect.X = 100;
+			TitleSelects[1].Rect.Y = 200;
+			TitleSelects[2].Rect.X = 100;
+			TitleSelects[2].Rect.Y = 300;
+			TitleSelects[0].DisplayBitmap->visable = true;
+			TitleSelects[1].DisplayBitmap->visable = true;
+			TitleSelects[2].DisplayBitmap->visable = true;
 		}
 	}
 	void GameAction0_OnShow(int i)
 	{
 		if (GameAction == 0)
 		{
-
+			TitleSelects[0].OnUpdate(TitleSelection, 0);
+			TitleSelects[1].OnUpdate(TitleSelection, 1);
+			TitleSelects[2].OnUpdate(TitleSelection, 2);
+			TitleSelects[0].DisplayBitmap->Draw(i,3);
+			TitleSelects[1].DisplayBitmap->Draw(i, 3);
+			TitleSelects[2].DisplayBitmap->Draw(i, 3);
 		}
 	}
 	void GameAction1_OnMove()
@@ -694,11 +727,12 @@ namespace game_framework
 		{
 		}
 	}
+
+	#pragma endregion
+
+	#pragma endregion
 	
-	#pragma endregion
-
-	#pragma endregion
-
+		
 	#pragma region 底層mygame.cpp的運作程序(基本上不用更改)
 	//程式開始
 	#pragma region Program Initialize
@@ -757,8 +791,9 @@ namespace game_framework
 		Title_Bitmap.OnUpdate();
 		if (KeyState_now.Space == true && KeyState_last.Space == false)
 		{
-			GameAction = 5;
+			GameAction0_initialization();
 			GotoGameState(GAME_STATE_RUN);
+
 		}
 		KeyState_last = KeyState_now;
 	}

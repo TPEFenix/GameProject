@@ -11,6 +11,5 @@ namespace game_framework
         ~SelectionBitmap();
         virtual void OnUpdate(int,int);
         virtual void AutoLoadBitmaps(string, COLORREF);//依照Name自動讀取檔名
-
     };
 }
