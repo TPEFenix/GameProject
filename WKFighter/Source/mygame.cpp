@@ -791,7 +791,7 @@ namespace game_framework
 		Title_Bitmap.OnUpdate();
 		if (KeyState_now.Space == true && KeyState_last.Space == false)
 		{
-			GameAction0_initialization();
+			GameAction5_initialization();
 			GotoGameState(GAME_STATE_RUN);
 
 		}
