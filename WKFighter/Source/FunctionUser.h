@@ -1,4 +1,5 @@
 #pragma once
+#include <thread>
 
 using namespace std;
 using namespace game_framework;
