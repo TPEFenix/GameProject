@@ -116,11 +116,19 @@ namespace game_framework
 
 
     //戰鬥
+    #pragma region 戰鬥畫面變數
+    double ReadyTimer;
     BattlePlayer *Player1;//1P戰鬥者k
     BattlePlayer *Player2;//2P戰鬥者
     int Player1Character = 1;//Player1選擇的角色ID
     int Player2Character = 0;//Player1選擇的角色ID
     BitmapPicture BK;//戰鬥背景
+    BitmapPicture BlackCover;//戰鬥黑幕
+    BitmapPicture WhiteCover;//戰鬥白幕
+    BitmapPicture ReadyBmp;//ReadyBitmap
+    BitmapPicture KoBmp;//ReadyBitmap
+
+    double BlackCoverfactor;//戰鬥黑幕大小
     Bar Bar_HP1;//玩家1血量
     Bar Bar_HP2;//玩家2血量
     Bar Bar_SP1;//玩家1體力
@@ -140,12 +148,16 @@ namespace game_framework
     BitmapPicture Player1_Name;
     BitmapPicture Player2_Name;
     BitmapPicture CutInMask;
+    double WinnerTimer;
+    double WinnerTimer2;
     bool SomeBodyDown;
+    int WinnerID;
+    #pragma endregion
 
     //聲音
     const Audio_ID Sounds;//音效資源編碼
 
-                          //鍵盤
+    //鍵盤
     const Keycode Keys;//鍵盤字典物件
     KeyBoardState KeyState_now;//當前的鍵盤狀態
     KeyBoardState KeyState_last;//前一瞬間的鍵盤狀態
@@ -234,13 +246,122 @@ namespace game_framework
         LoadSounds(Sounds.Fire1, "Content\\Sounds\\Fire1.wav");
         LoadSounds(Sounds.CutIn, "Content\\Sounds\\CutIn.wav");
         LoadSounds(Sounds.NormalHit2, "Content\\Sounds\\NormalHit2.wav");
+        LoadSounds(Sounds.SbDown, "Content\\Sounds\\SbDown.wav");
         ShowInitProgress(70);
+        LoadSounds(Sounds.DoubleHelixXi, "Content\\Sounds\\DoubleHelix-Xi.mp3");
+        ShowInitProgress(80);
     }
     #pragma endregion
     #pragma endregion
 
     #pragma region 遊戲內容
+    //各大GameAction的Show跟Move
+    #pragma region GameActions
 
+    void GameAction0_initialization()
+    {
+        GameAction = 0;
+    }
+    void GameAction1_initialization()
+    {
+        GameAction = 1;
+    }
+    void GameAction2_initialization()
+    {
+        GameAction = 2;
+    }
+    void GameAction3_initialization()
+    {
+        GameAction = 3;
+    }
+    void GameAction4_initialization()
+    {
+        GameAction = 4;
+    }
+    void GameAction5_initialization()
+    {
+        GameAction = 5;
+        LoadingStart = false;//開始讀取布林值
+        LoadingDone = false;//讀取完成布林值
+    }
+    void GameAction6_initialization()
+    {
+        GameAction = 6;
+    }
+    void GameAction7_initialization()
+    {
+        GameAction = 7;
+    }
+    void GameAction0_OnMove()
+    {
+        if (GameAction == 0)
+        {
+
+        }
+    }
+    void GameAction0_OnShow(int i)
+    {
+        if (GameAction == 0)
+        {
+
+        }
+    }
+    void GameAction1_OnMove()
+    {
+        if (GameAction == 1)
+        {
+
+        }
+    }
+    void GameAction1_OnShow(int i)
+    {
+        if (GameAction == 1)
+        {
+
+        }
+    }
+    void GameAction2_OnMove()
+    {
+        if (GameAction == 2)
+        {
+
+        }
+    }
+    void GameAction2_OnShow(int i)
+    {
+        if (GameAction == 2)
+        {
+
+        }
+    }
+    void GameAction3_OnMove()
+    {
+        if (GameAction == 3)
+        {
+
+        }
+    }
+    void GameAction3_OnShow(int i)
+    {
+        if (GameAction == 3)
+        {
+
+        }
+    }
+    void GameAction4_OnMove()
+    {
+        if (GameAction == 4)
+        {
+
+        }
+    }
+    void GameAction4_OnShow(int i)
+    {
+        if (GameAction == 4)
+        {
+
+        }
+    }
     //戰鬥畫面
     #pragma region 戰鬥環境
     //大絕招Cover
@@ -408,9 +529,21 @@ namespace game_framework
     {
         if (LoadingDone == false)
         {
+            //重製相機鏡頭
+            Camera = CameraPosition();
+           
+
             #pragma region 戰鬥背景
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
             BK.LoadTexture(TransparentColor);
+            BlackCover = BitmapPicture("Content\\Bitmaps\\Blackcover.bmp", 0, 0, false, false, false);
+            BlackCover.LoadTexture(TransparentColor);
+            WhiteCover = BitmapPicture("Content\\Bitmaps\\whitecover.bmp", 0, 0, false, false, false);
+            WhiteCover.LoadTexture(TransparentColor);
+            ReadyBmp = BitmapPicture("Content\\Bitmaps\\ReadyItem.bmp", 280, 600, false, false, false);
+            ReadyBmp.LoadTexture(TransparentColor);
+            KoBmp = BitmapPicture("Content\\Bitmaps\\KO.bmp", 0, 200, false, false, false);
+            KoBmp.LoadTexture(TransparentColor);
             #pragma endregion
 
             #pragma region 建置玩家變數
@@ -476,6 +609,8 @@ namespace game_framework
             Player1->CanControl = true;
             Player2->CanControl = true;
             SomeBodyDown = false;
+            BlackCoverfactor = 1;
+            ReadyTimer = 0;
             LoadingDone = true;
         }
     }
@@ -483,6 +618,7 @@ namespace game_framework
     void BattleOnMove()
     {
         BK.OnUpdate(Camera);
+        #pragma region 正常更新
         if (Player1->NeedCutIn == false && Player2->NeedCutIn == false)
         {
             Player1->OnUpdate(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
@@ -493,19 +629,141 @@ namespace game_framework
             CutInFunction(&CutInMask, Player1);
         if (Player2->NeedCutIn)
             CutInFunction(&CutInMask, Player2);
+        if (ReadyTimer < 1500)
+        {
+            ReadyTimer += TIMER_TICK_MILLIDECOND;
+            Player1->CanControl = false;
+            Player2->CanControl = false;
+            ReadyBmp.visable = true;
+            if (ReadyBmp.Rect.Y > 270)
+            {
+                ReadyBmp.Rect.Y -= 20;
+                if (ReadyBmp.Rect.Y < 270)
+                {
+                    ReadyBmp.Rect.Y = 270;
+                }
+            }
+            if (ReadyTimer >= 1500)
+            {
+                ReadyTimer = 1500;
+                Player1->CanControl = true;
+                Player2->CanControl = true;
+                ReadyBmp.visable = false;
+                PlaySounds(Sounds.SbDown, false);
+                PlaySounds(Sounds.DoubleHelixXi,true);
+            }
+            ReadyBmp.OnUpdate();
+        }
 
+        #pragma endregion
+
+
+        #pragma region 有人被打敗
         if (Player1->HP <= 0 && SomeBodyDown == false)
         {
             SomeBodyDown = true;
             Player1->CanControl = false;
-            Sleep(200);
+            PlaySounds(Sounds.SbDown, false);
+            WinnerTimer = 0;
+            WinnerTimer2 = 0;
+            CAudio::Instance()->Stop(Sounds.DoubleHelixXi);
         }
         if (Player2->HP <= 0 && SomeBodyDown == false)
         {
             SomeBodyDown = true;
             Player2->CanControl = false;
-            Sleep(200);
+            PlaySounds(Sounds.SbDown, false);
+            WinnerTimer = 0;
+            WinnerTimer2 = 0;
+            CAudio::Instance()->Stop(Sounds.DoubleHelixXi);
         }
+
+        if (SomeBodyDown == true)
+        {
+            WinnerTimer += TIMER_TICK_MILLIDECOND;
+            WinnerTimer2 += TIMER_TICK_MILLIDECOND;
+            if (WinnerTimer < 500 && WinnerTimer2>40)
+            {
+                WinnerTimer2 = 0;
+                if (WhiteCover.visable)
+                {
+                    WhiteCover.visable = false;
+                }
+                else
+                {
+                    WhiteCover.visable = true;
+                }
+            }
+            if (WinnerTimer >= 1000)
+            {
+                if (KoBmp.Rect.X < 250)
+                {
+                    KoBmp.Rect.X += 25;
+                    if (KoBmp.Rect.X > 250)
+                    {
+                        KoBmp.Rect.X = 250;
+                    }
+                }
+                KoBmp.visable = true;
+                KoBmp.OnUpdate();
+            }
+            Player1->Invincible = true;
+            Player2->Invincible = true;
+            if (Player1->HP <= 0)
+            {
+                Player1->CanControl = false;
+                Player1->Action = "受傷";
+                if (Player1->Rect.Y < GroundPosition)
+                    Player1->Step = 1;
+                else
+                    Player1->Step = 2;
+                Player1->AnimationUpdate(Camera);
+                Player1->Throughing = true;
+                Player1->Invincible = true;
+            }
+            if (Player2->HP <= 0)
+            {
+                Player2->CanControl = false;
+                Player2->Action = "受傷";
+                if (Player2->Rect.Y < GroundPosition)
+                    Player2->Step = 1;
+                else
+                    Player2->Step = 2;
+                Player2->AnimationUpdate(Camera);
+                Player2->Throughing = true;
+                Player2->Invincible = true;
+            }
+            if (WinnerTimer > 2000)
+            {
+                if (Player1->HP > 0)
+                {
+                    WinnerID = 1;
+                }
+                else if (Player2->HP > 0)
+                {
+                    WinnerID = 2;
+                }
+                else
+                {
+                    WinnerID = 0;
+                }
+                BlackCoverfactor = ((501 - (2500 - WinnerTimer)) / 500);
+                BlackCover.visable = true;
+                if (BlackCoverfactor > 1)
+                {
+                    BlackCoverfactor = 1;
+                    GameAction7_initialization();
+                }
+                BlackCover.OnUpdate();
+            }
+
+
+        }
+
+        #pragma endregion
+
+
+
 
         Bar_HP1_MaskTop.OnUpdate();
         Bar_HP1_MaskBottom.OnUpdate();
@@ -533,6 +791,10 @@ namespace game_framework
     void BattleOnShow(int i)
     {
         BK.Draw(i, 1);
+        BlackCover.Draw(i, 8, BlackCoverfactor);
+        WhiteCover.Draw(i, 8);
+        KoBmp.Draw(i, 7);
+        ReadyBmp.Draw(i, 7);
         Player1->Draw(i, 3, Camera);
         Player2->Draw(i, 3, Camera);
         Bar_HP1.Draw(i, 6, Player1->HP, Player1->HP_Max);
@@ -558,113 +820,6 @@ namespace game_framework
         CutInMask.Draw(i, 4);
     }
     #pragma endregion 
-    //各大GameAction的Show跟Move
-    #pragma region GameActions
-
-    void GameAction0_initialization()
-    {
-        GameAction = 0;
-    }
-    void GameAction1_initialization()
-    {
-        GameAction = 1;
-    }
-    void GameAction2_initialization()
-    {
-        GameAction = 2;
-    }
-    void GameAction3_initialization()
-    {
-        GameAction = 3;
-    }
-    void GameAction4_initialization()
-    {
-        GameAction = 4;
-    }
-    void GameAction5_initialization()
-    {
-        GameAction = 5;
-        LoadingStart = false;//開始讀取布林值
-        LoadingDone = false;//讀取完成布林值
-    }
-    void GameAction6_initialization()
-    {
-        GameAction = 6;
-    }
-    void GameAction7_initialization()
-    {
-        GameAction = 7;
-    }
-    void GameAction0_OnMove()
-    {
-        if (GameAction == 0)
-        {
-
-        }
-    }
-    void GameAction0_OnShow(int i)
-    {
-        if (GameAction == 0)
-        {
-
-        }
-    }
-    void GameAction1_OnMove()
-    {
-        if (GameAction == 1)
-        {
-
-        }
-    }
-    void GameAction1_OnShow(int i)
-    {
-        if (GameAction == 1)
-        {
-
-        }
-    }
-    void GameAction2_OnMove()
-    {
-        if (GameAction == 2)
-        {
-
-        }
-    }
-    void GameAction2_OnShow(int i)
-    {
-        if (GameAction == 2)
-        {
-
-        }
-    }
-    void GameAction3_OnMove()
-    {
-        if (GameAction == 3)
-        {
-
-        }
-    }
-    void GameAction3_OnShow(int i)
-    {
-        if (GameAction == 3)
-        {
-
-        }
-    }
-    void GameAction4_OnMove()
-    {
-        if (GameAction == 4)
-        {
-
-        }
-    }
-    void GameAction4_OnShow(int i)
-    {
-        if (GameAction == 4)
-        {
-
-        }
-    }
     void GameAction5_OnMove()
     {
         if (GameAction == 5)
@@ -718,6 +873,7 @@ namespace game_framework
     {
         if (GameAction == 7)
         {
+            GameAction5_initialization();
         }
     }
     void GameAction7_OnShow(int i)
@@ -728,7 +884,6 @@ namespace game_framework
     }
 
     #pragma endregion
-
     #pragma endregion
 
     #pragma region 底層mygame.cpp的運作程序(基本上不用更改)
@@ -789,7 +944,7 @@ namespace game_framework
         Title_Bitmap.OnUpdate();
         if (KeyState_now.Space == true && KeyState_last.Space == false)
         {
-            GameAction0_initialization();
+            GameAction5_initialization();
             GotoGameState(GAME_STATE_RUN);
 
         }
@@ -828,7 +983,7 @@ namespace game_framework
     //GameState ShowBitmaps
     void CGameStateRun::OnShow()
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 10; i++)
         {
             GameAction0_OnShow(i);
             GameAction1_OnShow(i);

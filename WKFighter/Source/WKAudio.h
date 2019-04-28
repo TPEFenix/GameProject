@@ -18,6 +18,8 @@ namespace WKAudio_namespace
         const int Fire1 = 9;
         const int CutIn = 10;
         const int NormalHit2 = 11;
+        const int SbDown = 12;
+        const int DoubleHelixXi = 13;
     };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);

@@ -120,7 +120,7 @@ namespace game_framework
     };
     #pragma endregion
 
-   
+
     #pragma region Rina
     class Rina :public  BattlePlayer
     {
@@ -231,11 +231,5 @@ namespace game_framework
 
     };
     #pragma endregion
-
- 
-
-
-
-
 
 }

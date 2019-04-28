@@ -74,7 +74,7 @@ namespace game_framework
             IsRight = false;
         }
         HP = HP_Max;//當前生命
-        SP = SP_Max;//當前氣力
+        SP = SP_Max/2;//當前氣力
         CanControl = false;//可以控制
         Invincible = false;//無敵狀態
         Action = "待機";//動作狀態
@@ -88,7 +88,7 @@ namespace game_framework
         Acceleration_Y = 0;//Y加速度
         Throughing = false;
         HitFly = false;
-        BreakPoint = 60;
+        BreakPoint = 0;
         Acceleration_gravity = 0.5;
 
 
@@ -307,6 +307,7 @@ namespace game_framework
 
                 CanToRushAttack;
                 CanToRushSkill;
+
             }
             #pragma endregion
 
@@ -1474,7 +1475,7 @@ namespace game_framework
             IsRight = false;
         }
         HP = HP_Max;//當前生命
-        SP = SP_Max;//當前氣力
+        SP = SP_Max / 2;//當前氣力
         CanControl = false;//可以控制
         Invincible = false;//無敵狀態
         Action = "待機";//動作狀態
@@ -1488,7 +1489,7 @@ namespace game_framework
         Acceleration_Y = 0;//Y加速度
         Throughing = false;
         HitFly = false;
-        BreakPoint = 60;
+        BreakPoint = 0;
         Acceleration_gravity = 0.5;
 
 
@@ -1674,12 +1675,14 @@ namespace game_framework
             {
                 CanToRushAttack;
                 CanToRushSkill;
+                
             }
             else if (RushTimer >= 16 && Step >= 1)//煞車
             {
                 Step = 2;
                 CanToRushAttack;
                 CanToRushSkill;
+                
             }
             if (RushTimer >= 40 && RushTimer <= 80 && Step == 2)
             {
@@ -1689,6 +1692,7 @@ namespace game_framework
                     Velocity_X = 0;
                 CanToRushAttack;
                 CanToRushSkill;
+                
             }
 
             #pragma endregion
