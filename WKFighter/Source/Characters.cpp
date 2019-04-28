@@ -74,7 +74,7 @@ namespace game_framework
             IsRight = false;
         }
         HP = HP_Max;//當前生命
-        SP = SP_Max/2;//當前氣力
+        SP = SP_Max / 2;//當前氣力
         CanControl = false;//可以控制
         Invincible = false;//無敵狀態
         Action = "待機";//動作狀態
@@ -1514,6 +1514,7 @@ namespace game_framework
         InsertAction("防禦受傷", 0, color);
         InsertAction("受傷", 2, color);
         InsertAction("練氣", 4, color);
+        InsertAction("普攻1", 4, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1525,6 +1526,7 @@ namespace game_framework
     void Rina::AutoLoadAttacks(GPH)
     {
         Attacks.AttackObjects = map<string, AttackObj>();
+        Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
     }
 
@@ -1675,14 +1677,14 @@ namespace game_framework
             {
                 CanToRushAttack;
                 CanToRushSkill;
-                
+
             }
             else if (RushTimer >= 16 && Step >= 1)//煞車
             {
                 Step = 2;
                 CanToRushAttack;
                 CanToRushSkill;
-                
+
             }
             if (RushTimer >= 40 && RushTimer <= 80 && Step == 2)
             {
@@ -1692,7 +1694,7 @@ namespace game_framework
                     Velocity_X = 0;
                 CanToRushAttack;
                 CanToRushSkill;
-                
+
             }
 
             #pragma endregion
@@ -1964,7 +1966,57 @@ namespace game_framework
     {
         if (Action == "普攻1")
         {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
 
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 16 && Step <= 2)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+
+                #pragma region 產生攻擊物件
+                //出拳
+                if (Step >= 3)
+                {
+                    Velocity_X += Ahead(4);
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Rina_NormalAttack1_Damage,
+                        2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        120, 30, "PunchHit", Sounds.NormalHit, Camera);
+
+                }
+                #pragma endregion
+
+
+            }
+            else if (NormalAttack1Timer >= 40 && Step == 3)
+            {
+                NormalAttack1Timer = 0;
+                Step = 4;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer < 100 && Step >= 4)
+            {
+                //到別的動作
+                CanToNormalAttack2;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
+                CanToUpAttack;
+                CanToDownAttack;
+                CanToUpSkill;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
         }
     }
 

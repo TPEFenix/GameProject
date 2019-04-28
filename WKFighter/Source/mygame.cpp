@@ -531,7 +531,7 @@ namespace game_framework
         {
             //重製相機鏡頭
             Camera = CameraPosition();
-           
+
 
             #pragma region 戰鬥背景
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
@@ -650,7 +650,7 @@ namespace game_framework
                 Player2->CanControl = true;
                 ReadyBmp.visable = false;
                 PlaySounds(Sounds.SbDown, false);
-                PlaySounds(Sounds.DoubleHelixXi,true);
+                PlaySounds(Sounds.DoubleHelixXi, true);
             }
             ReadyBmp.OnUpdate();
         }
