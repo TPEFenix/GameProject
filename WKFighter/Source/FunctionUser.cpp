@@ -17,12 +17,13 @@
 using namespace std;
 using namespace game_framework;
 
+
 namespace FunctionUser_namespace
 {
 
+    
 
-
-    void LoadingResource(void (LoadingFunction)(), thread *mThread, bool *started, bool *finished)
+    void LoadingResource(void (*LoadingFunction)(), thread *mThread, bool *started, bool *finished)
     {
         if (*started == false && *finished == false)
         {
@@ -31,8 +32,8 @@ namespace FunctionUser_namespace
         }
         if (*finished == true && *started == true)
         {
-            *started = false;
             mThread->join();
+            *started = false;
         }
     }
 

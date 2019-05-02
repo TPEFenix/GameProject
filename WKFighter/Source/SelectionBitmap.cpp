@@ -50,7 +50,8 @@ namespace game_framework
     {
         this->SetName(name);
         CanPixelCollision = false;
-        BitmapPictures = map<string, BitmapPicture>();
+
+
         string str = ("Content\\Bitmaps\\Selection\\" + name + "_0.bmp");
         BitmapPictures.insert(std::pair<string, BitmapPicture>(str, BitmapPicture(visable)));
         char *cc = new char[65535];

@@ -22,7 +22,7 @@ namespace game_framework
     //所有特效都寫這
     void EffectSprite::AutoLoadEffections(COLORREF color)
     {
-        Content = map<string, BitmapAnimation>();
+
         InsertEffection("Airboost", 5, 4, 10, color);
         InsertEffection("Airboost2", 5, 4, 10, color);
         InsertEffection("Airboost3", 5, 4, 10, color);

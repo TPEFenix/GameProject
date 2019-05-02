@@ -102,7 +102,6 @@ namespace game_framework
     bool CloseingDebug = false;
 
     BitmapPicture LoadingPicture;//讀取畫面圖示
-    thread LoadingThread;//讀取執行序
     bool LoadingStart = false;//開始讀取布林值
     bool LoadingDone = false;//讀取完成布林值
     bool LoadingTemp = false;//放大縮小
@@ -309,7 +308,7 @@ namespace game_framework
     {
         if (GameAction == 0)
         {
-            
+
             if (KeyState_now.Enter == true && KeyState_last.Enter == false)
             {
                 if (TitleSelection == 0)
@@ -598,11 +597,11 @@ namespace game_framework
     //戰鬥讀取
     void BattleLoading()
     {
+
         if (LoadingDone == false)
         {
             //重製相機鏡頭
             Camera = CameraPosition();
-
 
             #pragma region 戰鬥背景
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
@@ -616,17 +615,20 @@ namespace game_framework
             KoBmp = BitmapPicture("Content\\Bitmaps\\KO.bmp", 0, 200, false, false, false);
             KoBmp.LoadTexture(TransparentColor);
             #pragma endregion
+            for (int i = 0; i < 10; i++)
+            {
+                #pragma region 建置玩家變數
+                delete (Player1);
+                delete (Player2);
+                Player1 = DecideCharacter(1, Player1Character);
+                Player2 = DecideCharacter(2, Player2Character);
+                #pragma endregion
 
-            #pragma region 建置玩家變數
-            delete Player1;
-            delete Player2;
-            Player1 = DecideCharacter(1, Player1Character);
-            Player2 = DecideCharacter(2, Player2Character);
-            #pragma endregion
+                #pragma region 讀取玩家圖檔與設定初始參數
+                Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+                Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
 
-            #pragma region 讀取玩家圖檔與設定初始參數
-            Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-            Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+            }
             Player1->Rect.X = 250;
             Player1->Rect.Y = GroundPosition - 200;
             Player2->Rect.X = 430;
@@ -684,6 +686,7 @@ namespace game_framework
             ReadyTimer = 0;
             LoadingDone = true;
         }
+
     }
     //戰鬥OnMove
     void BattleOnMove()
@@ -823,7 +826,7 @@ namespace game_framework
                 if (BlackCoverfactor > 1)
                 {
                     BlackCoverfactor = 1;
-                    GameAction7_initialization();
+                    GameAction0_initialization();
                 }
                 BlackCover.OnUpdate();
             }
@@ -895,7 +898,8 @@ namespace game_framework
     {
         if (GameAction == 5)
         {
-            LoadingResource(BattleLoading, &LoadingThread, &LoadingStart, &LoadingDone);
+            static thread LoadingThread;//讀取執行序
+            LoadingResource(&BattleLoading, &LoadingThread, &LoadingStart, &LoadingDone);
             LoadingPicture.OnUpdate();
             if (LoadingStart == false && LoadingDone == true)
             {

@@ -133,11 +133,11 @@ namespace game_framework
         #define Rina_ChargeSPincrements 13
 
         #define Rina_NormalAttack1_Cost 2.5
-        #define Rina_NormalAttack1_Damage 30
+        #define Rina_NormalAttack1_Damage 300
         #define Rina_NormalAttack2_Cost 2.5
-        #define Rina_NormalAttack2_Damage 30
+        #define Rina_NormalAttack2_Damage 300
         #define Rina_NormalAttack3_Cost 5
-        #define Rina_NormalAttack3_Damage 70
+        #define Rina_NormalAttack3_Damage 700
         #define Rina_AirAttack1_Cost 2.5
         #define Rina_AirAttack1_Damage 30
         #define Rina_AirAttack2_Cost 5

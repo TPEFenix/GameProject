@@ -138,7 +138,7 @@ namespace game_framework
     //註冊攻擊物件
     void Matchstick::AutoLoadAttacks(GPH)
     {
-        Attacks.AttackObjects = map<string, AttackObj>();
+
         Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
@@ -1489,7 +1489,7 @@ namespace game_framework
     //註冊攻擊物件
     void Rina::AutoLoadAttacks(GPH)
     {
-        Attacks.AttackObjects = map<string, AttackObj>();
+
         Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
 
         Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
@@ -1976,7 +1976,7 @@ namespace game_framework
                     //出拳
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
-                        Matchstick_NormalAttack2_Damage,
+                        Rina_NormalAttack2_Damage,
                         3.5, 2, Rect.X + 85, Rect.X - 15, Rect.Y + 35, 0, 0,
                         120, 30, "PunchHit", Sounds.NormalHit, Camera);
                     #pragma endregion
@@ -2046,8 +2046,8 @@ namespace game_framework
                     //基本設定
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
-                        Matchstick_NormalAttack3_Damage,
-                        12, 7.5, Rect.X + 75, Rect.X -5, Rect.Y + 45, 0, 0,
+                        Rina_NormalAttack3_Damage,
+                        12, 7.5, Rect.X + 75, Rect.X - 5, Rect.Y + 45, 0, 0,
                         200, 100, "PunchHit", Sounds.NormalHit, Camera);
                     //額外設定
                     Attacks.AttackObjects["Normal1"].CanHitFly = true;
