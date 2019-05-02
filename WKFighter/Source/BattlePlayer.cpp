@@ -193,6 +193,57 @@ namespace game_framework
         #pragma endregion
 
     }
+    void BattlePlayer::ProduceBreakPoint(GPH)
+    {
+        #pragma region ¥¢¿Å­È
+        if (BreakPoint > 0 && BreakPoint < 90)
+        {
+            BreakPoint -= 0.05;
+        }
+        if (BreakPoint > 90)
+        {
+            BreakPoint = 90;
+            BreakPointTimer = 0;
+        }
+        if (BreakPoint == 90)
+        {
+            BreakPoint = 90;
+            BreakPointTimer += TIMER_TICK_MILLIDECOND;
+            if (BreakPointTimer > 2500)
+            {
+                BreakPointTimer = 0;
+                BreakPoint = 0;
+            }
+        }
+        #pragma endregion
+    }
+    void BattlePlayer::ProduceRecovery(GPH)
+    {
+        #pragma region ¦^´_¦å¶q
+        if (recovery > 0)
+        {
+            GainHP(0.1);
+            recovery -= 0.1;
+        }
+        #pragma endregion
+    }
+    void BattlePlayer::CheckPerfectBlock(GPH)
+    {
+        if (Button_now.button_Guard == Button_last.button_Guard && Button_now.button_Guard == true)
+        {
+            BetweenTwiceClickTimer = 0;
+            ClickDefendTimer += TIMER_TICK_MILLIDECOND;
+        }
+        if (Button_now.button_Guard == false)
+        {
+            BetweenTwiceClickTimer += TIMER_TICK_MILLIDECOND;
+        }
+        if (BetweenTwiceClickTimer > 100)
+        {
+            BetweenTwiceClickTimer = 0;
+            ClickDefendTimer = 0;
+        }
+    }
     void BattlePlayer::Draw(int i, int j, CameraPosition Camera)
     {
         this->DisplayBitmap->Draw(i, j);
@@ -511,7 +562,6 @@ namespace game_framework
             PlayEffect(this, "Airboost3", Camera, Rect.X - 20, Rect.X - 20, Rect.Y);
             Velocity_Y = 12;
         }
-
     }
 
     void BattlePlayer::GotoJump(GPH)

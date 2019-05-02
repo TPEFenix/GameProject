@@ -169,7 +169,10 @@ namespace game_framework
         virtual void LoopStep(int);//(重複同樣動作)
         virtual void RunAhead(double, double);//(正確方向走)
         virtual void PhysicalMovement(GPH);//物理移動，全角色共用，除非特例
-        double Ahead(double move);//依照正確方向行動回傳正負(以右為準)
+        virtual void ProduceBreakPoint(GPH);//處理失衡值
+        virtual void ProduceRecovery(GPH);//處理失生命回復
+        virtual void CheckPerfectBlock(GPH);//處理完美格黨
+        virtual double Ahead(double move);//依照正確方向行動回傳正負(以右為準)
 
 
 

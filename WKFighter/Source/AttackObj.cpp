@@ -181,7 +181,7 @@ namespace game_framework
 					}
 					else
 					{
-						Target->BreakPoint += Damage / 10;
+						Target->BreakPoint += 5+(Damage / 10);
 						if (Target->BreakPoint > 90)
 						{
 							Target->BreakPoint = 90;
@@ -193,7 +193,7 @@ namespace game_framework
 						Audio_ID Sounds;
 						PlaySounds(Sounds.Stoned, false);
 						Target->BeHitTimer = 0;
-						Target->BeHitTimeMax = 1000;
+						Target->BeHitTimeMax = 1250;
 						Target->BreakPoint = 0;
 						Target->BreakPointTimer = 0;
 						PlayEffect(Target, "stun_star", Camera, Rect.X - 15, Rect.X - 15, Rect.Y);

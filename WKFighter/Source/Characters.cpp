@@ -195,52 +195,9 @@ namespace game_framework
         AnimationUpdate(Camera);
 
         //雜項
-        #pragma region 失衡值
-        if (BreakPoint > 0 && BreakPoint < 90)
-        {
-            BreakPoint -= 0.075;
-        }
-        if (BreakPoint > 90)
-        {
-            BreakPoint = 90;
-            BreakPointTimer = 0;
-        }
-        if (BreakPoint == 90)
-        {
-            BreakPoint = 90;
-            BreakPointTimer += TIMER_TICK_MILLIDECOND;
-            if (BreakPointTimer > 2000)
-            {
-                BreakPointTimer = 0;
-                BreakPoint = 0;
-            }
-        }
-        #pragma endregion
-
-        #pragma region 回復血量
-        if (recovery > 0)
-        {
-            GainHP(0.1);
-            recovery -= 0.1;
-        }
-        #pragma endregion
-
-        #pragma region 完美格檔判定
-        if (Button_now.button_Guard == Button_last.button_Guard && Button_now.button_Guard == true)
-        {
-            BetweenTwiceClickTimer = 0;
-            ClickDefendTimer += TIMER_TICK_MILLIDECOND;
-        }
-        if (Button_now.button_Guard == false)
-        {
-            BetweenTwiceClickTimer += TIMER_TICK_MILLIDECOND;
-        }
-        if (BetweenTwiceClickTimer > 100)
-        {
-            BetweenTwiceClickTimer = 0;
-            ClickDefendTimer = 0;
-        }
-        #pragma endregion
+        ProduceBreakPoint(GPP);
+        ProduceRecovery(GPP);
+        CheckPerfectBlock(GPP);
 
         #pragma region 例外狀況
 
@@ -1515,6 +1472,7 @@ namespace game_framework
         InsertAction("受傷", 2, color);
         InsertAction("練氣", 4, color);
         InsertAction("普攻1", 4, color);
+        InsertAction("普攻2", 4, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1573,52 +1531,9 @@ namespace game_framework
         AnimationUpdate(Camera);
 
         //雜項
-        #pragma region 失衡值
-        if (BreakPoint > 0 && BreakPoint < 90)
-        {
-            BreakPoint -= 0.075;
-        }
-        if (BreakPoint > 90)
-        {
-            BreakPoint = 90;
-            BreakPointTimer = 0;
-        }
-        if (BreakPoint == 90)
-        {
-            BreakPoint = 90;
-            BreakPointTimer += TIMER_TICK_MILLIDECOND;
-            if (BreakPointTimer > 2000)
-            {
-                BreakPointTimer = 0;
-                BreakPoint = 0;
-            }
-        }
-        #pragma endregion
-
-        #pragma region 回復血量
-        if (recovery > 0)
-        {
-            GainHP(0.1);
-            recovery -= 0.1;
-        }
-        #pragma endregion
-
-        #pragma region 完美格檔判定
-        if (Button_now.button_Guard == Button_last.button_Guard && Button_now.button_Guard == true)
-        {
-            BetweenTwiceClickTimer = 0;
-            ClickDefendTimer += TIMER_TICK_MILLIDECOND;
-        }
-        if (Button_now.button_Guard == false)
-        {
-            BetweenTwiceClickTimer += TIMER_TICK_MILLIDECOND;
-        }
-        if (BetweenTwiceClickTimer > 100)
-        {
-            BetweenTwiceClickTimer = 0;
-            ClickDefendTimer = 0;
-        }
-        #pragma endregion
+        ProduceBreakPoint(GPP);
+        ProduceRecovery(GPP);
+        CheckPerfectBlock(GPP);
 
         #pragma region 例外狀況
 
@@ -2034,6 +1949,53 @@ namespace game_framework
     {
         if (Action == "普攻2")
         {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 16 && Step <= 2)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                if (Step >= 3)
+                {
+                    Velocity_X += Ahead(3.5);
+                    #pragma region 產生攻擊物件
+                    //出拳
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Matchstick_NormalAttack2_Damage,
+                        3.5, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        120, 30, "PunchHit", Sounds.NormalHit, Camera);
+                    #pragma endregion
+                }
+            }
+            else if (NormalAttack1Timer >= 50 && Step == 3)
+            {
+                NormalAttack1Timer = 0;
+                Step = 4;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer < 100 && Step >= 4)
+            {
+                //到別的動作
+                CanToNormalAttack3;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
+                CanToUpAttack;
+                CanToDownAttack;
+                CanToUpSkill;
+
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
 
         }
     }
