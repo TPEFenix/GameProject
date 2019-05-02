@@ -167,6 +167,10 @@ namespace game_framework
     #pragma region GameAction_Title
     BitmapPicture BackGround_Title;
     BitmapPicture Title_Bitmap;
+    BitmapPicture Title_Start;
+    BitmapPicture Title_SkillTable;
+    BitmapPicture Title_Exit;
+    BitmapPicture Title_Cursor;
     #pragma endregion 
     //主選單變數
     #pragma region GameAction_Menu
@@ -233,6 +237,14 @@ namespace game_framework
         Title_Bitmap.LoadTexture(TransparentColor);
         BackGround_Menu = BitmapPicture("Content\\Bitmaps\\BackGround_Menu.bmp", 0, 0, true, false, false);
         BackGround_Menu.LoadTexture(TransparentColor);
+        Title_Start = BitmapPicture("Content\\Bitmaps\\介面文字1.bmp", 260, 300, true, false, false);
+        Title_Start.LoadTexture(TransparentColor);
+        Title_SkillTable = BitmapPicture("Content\\Bitmaps\\介面文字2.bmp", 260, 400, true, false, false);
+        Title_SkillTable.LoadTexture(TransparentColor);
+        Title_Exit = BitmapPicture("Content\\Bitmaps\\介面文字3.bmp", 285, 500, true, false, false);
+        Title_Exit.LoadTexture(TransparentColor);
+        Title_Cursor = BitmapPicture("Content\\Bitmaps\\游標.bmp", 225, 300, true, false, false);
+        Title_Cursor.LoadTexture(TransparentColor);
         ShowInitProgress(50);
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
@@ -261,6 +273,7 @@ namespace game_framework
     void GameAction0_initialization()
     {
         GameAction = 0;
+        TitleSelection = 0;
     }
     void GameAction1_initialization()
     {
@@ -296,14 +309,72 @@ namespace game_framework
     {
         if (GameAction == 0)
         {
-
+            
+            if (KeyState_now.Enter == true && KeyState_last.Enter == false)
+            {
+                if (TitleSelection == 0)
+                {
+                    GameAction5_initialization();
+                }
+                else if (TitleSelection == 2)
+                {
+                    ExitGame();
+                }
+            }
+            else if ((KeyState_now.Up == true && KeyState_last.Up == false) || (KeyState_now.W == true && KeyState_last.W == false))
+            {
+                if (TitleSelection == 0)
+                {
+                    Title_Cursor.Rect.Y = 500;
+                    TitleSelection = 2;
+                }
+                else if (TitleSelection == 1)
+                {
+                    Title_Cursor.Rect.Y = 300;
+                    TitleSelection = 0;
+                }
+                else if (TitleSelection == 2)
+                {
+                    Title_Cursor.Rect.Y = 400;
+                    TitleSelection = 1;
+                }
+            }
+            else if ((KeyState_now.Down == true && KeyState_last.Down == false) || (KeyState_now.S == true && KeyState_last.S == false))
+            {
+                if (TitleSelection == 0)
+                {
+                    Title_Cursor.Rect.Y = 400;
+                    TitleSelection = 1;
+                }
+                else if (TitleSelection == 1)
+                {
+                    Title_Cursor.Rect.Y = 500;
+                    TitleSelection = 2;
+                }
+                else if (TitleSelection == 2)
+                {
+                    Title_Cursor.Rect.Y = 300;
+                    TitleSelection = 0;
+                }
+            }
+            BackGround_Title.OnUpdate();
+            Title_Bitmap.OnUpdate();
+            Title_Start.OnUpdate();
+            Title_SkillTable.OnUpdate();
+            Title_Exit.OnUpdate();
+            Title_Cursor.OnUpdate();
         }
     }
     void GameAction0_OnShow(int i)
     {
         if (GameAction == 0)
         {
-
+            BackGround_Title.Draw(i, 1);
+            Title_Bitmap.Draw(i, 3);
+            Title_Start.Draw(i, 3);
+            Title_SkillTable.Draw(i, 3);
+            Title_Exit.Draw(i, 3);
+            Title_Cursor.Draw(i, 3);
         }
     }
     void GameAction1_OnMove()
@@ -944,7 +1015,7 @@ namespace game_framework
         Title_Bitmap.OnUpdate();
         if (KeyState_now.Space == true && KeyState_last.Space == false)
         {
-            GameAction5_initialization();
+            GameAction0_initialization();
             GotoGameState(GAME_STATE_RUN);
 
         }

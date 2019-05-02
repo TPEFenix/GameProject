@@ -425,6 +425,11 @@ namespace game_framework
             }
             #pragma endregion
 
+
+
+
+
+
         }
     }
 
@@ -1473,6 +1478,7 @@ namespace game_framework
         InsertAction("練氣", 4, color);
         InsertAction("普攻1", 4, color);
         InsertAction("普攻2", 4, color);
+        InsertAction("普攻3", 6, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1485,6 +1491,7 @@ namespace game_framework
     {
         Attacks.AttackObjects = map<string, AttackObj>();
         Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
+
         Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
     }
 
@@ -1900,7 +1907,7 @@ namespace game_framework
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Rina_NormalAttack1_Damage,
                         2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
-                        120, 30, "PunchHit", Sounds.NormalHit, Camera);
+                        150, 30, "PunchHit", Sounds.NormalHit, Camera);
 
                 }
                 #pragma endregion
@@ -1953,24 +1960,29 @@ namespace game_framework
             #pragma region 動作主體
             //處理摩擦力
             ProduceFriction(1, 1);
-            if (NormalAttack1Timer >= 16 && Step <= 2)
+            if (NormalAttack1Timer >= 20 && Step >= 0 && Step < 2)
             {
                 NormalAttack1Timer = 0;
                 Step += 1;
-                if (Step >= 3)
+            }
+            if (NormalAttack1Timer >= 12 && Step >= 2 && Step < 3)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                if (Step == 3)
                 {
-                    Velocity_X += Ahead(3.5);
+                    Velocity_X += Ahead(4);
                     #pragma region 產生攻擊物件
                     //出拳
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Matchstick_NormalAttack2_Damage,
-                        3.5, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        3.5, 2, Rect.X + 85, Rect.X - 15, Rect.Y + 35, 0, 0,
                         120, 30, "PunchHit", Sounds.NormalHit, Camera);
                     #pragma endregion
                 }
             }
-            else if (NormalAttack1Timer >= 50 && Step == 3)
+            else if (NormalAttack1Timer >= 40 && Step == 3)
             {
                 NormalAttack1Timer = 0;
                 Step = 4;
@@ -2005,8 +2017,7 @@ namespace game_framework
         if (SP >= Rina_NormalAttack3_Cost)
         {
             GainSP(-Rina_NormalAttack3_Cost);
-            Velocity_X += Ahead(5);
-            Velocity_Y -= 5;
+            Velocity_X += Ahead(4);
             Action = "普攻3";
             Step = 0;
             NormalAttack1Timer = 0;
@@ -2016,6 +2027,52 @@ namespace game_framework
     {
         if (Action == "普攻3")
         {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            #pragma region 動作主體
+            ProduceFriction(0.25, 0.5);
+            if (NormalAttack1Timer >= 40 && Step == 0)
+            {
+                Step += 1;
+                NormalAttack1Timer = 0;
+            }
+            if (NormalAttack1Timer >= 24 && Step <= 4 && Step >= 1)
+            {
+                Step += 1;
+                NormalAttack1Timer = 0;
+                if (Step == 4)
+                {
+                    Velocity_Y -= 4;
+                    #pragma region 產生攻擊物件
+                    //基本設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Matchstick_NormalAttack3_Damage,
+                        12, 7.5, Rect.X + 75, Rect.X -5, Rect.Y + 45, 0, 0,
+                        200, 100, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["Normal1"].CanHitFly = true;
+                    #pragma endregion
+                }
+            }
+            else if (NormalAttack1Timer >= 30 && Step == 5)
+            {
+                NormalAttack1Timer = 0;
+                Step = 6;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer < 100 && Step >= 6)
+            {
+                CanToJump;
+                CanToRush;
+            }
+            else if (NormalAttack1Timer >= 100 && Step >= 6)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
 
         }
     }
