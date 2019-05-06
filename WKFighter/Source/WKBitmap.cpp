@@ -122,6 +122,7 @@ namespace game_framework
                 }
                 CDDraw::ReleaseBackCDC();
             }
+            bmp->DeleteObject();
         }
         delete[] cc;
     }
@@ -173,6 +174,7 @@ namespace game_framework
                 }
                 CDDraw::ReleaseBackCDC();
             }
+            bmp->DeleteObject();
         }
         delete[] cc;
     }
@@ -223,6 +225,7 @@ namespace game_framework
                 }
                 CDDraw::ReleaseBackCDC();
             }
+            bmp->DeleteObject();
         }
     }
     void BitmapPicture::OnUpdate()

@@ -102,6 +102,7 @@ namespace game_framework
     bool CloseingDebug = false;
 
     BitmapPicture LoadingPicture;//讀取畫面圖示
+    thread LoadingThread;//讀取執行序
     bool LoadingStart = false;//開始讀取布林值
     bool LoadingDone = false;//讀取完成布林值
     bool LoadingTemp = false;//放大縮小
@@ -170,13 +171,37 @@ namespace game_framework
     BitmapPicture Title_SkillTable;
     BitmapPicture Title_Exit;
     BitmapPicture Title_Cursor;
+    BitmapPicture BackGround_Select;
     #pragma endregion 
     //主選單變數
     #pragma region GameAction_Menu
     BitmapPicture BackGround_Menu;
     vector <SelectionBitmap> TitleSelects;
-    int TitleSelection = 0;
+    BitmapPicture P1Select_0;
+    BitmapPicture P1Select_1;
+    BitmapPicture P1Select_2;
+    BitmapPicture P1Select_3;
+    BitmapPicture P1Select_4;
+    BitmapPicture P1Select_5;
+    BitmapPicture P2Select_0;
+    BitmapPicture P2Select_1;
+    BitmapPicture P2Select_2;
+    BitmapPicture P2Select_3;
+    BitmapPicture P2Select_4;
+    BitmapPicture P2Select_5;
+    BitmapPicture P1P2Select_0;
+    BitmapPicture P1P2Select_1;
+    BitmapPicture P1P2Select_2;
+    BitmapPicture P1P2Select_3;
+    BitmapPicture P1P2Select_4;
+    BitmapPicture P1P2Select_5;
+    BitmapPicture Characters_Menu;
 
+    int TitleSelection = 0;
+    int P1Selection = 0;
+    int P2Selection = 0;
+    bool SelectedP1 = false;
+    bool SelectedP2 = false;
 
 
 
@@ -244,6 +269,46 @@ namespace game_framework
         Title_Exit.LoadTexture(TransparentColor);
         Title_Cursor = BitmapPicture("Content\\Bitmaps\\游標.bmp", 225, 300, true, false, false);
         Title_Cursor.LoadTexture(TransparentColor);
+        P1Select_0 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_0.bmp", 210, 270, true, false, false);
+        P1Select_0.LoadTexture(TransparentColor);
+        P1Select_1 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_1.bmp", 210, 270, true, false, false);
+        P1Select_1.LoadTexture(TransparentColor);
+        P1Select_2 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_2.bmp", 210, 270, true, false, false);
+        P1Select_2.LoadTexture(TransparentColor);
+        P1Select_3 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_3.bmp", 210, 270, true, false, false);
+        P1Select_3.LoadTexture(TransparentColor);
+        P1Select_4 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_4.bmp", 210, 270, true, false, false);
+        P1Select_4.LoadTexture(TransparentColor);
+        P1Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_5.bmp", 210, 270, true, false, false);
+        P1Select_5.LoadTexture(TransparentColor);
+        P2Select_0 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_0.bmp", 210, 270, true, false, false);
+        P2Select_0.LoadTexture(TransparentColor);
+        P2Select_1 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_1.bmp", 210, 270, true, false, false);
+        P2Select_1.LoadTexture(TransparentColor);
+        P2Select_2 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_2.bmp", 210, 270, true, false, false);
+        P2Select_2.LoadTexture(TransparentColor);
+        P2Select_3 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_3.bmp", 210, 270, true, false, false);
+        P2Select_3.LoadTexture(TransparentColor);
+        P2Select_4 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_4.bmp", 210, 270, true, false, false);
+        P2Select_4.LoadTexture(TransparentColor);
+        P2Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_5.bmp", 210, 270, true, false, false);
+        P2Select_5.LoadTexture(TransparentColor);
+        P1P2Select_0 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_0.bmp", 210, 270, true, false, false);
+        P1P2Select_0.LoadTexture(TransparentColor);
+        P1P2Select_1 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_1.bmp", 210, 270, true, false, false);
+        P1P2Select_1.LoadTexture(TransparentColor);
+        P1P2Select_2 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_2.bmp", 210, 270, true, false, false);
+        P1P2Select_2.LoadTexture(TransparentColor);
+        P1P2Select_3 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_3.bmp", 210, 270, true, false, false);
+        P1P2Select_3.LoadTexture(TransparentColor);
+        P1P2Select_4 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_4.bmp", 210, 270, true, false, false);
+        P1P2Select_4.LoadTexture(TransparentColor);
+        P1P2Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_5.bmp", 210, 270, true, false, false);
+        P1P2Select_5.LoadTexture(TransparentColor);
+        BackGround_Select = BitmapPicture("Content\\Bitmaps\\whitecover.bmp", 0, 0, true, false, false);
+        BackGround_Select.LoadTexture(TransparentColor);
+        Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 210, 270, true, false, false);
+        Characters_Menu.LoadTexture(TransparentColor);
         ShowInitProgress(50);
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
@@ -281,6 +346,10 @@ namespace game_framework
     void GameAction2_initialization()
     {
         GameAction = 2;
+        P1Selection = 0;
+        P2Selection = 2;
+        SelectedP1 = false;
+        SelectedP2 = false;
     }
     void GameAction3_initialization()
     {
@@ -313,7 +382,7 @@ namespace game_framework
             {
                 if (TitleSelection == 0)
                 {
-                    GameAction5_initialization();
+                    GameAction2_initialization();
                 }
                 else if (TitleSelection == 2)
                 {
@@ -394,14 +463,179 @@ namespace game_framework
     {
         if (GameAction == 2)
         {
+            if (SelectedP1 == true && SelectedP2 == true)
+            {
+                Player1Character = P1Selection;
+                Player2Character = P2Selection;
+                GameAction5_initialization();
+            }
 
+            if (KeyState_now.G == true && KeyState_last.G == false)
+                SelectedP1 = false;
+            if (KeyState_now.K == true && KeyState_last.K == false)
+                SelectedP2 = false;
+            
+            if (SelectedP1 == false)
+            {
+                if (KeyState_now.F == true && KeyState_last.F == false)
+                {
+                    SelectedP1 = true;
+                }
+                else if (KeyState_now.D == true && KeyState_last.D == false)
+                {
+                    P1Selection++;
+                    if (P1Selection > 5)
+                    {
+                        P1Selection = 0;
+                    }
+                }
+                else if (KeyState_now.A == true && KeyState_last.A == false)
+                {
+                    P1Selection--;
+                    if (P1Selection < 0)
+                    {
+                        P1Selection = 5;
+                    }
+                }
+                else if (KeyState_now.W == true && KeyState_last.W == false)
+                {
+                    P1Selection += 3;
+                    if (P1Selection > 5)
+                    {
+                        P1Selection -= 6;
+                    }
+                }
+                else if (KeyState_now.S == true && KeyState_last.S == false)
+                {
+                    P1Selection -= 3;
+                    if (P1Selection < 0)
+                    {
+                        P1Selection += 6;
+                    }
+                }
+            }
+            if (SelectedP2 == false)
+            {
+                if (KeyState_now.J == true && KeyState_last.J == false)
+                {
+                    SelectedP2 = true;
+                }
+                else if (KeyState_now.Right == true && KeyState_last.Right == false)
+                {
+                    P2Selection++;
+                    if (P2Selection > 5)
+                    {
+                        P2Selection = 0;
+                    }
+                }
+                else if (KeyState_now.Left == true && KeyState_last.Left == false)
+                {
+                    P2Selection--;
+                    if (P2Selection < 0)
+                    {
+                        P2Selection = 5;
+                    }
+                }
+                else if (KeyState_now.Up == true && KeyState_last.Up == false)
+                {
+                    P2Selection += 3;
+                    if (P2Selection > 5)
+                    {
+                        P2Selection -= 6;
+                    }
+                }
+                else if (KeyState_now.Down == true && KeyState_last.Down == false)
+                {
+                    P2Selection -= 3;
+                    if (P2Selection < 0)
+                    {
+                        P2Selection += 6;
+                    }
+                }
+            }
         }
     }
     void GameAction2_OnShow(int i)
     {
         if (GameAction == 2)
         {
-
+            BackGround_Select.Draw(i, 0);
+            Characters_Menu.Draw(i, 1);
+            if (P1Selection == P2Selection)
+            {
+                switch (P1Selection)
+                {
+                case 0:
+                    P1P2Select_0.Draw(i, 3);
+                    break;
+                case 1:
+                    P1P2Select_1.Draw(i, 3);
+                    break;
+                case 2:
+                    P1P2Select_2.Draw(i, 3);
+                    break;
+                case 3:
+                    P1P2Select_3.Draw(i, 3);
+                    break;
+                case 4:
+                    P1P2Select_4.Draw(i, 3);
+                    break;
+                case 5:
+                    P1P2Select_5.Draw(i, 3);
+                    break;
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                switch (P1Selection)
+                {
+                case 0:
+                    P1Select_0.Draw(i, 3);
+                    break;
+                case 1:
+                    P1Select_1.Draw(i, 3);
+                    break;
+                case 2:
+                    P1Select_2.Draw(i, 3);
+                    break;
+                case 3:
+                    P1Select_3.Draw(i, 3);
+                    break;
+                case 4:
+                    P1Select_4.Draw(i, 3);
+                    break;
+                case 5:
+                    P1Select_5.Draw(i, 3);
+                    break;
+                default:
+                    break;
+                }
+                switch (P2Selection)
+                {
+                case 0:
+                    P2Select_0.Draw(i, 3);
+                    break;
+                case 1:
+                    P2Select_1.Draw(i, 3);
+                    break;
+                case 2:
+                    P2Select_2.Draw(i, 3);
+                    break;
+                case 3:
+                    P2Select_3.Draw(i, 3);
+                    break;
+                case 4:
+                    P2Select_4.Draw(i, 3);
+                    break;
+                case 5:
+                    P2Select_5.Draw(i, 3);
+                    break;
+                default:
+                    break;
+                }
+            }
         }
     }
     void GameAction3_OnMove()
@@ -597,11 +831,11 @@ namespace game_framework
     //戰鬥讀取
     void BattleLoading()
     {
-
         if (LoadingDone == false)
         {
             //重製相機鏡頭
             Camera = CameraPosition();
+
 
             #pragma region 戰鬥背景
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
@@ -615,20 +849,17 @@ namespace game_framework
             KoBmp = BitmapPicture("Content\\Bitmaps\\KO.bmp", 0, 200, false, false, false);
             KoBmp.LoadTexture(TransparentColor);
             #pragma endregion
-            for (int i = 0; i < 10; i++)
-            {
-                #pragma region 建置玩家變數
-                delete (Player1);
-                delete (Player2);
-                Player1 = DecideCharacter(1, Player1Character);
-                Player2 = DecideCharacter(2, Player2Character);
-                #pragma endregion
 
-                #pragma region 讀取玩家圖檔與設定初始參數
-                Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-                Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+            #pragma region 建置玩家變數
+            delete Player1;
+            delete Player2;
+            Player1 = DecideCharacter(1, Player1Character);
+            Player2 = DecideCharacter(2, Player2Character);
+            #pragma endregion
 
-            }
+            #pragma region 讀取玩家圖檔與設定初始參數
+            Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+            Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player1->Rect.X = 250;
             Player1->Rect.Y = GroundPosition - 200;
             Player2->Rect.X = 430;
@@ -686,7 +917,6 @@ namespace game_framework
             ReadyTimer = 0;
             LoadingDone = true;
         }
-
     }
     //戰鬥OnMove
     void BattleOnMove()
@@ -826,7 +1056,7 @@ namespace game_framework
                 if (BlackCoverfactor > 1)
                 {
                     BlackCoverfactor = 1;
-                    GameAction0_initialization();
+                    GameAction7_initialization();
                 }
                 BlackCover.OnUpdate();
             }
@@ -898,8 +1128,7 @@ namespace game_framework
     {
         if (GameAction == 5)
         {
-            static thread LoadingThread;//讀取執行序
-            LoadingResource(&BattleLoading, &LoadingThread, &LoadingStart, &LoadingDone);
+            LoadingResource(BattleLoading, &LoadingThread, &LoadingStart, &LoadingDone);
             LoadingPicture.OnUpdate();
             if (LoadingStart == false && LoadingDone == true)
             {
