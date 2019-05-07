@@ -525,6 +525,8 @@ namespace game_framework
             }
             if (Shot1Timer >= 16 && Step >= 1 && Step <= 3)
             {
+                if (Shot1Current >= 5)
+                    Shot1Current = 0;
                 Shot1Timer = 0;
                 Step += 1;
                 if (Step == 3)
@@ -532,15 +534,13 @@ namespace game_framework
                     #pragma region 產生攻擊物件
                     //出拳
                     Attacks.AttackReset_Shot(&(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), this, Enemy,
-                        Matchstick_Skill1_Damage,
+                        Rina_DownSkill_Damage,
                         2, 3.5,
                         Rect.X + 50, Rect.X + 10, Rect.Y + 35, Ahead(4.5), 0,
                         120, 1000, 2,
                         true, true, true,
                         "PunchHit", Sounds.NormalHit, Camera);
                     Shot1Current += 1;
-                    if (Shot1Current >= 5)
-                        Shot1Current = 0;
 
                     #pragma endregion
                 }
@@ -1479,6 +1479,7 @@ namespace game_framework
         InsertAction("普攻1", 4, color);
         InsertAction("普攻2", 4, color);
         InsertAction("普攻3", 6, color);
+        InsertAction("下特技", 4, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1491,7 +1492,7 @@ namespace game_framework
     {
 
         Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
-
+        Attacks.InsertAttacks(GetName(), "flashblade",1, 5, 8, 0, 16, color, Camera);//多一個參數是具有編號的
         Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
     }
 
@@ -1518,6 +1519,7 @@ namespace game_framework
         OnAirDownAttack(GPP);
         OnAirUpAttack(GPP);
         OnDownAttack(GPP);
+        OnDownSkill(GPP);
         OnUpAttack(GPP);
         OnRushAttack(GPP);
         OnRushSkill(GPP);
@@ -1543,7 +1545,67 @@ namespace game_framework
         CheckPerfectBlock(GPP);
 
         #pragma region 例外狀況
+        if (useDownSkill)
+        {
+            DownSkillTimer2 += TIMER_TICK_MILLIDECOND;
+            if (DownSkillTimer2 > 50)
+            {
+                DownSkillTimer2 = 0;
+                Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)]), this, Enemy,
+                    Matchstick_UpSkill_Damage,
+                    1, 1,
+                    DownSkillXpoint + 40, DownSkillXpoint + 40, DownSkillYpoint - 150, 0, 0,
+                    20, 750, 5,
+                    true, true, true,
+                    "PunchHit", Sounds.NormalHit, Camera);
+                Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].HitNoon = false;
+                //額外設定
+                Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].GravityEffect = true;
+                Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Acceleration_gravity = 0.08;
+                double Positions[] = {0,30,-30,10,0,-60,80,-40,80,-10,-70,-25,10,-80,0,80};
+                if (DownSkillCurrent  == 0)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[0];
+                else if (DownSkillCurrent % 16 == 1)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[1];
+                else if (DownSkillCurrent % 16 == 2)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[2];
+                else if (DownSkillCurrent % 16 == 3)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[3];
+                else if (DownSkillCurrent % 16 == 4)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[4];
+                else if (DownSkillCurrent % 16 == 5)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[5];
+                else if (DownSkillCurrent % 16 == 6)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[6];
+                else if (DownSkillCurrent % 16 == 7)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[7];
+                else if (DownSkillCurrent % 16 == 8)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[8];
+                else if (DownSkillCurrent % 16 == 9)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[9];
+                else if (DownSkillCurrent % 16 == 10)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[10];
+                else if (DownSkillCurrent % 16 == 11)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[11];
+                else if (DownSkillCurrent % 16 == 12)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[12];
+                else if (DownSkillCurrent % 16 == 13)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[13];
+                else if (DownSkillCurrent % 16 == 14)
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[14];
+                else if (DownSkillCurrent % 16 == 15)
+                {
+                    Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[15];
+                    useDownSkill = false;
+                    DownSkillCurrent = 0;
+                }
 
+                
+                DownSkillCurrent += 1;
+            }
+            //基礎設定
+            
+        }
         #pragma endregion
 
 
@@ -2265,9 +2327,59 @@ namespace game_framework
 
     void Rina::GotoDownSkill(GPH)
     {
+        if (SP >= Rina_DownSkill_Cost&&useDownSkill == false)
+        {
+            GainSP(-Rina_DownSkill_Cost);
+            Action = "下特技";
+            Step = 0;
+            NormalAttack1Timer = 0;
+        }
     }
     void Rina::OnDownSkill(GPH)
     {
+        if (Action == "下特技")
+        {
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            DownSkillTimer += TIMER_TICK_MILLIDECOND;
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 24 && Step >= 0 && Step <= 3)
+            {
+                NormalAttack1Timer = 0;
+                Step += 1;
+                DownSkillTimer = 0;
+            }
+            #pragma endregion
+            //出拳
+            if (Step >= 4&& DownSkillTimer>=30)
+            {
+                DownSkillTimer = 0;
+                if (DownSkillCurrent >= 8)
+                    DownSkillCurrent = 0;
+                DownSkillTimer2 = 0;
+                useDownSkill = true;
+                DownSkillXpoint = Enemy->Rect.X;
+                DownSkillYpoint = Enemy->Rect.Y;
+            }
+            #pragma region 到別的動作
+            if (NormalAttack1Timer >= 20 && NormalAttack1Timer < 150 && Step >= 4)
+            {
+                //到別的動作
+                CanToNormalAttack1;
+                CanToSkill1;
+                CanToJump;
+                CanToRush;
+                CanToDownAttack;
+            }
+            else if (NormalAttack1Timer >= 150 && Step >= 4)
+            {
+                //正常結束
+                GotoStandby(GPP);
+            }
+            #pragma endregion
+
+        }
     }
 
     void Rina::GotoRushSkill(GPH)

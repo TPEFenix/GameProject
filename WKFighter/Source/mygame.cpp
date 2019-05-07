@@ -1056,7 +1056,7 @@ namespace game_framework
                 if (BlackCoverfactor > 1)
                 {
                     BlackCoverfactor = 1;
-                    GameAction7_initialization();
+                    GameAction2_initialization();
                 }
                 BlackCover.OnUpdate();
             }

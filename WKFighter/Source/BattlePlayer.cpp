@@ -477,6 +477,7 @@ namespace game_framework
             CanToDownAttack;
             CanToUpSkill;
             CanToUltimateSkill;
+            CanToDownSkill;
             #pragma endregion
 
         }

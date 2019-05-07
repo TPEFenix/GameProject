@@ -133,11 +133,11 @@ namespace game_framework
         #define Rina_ChargeSPincrements 13
 
         #define Rina_NormalAttack1_Cost 2.5
-        #define Rina_NormalAttack1_Damage 300
+        #define Rina_NormalAttack1_Damage 30
         #define Rina_NormalAttack2_Cost 2.5
-        #define Rina_NormalAttack2_Damage 300
+        #define Rina_NormalAttack2_Damage 30
         #define Rina_NormalAttack3_Cost 5
-        #define Rina_NormalAttack3_Damage 700
+        #define Rina_NormalAttack3_Damage 70
         #define Rina_AirAttack1_Cost 2.5
         #define Rina_AirAttack1_Damage 30
         #define Rina_AirAttack2_Cost 5
@@ -146,6 +146,8 @@ namespace game_framework
         #define Rina_UpAttack_Damage 50
         #define Rina_UpSkill_Cost 8
         #define Rina_UpSkill_Damage 15
+        #define Rina_DownSkill_Cost 15
+        #define Rina_DownSkill_Damage 20
         #define Rina_DownAttack_Cost 8
         #define Rina_DownAttack_Damage 80
         #define Rina_RushAttack_Cost 4
@@ -222,13 +224,21 @@ namespace game_framework
         //TimerのΩ计北把计------------------------------------------------------------------------------------------------------
         double NormalAttack1Timer = 0;
         double JumpTimer2 = 0;
+
         double UltraSkillTimer1 = 0;
         double Shot1Timer = 0;
         int Shot1Current = 0;
         int UpSkillCurrent = 0;
+
         bool IsRushAttack = false;
         double UltraSkillcostSP = 0;
 
+        double DownSkillTimer = 0;
+        double DownSkillTimer2 = 0;
+        int DownSkillCurrent = 0;
+        double DownSkillXpoint = 0;
+        double DownSkillYpoint = 0;
+        bool useDownSkill = false;
     };
     #pragma endregion
 

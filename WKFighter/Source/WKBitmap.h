@@ -106,9 +106,11 @@ namespace game_framework
 		//現狀變數
 		double AutoPlayTimer;//使用自動播放時的計時器
 		int Step;//當前步驟數
-		double Velocity_X = 0;//X軸速度
-		double Velocity_Y = 0;//Y軸速度
-
+        double Acceleration_X;//X加速度
+        double Acceleration_Y;//Y加速度
+        double Velocity_X = 0;//X軸速度
+        double Velocity_Y = 0;//Y軸速度
+        double Acceleration_gravity = 0.5;//重力加速度
 
 		//屬性成員
 		BitMapRectangle Rect;//圖片材質矩形 掌管座標跟長寬，會在讀取檔案時設定完成，並且可以在外部更動

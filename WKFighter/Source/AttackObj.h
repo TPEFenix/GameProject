@@ -61,6 +61,7 @@ namespace game_framework
         bool CanHitFly;//是否可擊飛
         bool CanBeDisappear;//可被抵銷
         bool CanCrackOther;//可抵銷別的攻擊
+        bool GravityEffect;//是否受重力影響
 
         string HitEffect;//擊中特效名稱
         int HitSound;//擊中聲音ID

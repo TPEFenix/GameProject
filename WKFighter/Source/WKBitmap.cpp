@@ -296,6 +296,10 @@ namespace game_framework
         BitmapisRight = true;
         drawlayer = 0;
         TrackPoint = false;
+        Velocity_X = 0;
+        Velocity_Y = 0;
+        Acceleration_X = 0;
+        Acceleration_Y = 0;
     }
     BitmapAnimation::BitmapAnimation(bool vis)
     {
@@ -308,6 +312,10 @@ namespace game_framework
         BitmapisRight = true;
         drawlayer = 0;
         TrackPoint = false;
+        Velocity_X = 0;
+        Velocity_Y = 0;
+        Acceleration_X = 0;
+        Acceleration_Y = 0;
     }
     BitmapAnimation::BitmapAnimation(string namein, bool vis)
     {
@@ -320,6 +328,10 @@ namespace game_framework
         BitmapisRight = true;
         drawlayer = 0;
         TrackPoint = false;
+        Velocity_X = 0;
+        Velocity_Y = 0;
+        Acceleration_X = 0;
+        Acceleration_Y = 0;
     }
     BitmapAnimation::BitmapAnimation(string namein, bool vis, bool inside)
     {
@@ -333,6 +345,10 @@ namespace game_framework
         BitmapisRight = true;
         drawlayer = 0;
         TrackPoint = false;
+        Velocity_X = 0;
+        Velocity_Y = 0;
+        Acceleration_X = 0;
+        Acceleration_Y = 0;
     }
     BitmapAnimation::BitmapAnimation(string namein, int X, int Y, bool vis, bool CanHit, bool inside)
     {
@@ -350,6 +366,10 @@ namespace game_framework
         BitmapisRight = true;
         drawlayer = 0;
         TrackPoint = false;
+        Velocity_X = 0;
+        Velocity_Y = 0;
+        Acceleration_X = 0;
+        Acceleration_Y = 0;
     }
     BitmapAnimation::~BitmapAnimation()
     {
