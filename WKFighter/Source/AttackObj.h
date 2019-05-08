@@ -33,7 +33,7 @@ namespace game_framework
 
 
         virtual void OnUpdate(string, CameraPosition);
-
+		virtual void HitAction(CameraPosition);
         //現狀變數
         double AliveTimer = 0;
         double ComboTimer = 0;
@@ -62,6 +62,8 @@ namespace game_framework
         bool CanBeDisappear;//可被抵銷
         bool CanCrackOther;//可抵銷別的攻擊
         bool GravityEffect;//是否受重力影響
+		bool UseRectCollision;//使用矩形碰撞判定
+
 
         string HitEffect;//擊中特效名稱
         int HitSound;//擊中聲音ID
