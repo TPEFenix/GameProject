@@ -1172,7 +1172,7 @@ namespace game_framework
                     //基礎設定
                     Attacks.AttackReset_Shot(&(Attacks.AttackObjects["UpSkill_" + IntToString(UpSkillCurrent)]), this, Enemy,
                         Matchstick_UpSkill_Damage,
-                        1, 13,
+                        1, 5,
                         Rect.X, Rect.X, Rect.Y + 17, 0, -9,
                         50, 400, 5,
                         true, true, true,
@@ -1556,6 +1556,7 @@ namespace game_framework
             DownSkillTimer2 += TIMER_TICK_MILLIDECOND;
             if (DownSkillTimer2 > 50)
             {
+                PlaySounds(Sounds.light2, false);
                 DownSkillTimer2 = 0;
                 Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)]), this, Enemy,
                     Matchstick_UpSkill_Damage,
@@ -1563,7 +1564,7 @@ namespace game_framework
                     DownSkillXpoint + 60, DownSkillXpoint + 60, DownSkillYpoint - 150, 0, 2,
                     20, 750, 5,
                     true, true, true,
-                    "PunchHit", Sounds.NormalHit, Camera);
+                    "PunchHit", Sounds.SliceHit, Camera);
                 Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].HitNoon = false;
                 Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].CanBeDisappear = false;
                 Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].CanCrackOther = false;
@@ -2184,7 +2185,7 @@ namespace game_framework
                 Shot1Timer = 0;
                 Step = 1;
             }
-            if (Shot1Timer >= 30 &&abs(Velocity_X)<1 &&  (Step == 1 || Step == 2))
+            else if (Shot1Timer >= 30 && abs(Velocity_X) < 1 && (Step == 1 || Step == 2))
             {
                 if (Button_now.button_Right)
                     IsRight = true;
@@ -2197,18 +2198,19 @@ namespace game_framework
                 Step = 3;
                 #pragma region 產生攻擊物件
                 //出拳
+                PlaySounds(Sounds.light1, false);
                 Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]), this, Enemy,
                     Rina_DownSkill_Damage,
                     2, 3.5,
                     Rect.X + 75, Rect.X + 10, Rect.Y + 60, Ahead(6), 0,
                     120, 1000, 2,
                     true, true, true,
-                    "PunchHit", Sounds.NormalHit, Camera);
+                    "PunchHit", Sounds.SliceHit, Camera);
                 Shot1Current += 1;
                 (Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]).HitNoon = false;
                 #pragma endregion
             }
-            if (Shot1Timer >= 16 && Step >= 3 && Step<5)
+            if (Shot1Timer >= 16 && Step >= 3 && Step < 5)
             {
                 Step += 1;
                 Shot1Timer = 0;
@@ -2496,7 +2498,7 @@ namespace game_framework
                 Shot1Timer = 0;
                 Step = 1;
             }
-            if (Shot1Timer >= 80 &&Step == 1)
+            if (Shot1Timer >= 80 && Step == 1)
             {
 
                 if (Shot1Current >= 4)
@@ -2505,18 +2507,19 @@ namespace game_framework
                 Step = 2;
                 #pragma region 產生攻擊物件
                 //出拳
+                PlaySounds(Sounds.light1, false);
                 Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]), this, Enemy,
                     Rina_DownSkill_Damage,
                     2, 3.5,
                     Rect.X + 75, Rect.X + 10, Rect.Y + 60, Ahead(6), 0,
                     120, 1000, 2,
                     true, true, true,
-                    "PunchHit", Sounds.NormalHit, Camera);
+                    "PunchHit", Sounds.SliceHit, Camera);
                 Shot1Current += 1;
                 (Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]).HitNoon = false;
                 #pragma endregion
             }
-            if (Shot1Timer >= 16 && Step >= 2 && Step<4)
+            if (Shot1Timer >= 16 && Step >= 2 && Step < 4)
             {
                 Step += 1;
                 Shot1Timer = 0;

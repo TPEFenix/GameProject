@@ -101,12 +101,7 @@ namespace game_framework
     const bool LoaddingBoost = false;//使否啟用讀取加速
     bool CloseingDebug = false;
 
-    BitmapPicture LoadingPicture;//讀取畫面圖示
-    thread LoadingThread;//讀取執行序
-    bool LoadingStart = false;//開始讀取布林值
-    bool LoadingDone = false;//讀取完成布林值
-    bool LoadingTemp = false;//放大縮小
-    double Loadingfactor = 1;//放大縮小Double
+
 
     //顯示
     CameraPosition Camera;//遊戲鏡頭
@@ -196,10 +191,10 @@ namespace game_framework
     BitmapPicture P1P2Select_4;
     BitmapPicture P1P2Select_5;
     BitmapPicture Characters_Menu;
-    BitmapAnimation P1RoleChoose = BitmapAnimation("RoleP1Choose", 70, 70, true, false, false);
-    BitmapAnimation P2RoleChoose = BitmapAnimation("RoleP1Choose", 560, 70, true, false, false);
-    BitmapAnimation P1RoleSelect = BitmapAnimation("RoleP1Select", 70, 70, true, false, false);
-    BitmapAnimation P2RoleSelect = BitmapAnimation("RoleP1Select", 560, 70, true, false, false);
+    BitmapAnimation P1RoleChoose = BitmapAnimation("RoleP1Choose", 70, GroundPosition, true, false, false);
+    BitmapAnimation P2RoleChoose = BitmapAnimation("RoleP1Choose", 560, GroundPosition, true, false, false);
+    BitmapAnimation P1RoleSelect = BitmapAnimation("RoleP1Select", 70, GroundPosition, true, false, false);
+    BitmapAnimation P2RoleSelect = BitmapAnimation("RoleP1Select", 560, GroundPosition, true, false, false);
 
     int TitleSelection = 0;
     int P1Selection = 0;
@@ -210,6 +205,19 @@ namespace game_framework
 
 
     #pragma endregion 
+
+    //圖取畫面圖片
+    #pragma region LoadingPicture
+    BitmapPicture LoadingPicture;//讀取畫面圖示
+    thread LoadingThread;//讀取執行序
+    bool LoadingStart = false;//開始讀取布林值
+    bool LoadingDone = false;//讀取完成布林值
+    bool LoadingTemp = false;//放大縮小
+    double Loadingfactor = 1;//放大縮小Double
+    BitmapPicture LoadingBK;//讀取畫面圖示
+    #pragma endregion
+
+
     #pragma endregion
 
     #pragma region 套裝函式內容
@@ -309,7 +317,7 @@ namespace game_framework
         P1P2Select_4.LoadTexture(TransparentColor);
         P1P2Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_5.bmp", 210, 270, true, false, false);
         P1P2Select_5.LoadTexture(TransparentColor);
-        BackGround_Select = BitmapPicture("Content\\Bitmaps\\whitecover.bmp", 0, 0, true, false, false);
+        BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Select.bmp", -400, 0, true, false, false);
         BackGround_Select.LoadTexture(TransparentColor);
         Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 210, 270, true, false, false);
         Characters_Menu.LoadTexture(TransparentColor);
@@ -317,8 +325,15 @@ namespace game_framework
         P2RoleChoose.AutoLoadBitmaps("Select", "RoleP1Choose", 6, 0, false, TransparentColor);
         P1RoleSelect.AutoLoadBitmaps("Select", "RoleP1Select", 6, 0, false, TransparentColor);
         P2RoleSelect.AutoLoadBitmaps("Select", "RoleP1Select", 6, 0, false, TransparentColor);
+        P1RoleChoose.BitmapisRight = true;
+        P1RoleSelect.BitmapisRight = true;
         P2RoleChoose.BitmapisRight = false;
         P2RoleSelect.BitmapisRight = false;
+
+
+        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
+        LoadingBK.LoadTexture(TransparentColor);
+
         ShowInitProgress(50);
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
@@ -333,8 +348,16 @@ namespace game_framework
         LoadSounds(Sounds.CutIn, "Content\\Sounds\\CutIn.wav");
         LoadSounds(Sounds.NormalHit2, "Content\\Sounds\\NormalHit2.wav");
         LoadSounds(Sounds.SbDown, "Content\\Sounds\\SbDown.wav");
+        LoadSounds(Sounds.Title, "Content\\Sounds\\Title.wav");
+        LoadSounds(Sounds.Beep, "Content\\Sounds\\Beep.wav");
+        LoadSounds(Sounds.Choose, "Content\\Sounds\\Choose.wav");
+        LoadSounds(Sounds.SliceHit, "Content\\Sounds\\SliceHit.wav");
+        LoadSounds(Sounds.light1, "Content\\Sounds\\light1.wav");
+        LoadSounds(Sounds.light2, "Content\\Sounds\\light2.wav");
+
         ShowInitProgress(70);
         LoadSounds(Sounds.DoubleHelixXi, "Content\\Sounds\\DoubleHelix-Xi.mp3");
+
         ShowInitProgress(80);
     }
     #pragma endregion
@@ -348,6 +371,7 @@ namespace game_framework
     {
         GameAction = 0;
         TitleSelection = 0;
+        PlaySounds(Sounds.Title, true);
     }
     void GameAction1_initialization()
     {
@@ -357,7 +381,7 @@ namespace game_framework
     {
         GameAction = 2;
         P1Selection = 0;
-        P2Selection = 2;
+        P2Selection = 1;
         SelectedP1 = false;
         SelectedP2 = false;
     }
@@ -371,6 +395,7 @@ namespace game_framework
     }
     void GameAction5_initialization()
     {
+        StopSounds(Sounds.Title);
         GameAction = 5;
         LoadingStart = false;//開始讀取布林值
         LoadingDone = false;//讀取完成布林值
@@ -390,17 +415,15 @@ namespace game_framework
 
             if (KeyState_now.Enter == true && KeyState_last.Enter == false)
             {
+                PlaySounds(Sounds.Choose, false);
                 if (TitleSelection == 0)
-                {
                     GameAction2_initialization();
-                }
                 else if (TitleSelection == 2)
-                {
                     ExitGame();
-                }
             }
             else if ((KeyState_now.Up == true && KeyState_last.Up == false) || (KeyState_now.W == true && KeyState_last.W == false))
             {
+                PlaySounds(Sounds.Beep, false);
                 if (TitleSelection == 0)
                 {
                     Title_Cursor.Rect.Y = 500;
@@ -419,6 +442,7 @@ namespace game_framework
             }
             else if ((KeyState_now.Down == true && KeyState_last.Down == false) || (KeyState_now.S == true && KeyState_last.S == false))
             {
+                PlaySounds(Sounds.Beep, false);
                 if (TitleSelection == 0)
                 {
                     Title_Cursor.Rect.Y = 400;
@@ -478,11 +502,18 @@ namespace game_framework
             {
                 Player1Character = P1Selection;
                 Player2Character = P2Selection;
+                Sleep(750);
                 GameAction5_initialization();
             }
 
             if (KeyState_now.G == true && KeyState_last.G == false)
+            {
+                if (SelectedP1 == false)
+                {
+                    GameAction0_initialization();
+                }
                 SelectedP1 = false;
+            }
             if (KeyState_now.K == true && KeyState_last.K == false)
                 SelectedP2 = false;
 
@@ -490,10 +521,15 @@ namespace game_framework
             {
                 if (KeyState_now.F == true && KeyState_last.F == false)
                 {
-                    SelectedP1 = true;
+                    if (P1Selection <= 1)
+                    {
+                        SelectedP1 = true;
+                        PlaySounds(Sounds.Choose, false);
+                    }
                 }
                 else if (KeyState_now.D == true && KeyState_last.D == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P1Selection++;
                     if (P1Selection > 5)
                     {
@@ -502,6 +538,7 @@ namespace game_framework
                 }
                 else if (KeyState_now.A == true && KeyState_last.A == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P1Selection--;
                     if (P1Selection < 0)
                     {
@@ -510,6 +547,7 @@ namespace game_framework
                 }
                 else if (KeyState_now.W == true && KeyState_last.W == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P1Selection += 3;
                     if (P1Selection > 5)
                     {
@@ -518,6 +556,7 @@ namespace game_framework
                 }
                 else if (KeyState_now.S == true && KeyState_last.S == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P1Selection -= 3;
                     if (P1Selection < 0)
                     {
@@ -529,10 +568,15 @@ namespace game_framework
             {
                 if (KeyState_now.J == true && KeyState_last.J == false)
                 {
-                    SelectedP2 = true;
+                    if (P2Selection <= 1)
+                    {
+                        SelectedP2 = true;
+                        PlaySounds(Sounds.Choose, false);
+                    }
                 }
                 else if (KeyState_now.Right == true && KeyState_last.Right == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P2Selection++;
                     if (P2Selection > 5)
                     {
@@ -541,6 +585,7 @@ namespace game_framework
                 }
                 else if (KeyState_now.Left == true && KeyState_last.Left == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P2Selection--;
                     if (P2Selection < 0)
                     {
@@ -549,6 +594,7 @@ namespace game_framework
                 }
                 else if (KeyState_now.Up == true && KeyState_last.Up == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P2Selection += 3;
                     if (P2Selection > 5)
                     {
@@ -557,6 +603,7 @@ namespace game_framework
                 }
                 else if (KeyState_now.Down == true && KeyState_last.Down == false)
                 {
+                    PlaySounds(Sounds.Beep, false);
                     P2Selection -= 3;
                     if (P2Selection < 0)
                     {
@@ -859,7 +906,6 @@ namespace game_framework
             //重製相機鏡頭
             Camera = CameraPosition();
 
-
             #pragma region 戰鬥背景
             BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight2.bmp", -400, 0, true, false, true);
             BK.LoadTexture(TransparentColor);
@@ -883,10 +929,10 @@ namespace game_framework
             #pragma region 讀取玩家圖檔與設定初始參數
             Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-            Player1->Rect.X = 250;
-            Player1->Rect.Y = GroundPosition - 200;
-            Player2->Rect.X = 430;
-            Player2->Rect.Y = GroundPosition - 200;
+            Player1->Rect.X = 230;
+            Player1->Rect.Y = GroundPosition ;
+            Player2->Rect.X = 400;
+            Player2->Rect.Y = GroundPosition;
             #pragma endregion
 
             #pragma region 讀取血量條等等
@@ -1113,6 +1159,13 @@ namespace game_framework
         Player1_Name.OnUpdate(Camera);
         Player2_Name.OnUpdate(Camera);
 
+        if (KeyState_now.ESC)
+        {
+            StopSounds(Sounds.DoubleHelixXi);
+            GameAction2_initialization();
+        }
+
+
     }
     //戰鬥OnShow
     void BattleOnShow(int i)
@@ -1153,6 +1206,7 @@ namespace game_framework
         {
             LoadingResource(BattleLoading, &LoadingThread, &LoadingStart, &LoadingDone);
             LoadingPicture.OnUpdate();
+            LoadingBK.OnUpdate();
             if (LoadingStart == false && LoadingDone == true)
             {
                 GameAction6_initialization();
@@ -1179,7 +1233,8 @@ namespace game_framework
                     LoadingTemp = false;
                 }
             }
-            LoadingPicture.Draw(i, 2, Loadingfactor);
+            LoadingPicture.Draw(i, 3, Loadingfactor);
+            LoadingBK.Draw(i, 1);
         }
     }
     void GameAction6_OnMove()

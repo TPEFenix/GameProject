@@ -20,6 +20,12 @@ namespace WKAudio_namespace
         const int NormalHit2 = 11;
         const int SbDown = 12;
         const int DoubleHelixXi = 13;
+        const int Title = 14;
+        const int Beep = 15;
+        const int Choose = 16;
+        const int SliceHit = 17;
+        const int light1 = 18;
+        const int light2 = 19;
     };
     void LoadSounds(int , string);
     void PlaySounds(int, bool);
