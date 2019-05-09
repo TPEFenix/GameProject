@@ -144,8 +144,8 @@ namespace game_framework
         #define Rina_AirAttack2_Damage 70
         #define Rina_UpAttack_Cost 4
         #define Rina_UpAttack_Damage 50
-        #define Rina_UpSkill_Cost 8
-        #define Rina_UpSkill_Damage 15
+        #define Rina_UpSkill_Cost 4
+        #define Rina_UpSkill_Damage 20
         #define Rina_DownSkill_Cost 15
         #define Rina_DownSkill_Damage 20
         #define Rina_DownAttack_Cost 8

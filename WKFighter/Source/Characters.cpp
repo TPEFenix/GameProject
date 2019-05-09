@@ -1482,6 +1482,7 @@ namespace game_framework
         InsertAction("下特技", 4, color);
         InsertAction("衝刺普", 2, color);
         InsertAction("特技", 5, color);
+        InsertAction("上特技", 4, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -2471,7 +2472,13 @@ namespace game_framework
             GainSP(-Rina_UpSkill_Cost);
             Action = "上特技";
             Step = 0;
-            NormalAttack1Timer = 0;
+            Shot1Timer = 0;
+            Velocity_X = -Ahead(12);
+            Velocity_Y = -6;
+            if (Button_now.button_Right)
+                IsRight = true;
+            else if (Button_now.button_Left)
+                IsRight = false;
         }
     }
     void Rina::OnUpSkill(GPH)
@@ -2479,6 +2486,80 @@ namespace game_framework
         if (Action == "上特技")
         {
 
+            Shot1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            ProduceFriction(0.25, 0.5);
+
+            if (Shot1Timer >= 30 && Step == 0)
+            {
+                Shot1Timer = 0;
+                Step = 1;
+            }
+            if (Shot1Timer >= 80 &&Step == 1)
+            {
+
+                if (Shot1Current >= 4)
+                    Shot1Current = 0;
+                Shot1Timer = 0;
+                Step = 2;
+                #pragma region 產生攻擊物件
+                //出拳
+                Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]), this, Enemy,
+                    Rina_DownSkill_Damage,
+                    2, 3.5,
+                    Rect.X + 75, Rect.X + 10, Rect.Y + 60, Ahead(6), 0,
+                    120, 1000, 2,
+                    true, true, true,
+                    "PunchHit", Sounds.NormalHit, Camera);
+                Shot1Current += 1;
+                (Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]).HitNoon = false;
+                #pragma endregion
+            }
+            if (Shot1Timer >= 16 && Step >= 2 && Step<4)
+            {
+                Step += 1;
+                Shot1Timer = 0;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (Shot1Timer < 100 && Step >= 4)
+            {
+                Throughing = false;
+                //到別的可能動作
+                if (OnGround)
+                {
+
+                    CanToNormalAttack1;
+                    CanToUpAttack;
+                    CanToDownAttack;
+                    CanToUpSkill;
+                    CanToSkill1;
+                }
+                else
+                {
+
+                    CanToAirUpAttack;
+                    CanToAirDownAttack;
+                    CanToAirAttack1;
+                    CanToFastDrop;
+                    CanToSkill1;
+                }
+
+                CanToRush;
+                CanToJump;
+            }
+            else if (Shot1Timer >= 100 && Step >= 4)
+            {
+                Throughing = false;
+                //正常結束
+                if (OnGround)
+                    GotoStandby(GPP);
+                else
+                    GotoDrop(GPP);
+            }
+            #pragma endregion
 
         }
     }
