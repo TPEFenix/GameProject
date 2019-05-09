@@ -584,7 +584,7 @@ namespace game_framework
                 RushTimer = 0;
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -13;
+                Velocity_Y = -12;
                 OnGround = false;
                 PlayEffect(this, "Airboost2", Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
                 PlaySounds(Sounds.Jump, false);
@@ -795,6 +795,9 @@ namespace game_framework
                         JumpTimer = 0;
                         Velocity_Y = -10;
                         OnGround = false;
+                        HitFly = false;
+                        Invincible = false;
+                        Throughing = false;
                         Effects.Content["stun_star"].loop = false;
                         PlayEffect(this, "Airboost2", Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
                         PlaySounds(Sounds.Jump, false);

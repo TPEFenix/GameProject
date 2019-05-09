@@ -150,8 +150,8 @@ namespace game_framework
         #define Rina_DownSkill_Damage 20
         #define Rina_DownAttack_Cost 8
         #define Rina_DownAttack_Damage 80
-        #define Rina_RushAttack_Cost 4
-        #define Rina_RushAttack_Damage 12
+        #define Rina_RushAttack_Cost 5
+        #define Rina_RushAttack_Damage 20
         #define Rina_RushSkill_Cost 8
         #define Rina_RushSkill_Damage 20
         #define Rina_AirUpAttack_Cost 4

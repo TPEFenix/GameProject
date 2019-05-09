@@ -1480,6 +1480,7 @@ namespace game_framework
         InsertAction("普攻2", 4, color);
         InsertAction("普攻3", 6, color);
         InsertAction("下特技", 4, color);
+        InsertAction("衝刺普", 2, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1797,7 +1798,7 @@ namespace game_framework
                 RushTimer = 0;
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -13;
+                Velocity_Y = -12;
                 OnGround = false;
                 PlayEffect(this, "Airboost2", Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
                 PlaySounds(Sounds.Jump, false);
@@ -1820,7 +1821,7 @@ namespace game_framework
             {
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -13;
+                Velocity_Y = -12;
                 OnGround = false;
                 PlayEffect(this, "Airboost2", Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
                 PlaySounds(Sounds.Jump, false);
@@ -2259,7 +2260,6 @@ namespace game_framework
             IsRushAttack = false;
             Throughing = false;
             Invincible = false;
-            Velocity_X = 0;
             Acceleration_X = 0;
             Action = "衝刺普";
             Step = 0;
@@ -2270,6 +2270,69 @@ namespace game_framework
     {
         if (Action == "衝刺普")
         {
+
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            ProduceFriction(0.25,0.5);
+            #pragma region 動作主體
+            if (NormalAttack1Timer <= 110 && Step >= 0)
+            {
+
+                if (abs(Velocity_X) > 12)
+                {
+                    Velocity_X = Ahead(12);
+                }
+
+                if (NormalAttack1Timer >= 25)
+                    Step = 1;
+                if (NormalAttack1Timer >= 50)
+                    Step = 2;
+                
+
+                #pragma region 更新攻擊物件位置
+                if (IsRight)
+                    Attacks.AttackObjects["Normal1"].Rect.X = Rect.X + 90;
+                else
+                    Attacks.AttackObjects["Normal1"].Rect.X = Rect.X ;
+                Attacks.AttackObjects["Normal1"].Rect.Y = Rect.Y + 55;
+                if (Attacks.AttackObjects["Normal1"].IsHited&&(Attacks.AttackObjects["Normal1"].ComboTimer > TIMER_TICK_MILLIDECOND * 4))
+                {
+                    Attacks.AttackObjects["Normal1"].ComboTimer = 0;
+                    Attacks.AttackObjects["Normal1"].IsHited = false;
+                }
+                #pragma endregion
+
+                #pragma region 產生攻擊物件
+                if (IsRushAttack == false)
+                {
+                    IsRushAttack = true;
+                    //基礎設定
+                    Attacks.AttackReset_Normal(
+                        &(Attacks.AttackObjects["Normal1"]), this, Enemy,
+                        Matchstick_RushAttack_Damage,
+                        9.5, 0, Rect.X + 98, 0, 0, 0, 0,
+                       100, 100, "PunchHit", Sounds.NormalHit, Camera);
+                    //額外設定
+                    Attacks.AttackObjects["Normal1"].CanCombo = true;//可連擊
+                    Attacks.AttackObjects["Normal1"].HitNoon = false;
+                    Attacks.AttackObjects["Normal1"].Drawable = false;
+                }
+                #pragma endregion
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (NormalAttack1Timer > 110 && Step >= 0)
+            {
+                Acceleration_X = 0;
+                Velocity_X = 0;
+                #pragma region 判斷應該回到哪個動作
+                if (OnGround)
+                    GotoStandby(GPP);
+                else
+                    GotoDrop(GPP);
+                #pragma endregion
+            }
+            #pragma endregion
 
         }
     }

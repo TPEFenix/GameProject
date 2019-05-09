@@ -68,7 +68,7 @@ namespace game_framework
 
     //共用設定
     #define GuardSPCost                0.15
-    #define MaxGravity                   8
+    #define MaxGravity                   9
     #pragma endregion
 
 
@@ -232,7 +232,7 @@ namespace game_framework
         double Velocity_Y;//Y速度
         double Acceleration_X;//X加速度
         double Acceleration_Y;//Y加速度
-        double Acceleration_gravity = 0.5;//重力加速度
+        double Acceleration_gravity = 0.55;//重力加速度
 
         //成員------------------------------------------------------------------------------------------------------
         BitmapPicture *DisplayBitmap;//永遠把顯示用的Bitmap指向對應的BitmapPicture==當前所顯示的BitmapPicture

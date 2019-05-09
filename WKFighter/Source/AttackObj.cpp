@@ -301,10 +301,8 @@ namespace game_framework
             Target->Acceleration_X = 0;
             Target->Acceleration_Y = 0;
 
-            if (HitVelocity_X > 0 && Target->Velocity_X <= 0)
-                Target->Velocity_X = Ahead(this->HitVelocity_X);
-            else if (HitVelocity_X > 0 && Target->Velocity_X > 0)
-                Target->Velocity_X += Ahead(this->HitVelocity_X);
+            Target->Velocity_X = Ahead(this->HitVelocity_X);
+
 
 
 

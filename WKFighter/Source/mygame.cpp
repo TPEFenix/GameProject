@@ -856,9 +856,9 @@ namespace game_framework
             #pragma region 讀取玩家圖檔與設定初始參數
             Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-            Player1->Rect.X = 250;
+            Player1->Rect.X = 220;
             Player1->Rect.Y = GroundPosition - 200;
-            Player2->Rect.X = 430;
+            Player2->Rect.X = 400;
             Player2->Rect.Y = GroundPosition - 200;
             #pragma endregion
 
@@ -1079,9 +1079,9 @@ namespace game_framework
         Bar_Player2Break.Rect.Y = Player2->Rect.Y + 190;
         Bar_Player1Break.OnUpdate(Camera);
         Bar_Player2Break.OnUpdate(Camera);
-        Player1_Name.Rect.X = Player1->Rect.X + 52;
+        Player1_Name.Rect.X = Player1->Rect.X + 75;
         Player1_Name.Rect.Y = Player1->Rect.Y - 30;
-        Player2_Name.Rect.X = Player2->Rect.X + 52;
+        Player2_Name.Rect.X = Player2->Rect.X + 75;
         Player2_Name.Rect.Y = Player2->Rect.Y - 30;
         Player1_Name.OnUpdate(Camera);
         Player2_Name.OnUpdate(Camera);
