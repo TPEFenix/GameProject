@@ -1481,6 +1481,7 @@ namespace game_framework
         InsertAction("普攻3", 6, color);
         InsertAction("下特技", 4, color);
         InsertAction("衝刺普", 2, color);
+        InsertAction("特技", 5, color);
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1494,6 +1495,7 @@ namespace game_framework
 
         Attacks.InsertAttacks(GetName(), "Normal1", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "flashblade", 1, 5, 8, 0, 16, color, Camera);//多一個參數是具有編號的
+        Attacks.InsertAttacks(GetName(), "flashblade_H", 1, 5, 8, 0, 4, color, Camera);//多一個參數是具有編號的
         Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
     }
 
@@ -2155,15 +2157,100 @@ namespace game_framework
             GainSP(-Rina_Skill1_Cost);
             if (Velocity_Y > 0 && OnGround == false)
                 Velocity_Y = 0;
-            Action = "特技1";
+            Action = "特技";
             Step = 0;
             Shot1Timer = 0;
+            Velocity_X = Ahead(30);
+            Throughing = true;
+            if (Button_now.button_Right)
+                IsRight = true;
+            else if (Button_now.button_Left)
+                IsRight = false;
         }
     }
     void Rina::OnSkill1(GPH)
     {
-        if (Action == "特技1")
+        if (Action == "特技")
         {
+
+            Shot1Timer += TIMER_TICK_MILLIDECOND;
+
+            #pragma region 動作主體
+            ProduceFriction(3, 1);
+
+            if (Shot1Timer >= 30 && Step == 0)
+            {
+                Shot1Timer = 0;
+                Step = 1;
+            }
+            if (Shot1Timer >= 30 &&abs(Velocity_X)<1 &&  (Step == 1 || Step == 2))
+            {
+                if (Button_now.button_Right)
+                    IsRight = true;
+                else if (Button_now.button_Left)
+                    IsRight = false;
+
+                if (Shot1Current >= 4)
+                    Shot1Current = 0;
+                Shot1Timer = 0;
+                Step = 3;
+                #pragma region 產生攻擊物件
+                //出拳
+                Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]), this, Enemy,
+                    Rina_DownSkill_Damage,
+                    2, 3.5,
+                    Rect.X + 75, Rect.X + 10, Rect.Y + 60, Ahead(6), 0,
+                    120, 1000, 2,
+                    true, true, true,
+                    "PunchHit", Sounds.NormalHit, Camera);
+                Shot1Current += 1;
+                (Attacks.AttackObjects["flashblade_H_" + IntToString(Shot1Current)]).HitNoon = false;
+                #pragma endregion
+            }
+            if (Shot1Timer >= 16 && Step >= 3 && Step<5)
+            {
+                Step += 1;
+                Shot1Timer = 0;
+            }
+            #pragma endregion
+
+            #pragma region 到別的動作
+            if (Shot1Timer < 100 && Step >= 5)
+            {
+                Throughing = false;
+                //到別的可能動作
+                if (OnGround)
+                {
+
+                    CanToNormalAttack1;
+                    CanToUpAttack;
+                    CanToDownAttack;
+                    CanToUpSkill;
+                    CanToSkill1;
+                }
+                else
+                {
+
+                    CanToAirUpAttack;
+                    CanToAirDownAttack;
+                    CanToAirAttack1;
+                    CanToFastDrop;
+                    CanToSkill1;
+                }
+
+                CanToRush;
+                CanToJump;
+            }
+            else if (Shot1Timer >= 100 && Step >= 5)
+            {
+                Throughing = false;
+                //正常結束
+                if (OnGround)
+                    GotoStandby(GPP);
+                else
+                    GotoDrop(GPP);
+            }
+            #pragma endregion
 
         }
     }
@@ -2272,7 +2359,7 @@ namespace game_framework
         {
 
             NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
-            ProduceFriction(0.25,0.5);
+            ProduceFriction(0.25, 0.5);
             #pragma region 動作主體
             if (NormalAttack1Timer <= 110 && Step >= 0)
             {
@@ -2286,15 +2373,15 @@ namespace game_framework
                     Step = 1;
                 if (NormalAttack1Timer >= 50)
                     Step = 2;
-                
+
 
                 #pragma region 更新攻擊物件位置
                 if (IsRight)
                     Attacks.AttackObjects["Normal1"].Rect.X = Rect.X + 90;
                 else
-                    Attacks.AttackObjects["Normal1"].Rect.X = Rect.X ;
+                    Attacks.AttackObjects["Normal1"].Rect.X = Rect.X;
                 Attacks.AttackObjects["Normal1"].Rect.Y = Rect.Y + 55;
-                if (Attacks.AttackObjects["Normal1"].IsHited&&(Attacks.AttackObjects["Normal1"].ComboTimer > TIMER_TICK_MILLIDECOND * 4))
+                if (Attacks.AttackObjects["Normal1"].IsHited && (Attacks.AttackObjects["Normal1"].ComboTimer > TIMER_TICK_MILLIDECOND * 4))
                 {
                     Attacks.AttackObjects["Normal1"].ComboTimer = 0;
                     Attacks.AttackObjects["Normal1"].IsHited = false;
@@ -2310,7 +2397,7 @@ namespace game_framework
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Matchstick_RushAttack_Damage,
                         9.5, 0, Rect.X + 98, 0, 0, 0, 0,
-                       100, 100, "PunchHit", Sounds.NormalHit, Camera);
+                        100, 100, "PunchHit", Sounds.NormalHit, Camera);
                     //額外設定
                     Attacks.AttackObjects["Normal1"].CanCombo = true;//可連擊
                     Attacks.AttackObjects["Normal1"].HitNoon = false;

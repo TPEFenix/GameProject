@@ -196,6 +196,10 @@ namespace game_framework
     BitmapPicture P1P2Select_4;
     BitmapPicture P1P2Select_5;
     BitmapPicture Characters_Menu;
+    BitmapAnimation P1RoleChoose = BitmapAnimation("RoleP1Choose", 70, 70, true, false, false);
+    BitmapAnimation P2RoleChoose = BitmapAnimation("RoleP1Choose", 560, 70, true, false, false);
+    BitmapAnimation P1RoleSelect = BitmapAnimation("RoleP1Select", 70, 70, true, false, false);
+    BitmapAnimation P2RoleSelect = BitmapAnimation("RoleP1Select", 560, 70, true, false, false);
 
     int TitleSelection = 0;
     int P1Selection = 0;
@@ -309,6 +313,12 @@ namespace game_framework
         BackGround_Select.LoadTexture(TransparentColor);
         Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 210, 270, true, false, false);
         Characters_Menu.LoadTexture(TransparentColor);
+        P1RoleChoose.AutoLoadBitmaps("Select", "RoleP1Choose", 6, 0, false, TransparentColor);
+        P2RoleChoose.AutoLoadBitmaps("Select", "RoleP1Choose", 6, 0, false, TransparentColor);
+        P1RoleSelect.AutoLoadBitmaps("Select", "RoleP1Select", 6, 0, false, TransparentColor);
+        P2RoleSelect.AutoLoadBitmaps("Select", "RoleP1Select", 6, 0, false, TransparentColor);
+        P2RoleChoose.BitmapisRight = false;
+        P2RoleSelect.BitmapisRight = false;
         ShowInitProgress(50);
         //讀取所有音效--Begin
         LoadSounds(Sounds.Ding, "Content\\Sounds\\ding.wav");
@@ -463,6 +473,7 @@ namespace game_framework
     {
         if (GameAction == 2)
         {
+
             if (SelectedP1 == true && SelectedP2 == true)
             {
                 Player1Character = P1Selection;
@@ -553,6 +564,10 @@ namespace game_framework
                     }
                 }
             }
+            P1RoleChoose.OnUpdate("Select", Camera);
+            P2RoleChoose.OnUpdate("Select", Camera);
+            P1RoleSelect.OnUpdate("Select", Camera);
+            P2RoleSelect.OnUpdate("Select", Camera);
         }
     }
     void GameAction2_OnShow(int i)
@@ -561,14 +576,22 @@ namespace game_framework
         {
             BackGround_Select.Draw(i, 0);
             Characters_Menu.Draw(i, 1);
+            P1RoleChoose.Step = P1Selection;
+            P2RoleChoose.Step = P2Selection;
+            P1RoleSelect.Step = P1Selection;
+            P2RoleSelect.Step = P2Selection;
             if (P1Selection == P2Selection)
             {
                 switch (P1Selection)
                 {
                 case 0:
                     P1P2Select_0.Draw(i, 3);
+                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
+                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
                     break;
                 case 1:
+                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
+                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
                     P1P2Select_1.Draw(i, 3);
                     break;
                 case 2:
@@ -592,9 +615,11 @@ namespace game_framework
                 switch (P1Selection)
                 {
                 case 0:
+                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
                     P1Select_0.Draw(i, 3);
                     break;
                 case 1:
+                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
                     P1Select_1.Draw(i, 3);
                     break;
                 case 2:
@@ -615,9 +640,11 @@ namespace game_framework
                 switch (P2Selection)
                 {
                 case 0:
+                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
                     P2Select_0.Draw(i, 3);
                     break;
                 case 1:
+                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
                     P2Select_1.Draw(i, 3);
                     break;
                 case 2:
@@ -856,9 +883,9 @@ namespace game_framework
             #pragma region 讀取玩家圖檔與設定初始參數
             Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-            Player1->Rect.X = 220;
+            Player1->Rect.X = 250;
             Player1->Rect.Y = GroundPosition - 200;
-            Player2->Rect.X = 400;
+            Player2->Rect.X = 430;
             Player2->Rect.Y = GroundPosition - 200;
             #pragma endregion
 
@@ -1079,9 +1106,9 @@ namespace game_framework
         Bar_Player2Break.Rect.Y = Player2->Rect.Y + 190;
         Bar_Player1Break.OnUpdate(Camera);
         Bar_Player2Break.OnUpdate(Camera);
-        Player1_Name.Rect.X = Player1->Rect.X + 75;
+        Player1_Name.Rect.X = Player1->Rect.X + 52;
         Player1_Name.Rect.Y = Player1->Rect.Y - 30;
-        Player2_Name.Rect.X = Player2->Rect.X + 75;
+        Player2_Name.Rect.X = Player2->Rect.X + 52;
         Player2_Name.Rect.Y = Player2->Rect.Y - 30;
         Player1_Name.OnUpdate(Camera);
         Player2_Name.OnUpdate(Camera);
