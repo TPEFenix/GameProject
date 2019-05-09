@@ -244,13 +244,13 @@ namespace game_framework
                 PlaySounds(Sounds.Rush, false);
                 if (IsRight)
                 {
-                    Velocity_X = 35;
+                    Velocity_X = 38;
                     Acceleration_X = -3.5;
                     Invincible = true;
                 }
                 else
                 {
-                    Velocity_X = -35;
+                    Velocity_X = -38;
                     Acceleration_X = +3.5;
                     Invincible = true;
                 }
@@ -327,7 +327,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Matchstick_NormalAttack1_Damage,
-                        2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        2, 2, Rect.X + 108, Rect.X - 2, Rect.Y + 52, 0, 0,
                         120, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
@@ -393,7 +393,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Matchstick_NormalAttack2_Damage,
-                        3.5, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        3.5, 2, Rect.X + 108, Rect.X - 2, Rect.Y + 52, 0, 0,
                         120, 30, "PunchHit", Sounds.NormalHit, Camera);
                     #pragma endregion
                 }
@@ -462,7 +462,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal2"]), this, Enemy,
                         Matchstick_NormalAttack3_Damage,
-                        12, 7.5, Rect.X + 98, Rect.X - 7, Rect.Y + 17, 0, 0,
+                        12, 7.5, Rect.X + 147, Rect.X - 7, Rect.Y + 25, 0, 0,
                         200, 30, "PunchHit", Sounds.NormalHit, Camera);
                     //額外設定
                     Attacks.AttackObjects["Normal2"].CanHitFly = true;
@@ -536,7 +536,7 @@ namespace game_framework
                     Attacks.AttackReset_Shot(&(Attacks.AttackObjects["Skill1_" + IntToString(Shot1Current)]), this, Enemy,
                         Rina_DownSkill_Damage,
                         2, 3.5,
-                        Rect.X + 50, Rect.X + 10, Rect.Y + 35, Ahead(4.5), 0,
+                        Rect.X + 75, Rect.X + 10, Rect.Y + 52, Ahead(4.5), 0,
                         120, 1000, 2,
                         true, true, true,
                         "PunchHit", Sounds.NormalHit, Camera);
@@ -641,7 +641,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal3"]), this, Enemy,
                         Matchstick_AirAttack1_Damage,
-                        2, 5, Rect.X + 72, Rect.X - 2, Rect.Y + 60, Velocity_X / 3, 0,
+                        2, 5, Rect.X + 108, Rect.X - 2, Rect.Y + 90, Velocity_X / 3, 0,
                         150, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
@@ -705,7 +705,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal2"]), this, Enemy,
                         Matchstick_AirAttack2_Damage,
-                        12, 7.5, Rect.X + 95, Rect.X, Rect.Y + 40, Velocity_X / 3, 0,
+                        12, 7.5, Rect.X + 142, Rect.X, Rect.Y + 60, Velocity_X / 3, 0,
                         250, 50, "PunchHit", Sounds.NormalHit, Camera);
                     //額外設定
                     Attacks.AttackObjects["Normal2"].CanHitFly = true;
@@ -769,7 +769,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal2"]), this, Enemy,
                         Matchstick_UpAttack_Damage,
-                        2, 12, Rect.X + 98, Rect.X - 7, Rect.Y + 17, 0, 0,
+                        2, 12, Rect.X + 147, Rect.X - 7, Rect.Y + 25, 0, 0,
                         220, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
@@ -838,7 +838,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Matchstick_DownAttack_Damage,
-                        2, 3, Rect.X + 74, Rect.X, Rect.Y + 35, 0, 0,
+                        2, 3, Rect.X + 111, Rect.X, Rect.Y + 52, 0, 0,
                         200, 30, "PunchHit", Sounds.NormalHit, Camera);
                     Attacks.AttackObjects["Normal1"].HitBreak = true;
                 }
@@ -1105,7 +1105,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal4"]), this, Enemy,
                         Matchstick_AirDownAttack_Damage,
-                        2.5, -16, Rect.X + 60, Rect.X, Rect.Y + 10, Velocity_X / 2, Velocity_Y / 3,
+                        2.5, -16, Rect.X + 90, Rect.X, Rect.Y + 20, Velocity_X / 2, Velocity_Y / 3,
                         200, 30, "PunchHit", Sounds.NormalHit, Camera);
                 }
                 #pragma endregion
@@ -1556,7 +1556,7 @@ namespace game_framework
                 Attacks.AttackReset_Shot(&(Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)]), this, Enemy,
                     Matchstick_UpSkill_Damage,
                     0, 0,
-                    DownSkillXpoint + 40, DownSkillXpoint + 40, DownSkillYpoint - 150, 0, 0,
+                    DownSkillXpoint + 60, DownSkillXpoint + 60, DownSkillYpoint - 150, 0, 2,
                     20, 750, 5,
                     true, true, true,
                     "PunchHit", Sounds.NormalHit, Camera);
@@ -1566,7 +1566,7 @@ namespace game_framework
                 Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].UseRectCollision = true;
                 //額外設定
                 Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].GravityEffect = true;
-                Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Acceleration_gravity = 0.08;
+                Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Acceleration_gravity = 0.5;
                 double Positions[] = { 0,30,-30,10,0,-60,80,-40,80,-10,-70,-25,10,-80,0,80 };
                 if (DownSkillCurrent == 0)
                     Attacks.AttackObjects["flashblade_" + IntToString(DownSkillCurrent)].Rect.X += Positions[0];
@@ -1652,14 +1652,14 @@ namespace game_framework
                 PlaySounds(Sounds.Rush, false);
                 if (IsRight)
                 {
-                    Velocity_X = 35;
+                    Velocity_X = 38;
                     Acceleration_X = -3.5;
                     Velocity_Y = 2;
                     Invincible = true;
                 }
                 else
                 {
-                    Velocity_X = -35;
+                    Velocity_X = -38;
                     Acceleration_X = +3.5;
                     Velocity_Y = 2;
                     Invincible = true;
@@ -1797,7 +1797,7 @@ namespace game_framework
                 RushTimer = 0;
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -10;
+                Velocity_Y = -13;
                 OnGround = false;
                 PlayEffect(this, "Airboost2", Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
                 PlaySounds(Sounds.Jump, false);
@@ -1820,7 +1820,7 @@ namespace game_framework
             {
                 Step = 3;
                 JumpTimer = 0;
-                Velocity_Y = -10;
+                Velocity_Y = -13;
                 OnGround = false;
                 PlayEffect(this, "Airboost2", Camera, Rect.X - 30, Rect.X - 35, Rect.Y + 80);
                 PlaySounds(Sounds.Jump, false);
@@ -1976,7 +1976,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Rina_NormalAttack1_Damage,
-                        2, 2, Rect.X + 72, Rect.X - 2, Rect.Y + 35, 0, 0,
+                        2, 2, Rect.X + 108, Rect.X - 2, Rect.Y + 52, 0, 0,
                         150, 30, "PunchHit", Sounds.NormalHit, Camera);
 
                 }
@@ -2047,7 +2047,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Rina_NormalAttack2_Damage,
-                        3.5, 2, Rect.X + 85, Rect.X - 15, Rect.Y + 35, 0, 0,
+                        3.5, 2, Rect.X + 127, Rect.X - 15, Rect.Y + 52, 0, 0,
                         120, 30, "PunchHit", Sounds.NormalHit, Camera);
                     #pragma endregion
                 }
@@ -2117,7 +2117,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Rina_NormalAttack3_Damage,
-                        12, 7.5, Rect.X + 75, Rect.X - 5, Rect.Y + 45, 0, 0,
+                        12, 7.5, Rect.X + 112, Rect.X - 5, Rect.Y + 67, 0, 0,
                         200, 100, "PunchHit", Sounds.NormalHit, Camera);
                     //額外設定
                     Attacks.AttackObjects["Normal1"].CanHitFly = true;

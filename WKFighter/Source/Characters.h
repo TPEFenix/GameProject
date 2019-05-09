@@ -25,7 +25,7 @@ namespace game_framework
         #define Matchstick_HP_Max 1000
         #define Matchstick_SP_Max 100
         #define Matchstick_Rush_Cost 8
-        #define Matchstick_RunSpeed 6
+        #define Matchstick_RunSpeed 7.5
         #define Matchstick_StandbySPincrements 0.3
         #define Matchstick_RunningSPincrements 0.15
         #define Matchstick_ChargeSPincrements 13
@@ -127,7 +127,7 @@ namespace game_framework
         #define Rina_HP_Max 1000
         #define Rina_SP_Max 100
         #define Rina_Rush_Cost 8
-        #define Rina_RunSpeed 6.5
+        #define Rina_RunSpeed 8
         #define Rina_StandbySPincrements 0.3
         #define Rina_RunningSPincrements 0.15
         #define Rina_ChargeSPincrements 13
