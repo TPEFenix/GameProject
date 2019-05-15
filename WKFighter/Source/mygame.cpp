@@ -195,6 +195,9 @@ namespace game_framework
     BitmapAnimation P2RoleChoose = BitmapAnimation("RoleP1Choose", 560, GroundPosition, true, false, false);
     BitmapAnimation P1RoleSelect = BitmapAnimation("RoleP1Select", 70, GroundPosition, true, false, false);
     BitmapAnimation P2RoleSelect = BitmapAnimation("RoleP1Select", 560, GroundPosition, true, false, false);
+    BitmapAnimation P1Selector = BitmapAnimation("P1Selector", 267, 288, true, false, false);
+    BitmapAnimation P2Selector = BitmapAnimation("P2Selector", 354, 288, true, false, false);
+    BitmapAnimation P1P2Selector = BitmapAnimation("P1P2Selector", 267, 288, true, false, false);
 
     int TitleSelection = 0;
     int P1Selection = 0;
@@ -319,7 +322,7 @@ namespace game_framework
         P1P2Select_5.LoadTexture(TransparentColor);
         BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Select.bmp", -400, 0, true, false, false);
         BackGround_Select.LoadTexture(TransparentColor);
-        Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 210, 270, true, false, false);
+        Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 265, 300, true, false, false);
         Characters_Menu.LoadTexture(TransparentColor);
         P1RoleChoose.AutoLoadBitmaps("Select", "RoleP1Choose", 6, 0, false, TransparentColor);
         P2RoleChoose.AutoLoadBitmaps("Select", "RoleP1Choose", 6, 0, false, TransparentColor);
@@ -329,7 +332,9 @@ namespace game_framework
         P1RoleSelect.BitmapisRight = true;
         P2RoleChoose.BitmapisRight = false;
         P2RoleSelect.BitmapisRight = false;
-
+        P1Selector.AutoLoadBitmaps("Select", "P1Selector", 2, 0, false, TransparentColor);
+        P2Selector.AutoLoadBitmaps("Select", "P2Selector", 2, 0, false, TransparentColor);
+        P1P2Selector.AutoLoadBitmaps("Select", "P1P2Selector", 2, 0, false, TransparentColor);
 
         LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
         LoadingBK.LoadTexture(TransparentColor);
@@ -615,6 +620,9 @@ namespace game_framework
             P2RoleChoose.OnUpdate("Select", Camera);
             P1RoleSelect.OnUpdate("Select", Camera);
             P2RoleSelect.OnUpdate("Select", Camera);
+            P1Selector.OnUpdate("Select", Camera);
+            P2Selector.OnUpdate("Select", Camera);
+            P1P2Selector.OnUpdate("Select", Camera);
         }
     }
     void GameAction2_OnShow(int i)
@@ -627,31 +635,40 @@ namespace game_framework
             P2RoleChoose.Step = P2Selection;
             P1RoleSelect.Step = P1Selection;
             P2RoleSelect.Step = P2Selection;
+
             if (P1Selection == P2Selection)
             {
+                P1P2Selector.DisplayBitmap->Draw(i, 4);
+                P1P2Selector.AutoPlay(750, true);
                 switch (P1Selection)
                 {
                 case 0:
-                    P1P2Select_0.Draw(i, 3);
                     SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
                     SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
+                    P1P2Selector.Rect.X = 267;
+                    P1P2Selector.Rect.Y = 288;
                     break;
                 case 1:
                     SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
                     SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1P2Select_1.Draw(i, 3);
+                    P1P2Selector.Rect.X = 354;
+                    P1P2Selector.Rect.Y = 288;
                     break;
                 case 2:
-                    P1P2Select_2.Draw(i, 3);
+                    P1P2Selector.Rect.X = 441;
+                    P1P2Selector.Rect.Y = 288;
                     break;
                 case 3:
-                    P1P2Select_3.Draw(i, 3);
+                    P1P2Selector.Rect.X = 267;
+                    P1P2Selector.Rect.Y = 393;
                     break;
                 case 4:
-                    P1P2Select_4.Draw(i, 3);
+                    P1P2Selector.Rect.X = 354;
+                    P1P2Selector.Rect.Y = 393;
                     break;
                 case 5:
-                    P1P2Select_5.Draw(i, 3);
+                    P1P2Selector.Rect.X = 441;
+                    P1P2Selector.Rect.Y = 393;
                     break;
                 default:
                     break;
@@ -659,27 +676,37 @@ namespace game_framework
             }
             else
             {
+                P1Selector.DisplayBitmap->Draw(i, 4);
+                P1Selector.AutoPlay(750, true);
+                P2Selector.DisplayBitmap->Draw(i, 4);
+                P2Selector.AutoPlay(750, true);
                 switch (P1Selection)
                 {
                 case 0:
                     SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1Select_0.Draw(i, 3);
+                    P1Selector.Rect.X = 267;
+                    P1Selector.Rect.Y = 288;
                     break;
                 case 1:
                     SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1Select_1.Draw(i, 3);
+                    P1Selector.Rect.X = 354;
+                    P1Selector.Rect.Y = 288;
                     break;
                 case 2:
-                    P1Select_2.Draw(i, 3);
+                    P1Selector.Rect.X = 441;
+                    P1Selector.Rect.Y = 288;
                     break;
                 case 3:
-                    P1Select_3.Draw(i, 3);
+                    P1Selector.Rect.X = 267;
+                    P1Selector.Rect.Y = 393;
                     break;
                 case 4:
-                    P1Select_4.Draw(i, 3);
+                    P1Selector.Rect.X = 354;
+                    P1Selector.Rect.Y = 393;
                     break;
                 case 5:
-                    P1Select_5.Draw(i, 3);
+                    P1Selector.Rect.X = 441;
+                    P1Selector.Rect.Y = 393;
                     break;
                 default:
                     break;
@@ -688,28 +715,35 @@ namespace game_framework
                 {
                 case 0:
                     SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P2Select_0.Draw(i, 3);
+                    P2Selector.Rect.X = 267;
+                    P2Selector.Rect.Y = 288;
                     break;
                 case 1:
                     SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P2Select_1.Draw(i, 3);
+                    P2Selector.Rect.X = 354;
+                    P2Selector.Rect.Y = 288;
                     break;
                 case 2:
-                    P2Select_2.Draw(i, 3);
+                    P2Selector.Rect.X = 441;
+                    P2Selector.Rect.Y = 288;
                     break;
                 case 3:
-                    P2Select_3.Draw(i, 3);
+                    P2Selector.Rect.X = 267;
+                    P2Selector.Rect.Y = 393;
                     break;
                 case 4:
-                    P2Select_4.Draw(i, 3);
+                    P2Selector.Rect.X = 354;
+                    P2Selector.Rect.Y = 393;
                     break;
                 case 5:
-                    P2Select_5.Draw(i, 3);
+                    P2Selector.Rect.X = 441;
+                    P2Selector.Rect.Y = 393;
                     break;
                 default:
                     break;
                 }
             }
+            
         }
     }
     void GameAction3_OnMove()
