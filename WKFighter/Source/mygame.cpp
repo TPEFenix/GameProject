@@ -204,6 +204,8 @@ namespace game_framework
     int P2Selection = 0;
     bool SelectedP1 = false;
     bool SelectedP2 = false;
+    int Charaters_Menu_X[6] = { 267, 354, 441, 267, 354, 441 };
+    int Charaters_Menu_Y[6] = { 288, 288, 288, 393, 393, 393 };
 
 
 
@@ -507,6 +509,8 @@ namespace game_framework
             {
                 Player1Character = P1Selection;
                 Player2Character = P2Selection;
+                P1P2Selector.Step = 0;
+                P1P2Selector.DisplayBitmap->Draw(4, 4);
                 Sleep(750);
                 GameAction5_initialization();
             }
@@ -529,6 +533,7 @@ namespace game_framework
                     if (P1Selection <= 1)
                     {
                         SelectedP1 = true;
+                        P1Selector.Step = 0;
                         PlaySounds(Sounds.Choose, false);
                     }
                 }
@@ -568,6 +573,8 @@ namespace game_framework
                         P1Selection += 6;
                     }
                 }
+                P1Selector.Rect.X = Charaters_Menu_X[P1Selection];
+                P1Selector.Rect.Y = Charaters_Menu_Y[P1Selection];
             }
             if (SelectedP2 == false)
             {
@@ -576,6 +583,7 @@ namespace game_framework
                     if (P2Selection <= 1)
                     {
                         SelectedP2 = true;
+                        P2Selector.Step = 0;
                         PlaySounds(Sounds.Choose, false);
                     }
                 }
@@ -615,7 +623,11 @@ namespace game_framework
                         P2Selection += 6;
                     }
                 }
+                P2Selector.Rect.X = Charaters_Menu_X[P2Selection];
+                P2Selector.Rect.Y = Charaters_Menu_Y[P2Selection];
             }
+            P1P2Selector.Rect.X = Charaters_Menu_X[P1Selection];
+            P1P2Selector.Rect.Y = Charaters_Menu_Y[P1Selection];
             P1RoleChoose.OnUpdate("Select", Camera);
             P2RoleChoose.OnUpdate("Select", Camera);
             P1RoleSelect.OnUpdate("Select", Camera);
@@ -640,110 +652,18 @@ namespace game_framework
             {
                 P1P2Selector.DisplayBitmap->Draw(i, 4);
                 P1P2Selector.AutoPlay(750, true);
-                switch (P1Selection)
-                {
-                case 0:
-                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
-                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1P2Selector.Rect.X = 267;
-                    P1P2Selector.Rect.Y = 288;
-                    break;
-                case 1:
-                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
-                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1P2Selector.Rect.X = 354;
-                    P1P2Selector.Rect.Y = 288;
-                    break;
-                case 2:
-                    P1P2Selector.Rect.X = 441;
-                    P1P2Selector.Rect.Y = 288;
-                    break;
-                case 3:
-                    P1P2Selector.Rect.X = 267;
-                    P1P2Selector.Rect.Y = 393;
-                    break;
-                case 4:
-                    P1P2Selector.Rect.X = 354;
-                    P1P2Selector.Rect.Y = 393;
-                    break;
-                case 5:
-                    P1P2Selector.Rect.X = 441;
-                    P1P2Selector.Rect.Y = 393;
-                    break;
-                default:
-                    break;
-                }
             }
             else
             {
                 P1Selector.DisplayBitmap->Draw(i, 4);
-                P1Selector.AutoPlay(750, true);
+                if (!SelectedP1)
+                    P1Selector.AutoPlay(750, true);
                 P2Selector.DisplayBitmap->Draw(i, 4);
-                P2Selector.AutoPlay(750, true);
-                switch (P1Selection)
-                {
-                case 0:
-                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1Selector.Rect.X = 267;
-                    P1Selector.Rect.Y = 288;
-                    break;
-                case 1:
-                    SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P1Selector.Rect.X = 354;
-                    P1Selector.Rect.Y = 288;
-                    break;
-                case 2:
-                    P1Selector.Rect.X = 441;
-                    P1Selector.Rect.Y = 288;
-                    break;
-                case 3:
-                    P1Selector.Rect.X = 267;
-                    P1Selector.Rect.Y = 393;
-                    break;
-                case 4:
-                    P1Selector.Rect.X = 354;
-                    P1Selector.Rect.Y = 393;
-                    break;
-                case 5:
-                    P1Selector.Rect.X = 441;
-                    P1Selector.Rect.Y = 393;
-                    break;
-                default:
-                    break;
-                }
-                switch (P2Selection)
-                {
-                case 0:
-                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P2Selector.Rect.X = 267;
-                    P2Selector.Rect.Y = 288;
-                    break;
-                case 1:
-                    SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
-                    P2Selector.Rect.X = 354;
-                    P2Selector.Rect.Y = 288;
-                    break;
-                case 2:
-                    P2Selector.Rect.X = 441;
-                    P2Selector.Rect.Y = 288;
-                    break;
-                case 3:
-                    P2Selector.Rect.X = 267;
-                    P2Selector.Rect.Y = 393;
-                    break;
-                case 4:
-                    P2Selector.Rect.X = 354;
-                    P2Selector.Rect.Y = 393;
-                    break;
-                case 5:
-                    P2Selector.Rect.X = 441;
-                    P2Selector.Rect.Y = 393;
-                    break;
-                default:
-                    break;
-                }
+                if (!SelectedP2)
+                    P2Selector.AutoPlay(750, true);
             }
-            
+            SelectedP1 == true ? P1RoleSelect.DisplayBitmap->Draw(i, 3) : P1RoleChoose.DisplayBitmap->Draw(i, 3);
+            SelectedP2 == true ? P2RoleSelect.DisplayBitmap->Draw(i, 3) : P2RoleChoose.DisplayBitmap->Draw(i, 3);
         }
     }
     void GameAction3_OnMove()
