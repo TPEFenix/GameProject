@@ -172,24 +172,6 @@ namespace game_framework
     #pragma region GameAction_Menu
     BitmapPicture BackGround_Menu;
     vector <SelectionBitmap> TitleSelects;
-    BitmapPicture P1Select_0;
-    BitmapPicture P1Select_1;
-    BitmapPicture P1Select_2;
-    BitmapPicture P1Select_3;
-    BitmapPicture P1Select_4;
-    BitmapPicture P1Select_5;
-    BitmapPicture P2Select_0;
-    BitmapPicture P2Select_1;
-    BitmapPicture P2Select_2;
-    BitmapPicture P2Select_3;
-    BitmapPicture P2Select_4;
-    BitmapPicture P2Select_5;
-    BitmapPicture P1P2Select_0;
-    BitmapPicture P1P2Select_1;
-    BitmapPicture P1P2Select_2;
-    BitmapPicture P1P2Select_3;
-    BitmapPicture P1P2Select_4;
-    BitmapPicture P1P2Select_5;
     BitmapPicture Characters_Menu;
     BitmapAnimation P1RoleChoose = BitmapAnimation("RoleP1Choose", 70, GroundPosition, true, false, false);
     BitmapAnimation P2RoleChoose = BitmapAnimation("RoleP1Choose", 560, GroundPosition, true, false, false);
@@ -198,7 +180,8 @@ namespace game_framework
     BitmapAnimation P1Selector = BitmapAnimation("P1Selector", 267, 288, true, false, false);
     BitmapAnimation P2Selector = BitmapAnimation("P2Selector", 354, 288, true, false, false);
     BitmapAnimation P1P2Selector = BitmapAnimation("P1P2Selector", 267, 288, true, false, false);
-
+    BitmapAnimation Number_Digits = BitmapAnimation("number", 400, 10, true, false, false);
+    BitmapAnimation Number_Ten_Digits = BitmapAnimation("number", 360, 10, true, false, false);
     int TitleSelection = 0;
     int P1Selection = 0;
     int P2Selection = 0;
@@ -206,6 +189,9 @@ namespace game_framework
     bool SelectedP2 = false;
     int Charaters_Menu_X[6] = { 267, 354, 441, 267, 354, 441 };
     int Charaters_Menu_Y[6] = { 288, 288, 288, 393, 393, 393 };
+    int Battle_Timer = 99;
+    int Cycle_Timer = 60;
+    bool onBattle = true;
 
 
 
@@ -286,42 +272,6 @@ namespace game_framework
         Title_Exit.LoadTexture(TransparentColor);
         Title_Cursor = BitmapPicture("Content\\Bitmaps\\´å¼Ð.bmp", 225, 300, true, false, false);
         Title_Cursor.LoadTexture(TransparentColor);
-        P1Select_0 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_0.bmp", 210, 270, true, false, false);
-        P1Select_0.LoadTexture(TransparentColor);
-        P1Select_1 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_1.bmp", 210, 270, true, false, false);
-        P1Select_1.LoadTexture(TransparentColor);
-        P1Select_2 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_2.bmp", 210, 270, true, false, false);
-        P1Select_2.LoadTexture(TransparentColor);
-        P1Select_3 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_3.bmp", 210, 270, true, false, false);
-        P1Select_3.LoadTexture(TransparentColor);
-        P1Select_4 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_4.bmp", 210, 270, true, false, false);
-        P1Select_4.LoadTexture(TransparentColor);
-        P1Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P1Select_5.bmp", 210, 270, true, false, false);
-        P1Select_5.LoadTexture(TransparentColor);
-        P2Select_0 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_0.bmp", 210, 270, true, false, false);
-        P2Select_0.LoadTexture(TransparentColor);
-        P2Select_1 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_1.bmp", 210, 270, true, false, false);
-        P2Select_1.LoadTexture(TransparentColor);
-        P2Select_2 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_2.bmp", 210, 270, true, false, false);
-        P2Select_2.LoadTexture(TransparentColor);
-        P2Select_3 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_3.bmp", 210, 270, true, false, false);
-        P2Select_3.LoadTexture(TransparentColor);
-        P2Select_4 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_4.bmp", 210, 270, true, false, false);
-        P2Select_4.LoadTexture(TransparentColor);
-        P2Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P2Select_5.bmp", 210, 270, true, false, false);
-        P2Select_5.LoadTexture(TransparentColor);
-        P1P2Select_0 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_0.bmp", 210, 270, true, false, false);
-        P1P2Select_0.LoadTexture(TransparentColor);
-        P1P2Select_1 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_1.bmp", 210, 270, true, false, false);
-        P1P2Select_1.LoadTexture(TransparentColor);
-        P1P2Select_2 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_2.bmp", 210, 270, true, false, false);
-        P1P2Select_2.LoadTexture(TransparentColor);
-        P1P2Select_3 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_3.bmp", 210, 270, true, false, false);
-        P1P2Select_3.LoadTexture(TransparentColor);
-        P1P2Select_4 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_4.bmp", 210, 270, true, false, false);
-        P1P2Select_4.LoadTexture(TransparentColor);
-        P1P2Select_5 = BitmapPicture("Content\\Bitmaps\\Select\\P1P2Select_5.bmp", 210, 270, true, false, false);
-        P1P2Select_5.LoadTexture(TransparentColor);
         BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Select.bmp", -400, 0, true, false, false);
         BackGround_Select.LoadTexture(TransparentColor);
         Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 265, 300, true, false, false);
@@ -337,6 +287,8 @@ namespace game_framework
         P1Selector.AutoLoadBitmaps("Select", "P1Selector", 2, 0, false, TransparentColor);
         P2Selector.AutoLoadBitmaps("Select", "P2Selector", 2, 0, false, TransparentColor);
         P1P2Selector.AutoLoadBitmaps("Select", "P1P2Selector", 2, 0, false, TransparentColor);
+        Number_Digits.AutoLoadBitmaps("Number", "number", 10, 0, false, TransparentColor);
+        Number_Ten_Digits.AutoLoadBitmaps("Number", "number", 10, 0, false, TransparentColor);
 
         LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
         LoadingBK.LoadTexture(TransparentColor);
@@ -981,7 +933,16 @@ namespace game_framework
             }
             ReadyBmp.OnUpdate();
         }
-
+        if (ReadyTimer >= 1500  && onBattle) 
+        {
+            Cycle_Timer--;
+            if (Cycle_Timer == 0) {
+                Battle_Timer--;
+                Cycle_Timer = 60;
+            }
+            Number_Digits.Step = Battle_Timer % 10;
+            Number_Ten_Digits.Step = Battle_Timer / 10;
+        }
         #pragma endregion
 
 
@@ -1007,6 +968,7 @@ namespace game_framework
 
         if (SomeBodyDown == true)
         {
+            onBattle = false;
             WinnerTimer += TIMER_TICK_MILLIDECOND;
             WinnerTimer2 += TIMER_TICK_MILLIDECOND;
             if (WinnerTimer < 500 && WinnerTimer2>40)
@@ -1087,6 +1049,86 @@ namespace game_framework
 
         }
 
+        if (Battle_Timer == 0)
+        {
+            onBattle = false;
+            WinnerTimer += TIMER_TICK_MILLIDECOND;
+            WinnerTimer2 += TIMER_TICK_MILLIDECOND;
+            if (WinnerTimer < 500 && WinnerTimer2>40)
+            {
+                WinnerTimer2 = 0;
+                if (WhiteCover.visable)
+                {
+                    WhiteCover.visable = false;
+                }
+                else
+                {
+                    WhiteCover.visable = true;
+                }
+            }
+            if (WinnerTimer >= 1000)
+            {
+                if (KoBmp.Rect.X < 250)
+                {
+                    KoBmp.Rect.X += 25;
+                    if (KoBmp.Rect.X > 250)
+                    {
+                        KoBmp.Rect.X = 250;
+                    }
+                }
+                KoBmp.visable = true;
+                KoBmp.OnUpdate();
+            }
+            Player1->Invincible = true;
+            Player2->Invincible = true;
+            if (Player1->HP < Player2->HP)
+            {
+                Player1->CanControl = false;
+                Player1->Action = "¨ü¶Ë";
+                if (Player1->Rect.Y < GroundPosition)
+                    Player1->Step = 1;
+                else
+                    Player1->Step = 2;
+                Player1->AnimationUpdate(Camera);
+                Player1->Throughing = true;
+                Player1->Invincible = true;
+            }
+            else
+            {
+                Player2->CanControl = false;
+                Player2->Action = "¨ü¶Ë";
+                if (Player2->Rect.Y < GroundPosition)
+                    Player2->Step = 1;
+                else
+                    Player2->Step = 2;
+                Player2->AnimationUpdate(Camera);
+                Player2->Throughing = true;
+                Player2->Invincible = true;
+            }
+            if (WinnerTimer > 2000)
+            {
+                if (Player1->HP > Player2->HP)
+                {
+                    WinnerID = 1;
+                }
+                else if (Player2->HP > Player1->HP)
+                {
+                    WinnerID = 2;
+                }
+                else
+                {
+                    WinnerID = 0;
+                }
+                BlackCoverfactor = ((501 - (2500 - WinnerTimer)) / 500);
+                BlackCover.visable = true;
+                if (BlackCoverfactor > 1)
+                {
+                    BlackCoverfactor = 1;
+                    GameAction2_initialization();
+                }
+                BlackCover.OnUpdate();
+            }
+        }
         #pragma endregion
 
 
@@ -1112,6 +1154,8 @@ namespace game_framework
         Player2_Name.Rect.Y = Player2->Rect.Y - 30;
         Player1_Name.OnUpdate(Camera);
         Player2_Name.OnUpdate(Camera);
+        Number_Digits.OnUpdate("Number", Camera);
+        Number_Ten_Digits.OnUpdate("Number", Camera);
 
         if (KeyState_now.ESC)
         {
@@ -1152,6 +1196,9 @@ namespace game_framework
         Player1_Name.Draw(i, 3);
         Player2_Name.Draw(i, 3);
         CutInMask.Draw(i, 4);
+
+        Number_Digits.DisplayBitmap->Draw(i, 3);
+        Number_Ten_Digits.DisplayBitmap->Draw(i, 3);
     }
     #pragma endregion 
     void GameAction5_OnMove()
