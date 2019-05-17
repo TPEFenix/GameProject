@@ -64,7 +64,7 @@ static UINT indicators[] =
 	ID_INDICATOR_NUM,
 	ID_INDICATOR_SCRL,
 };
-
+static bool isfirst;
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame construction/destruction
 
@@ -74,6 +74,7 @@ CMainFrame::CMainFrame()
 	isFullScreen = OPEN_AS_FULLSCREEN;	
 	isToolBarVisible = true;
 	isStatusBarVisible = true;
+	isfirst = true;
 }
 
 CMainFrame::~CMainFrame()
@@ -117,16 +118,23 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	//
 	// 儲存Menu的pointer
 	//
-	pMenu = GetMenu();
+	//pMenu = GetMenu();
 	//
 	// 如果是Full Screen的話，隱藏ToolBar, StatusBar, Menu
 	//
+
+	pMenu = NULL;
+	m_wndToolBar.ShowWindow(SW_HIDE);
+	m_wndStatusBar.ShowWindow(SW_HIDE);
+	ShowWindow(SW_NORMAL);
+	ModifyStyle(0, WS_DLGFRAME);
 	if (isFullScreen) {
 		m_wndToolBar.ShowWindow(SW_HIDE);
 		m_wndStatusBar.ShowWindow(SW_HIDE);
 		ModifyStyle(WS_DLGFRAME, 0);
 		SetMenu(NULL);
 	}
+
 	return 0;
 }
 
@@ -198,12 +206,15 @@ void CMainFrame::SetFullScreen(bool isFull)
 		//
 		// Recover menu, tool bar, and status bar
 		//
+		/*
 		SetMenu(pMenu);
 		if (isToolBarVisible)
 			m_wndToolBar.ShowWindow(SW_NORMAL);
 		if (isStatusBarVisible)
 			m_wndStatusBar.ShowWindow(SW_NORMAL);
+			*/
 		ModifyStyle(0, WS_DLGFRAME);
+		
 		//
 		// Restore window position
 		//
@@ -221,8 +232,10 @@ void CMainFrame::OnToggleFullscreen()
 
 void CMainFrame::OnPaint() 
 {
+
 	CPaintDC dc(this); // device context for painting
-	
+	m_wndToolBar.ShowWindow(SW_HIDE);
+	m_wndStatusBar.ShowWindow(SW_HIDE);
 	// TODO: Add your message handler code here
 
 	// Do not call CFrameWnd::OnPaint() for painting messages
@@ -232,6 +245,7 @@ void CMainFrame::OnPaint()
 	CRect ClientRect;
 	game_framework::CDDraw::GetClientRect(ClientRect);
 	CalcWindowRect(&ClientRect, CWnd::adjustBorder);
+	/*
 	CRect ControlRect;
 	if(m_wndToolBar.IsWindowVisible()) {
 		m_wndToolBar.GetWindowRect(ControlRect);
@@ -242,9 +256,48 @@ void CMainFrame::OnPaint()
 		extra_height += ControlRect.bottom - ControlRect.top;
 	}
 	extra_height += GetSystemMetrics(SM_CYMENU);
+	*/
+	ModifyStyle(0, WS_DLGFRAME);
 	CRect WindowRect;
 	GetWindowRect(WindowRect);
-	MoveWindow(WindowRect.left, WindowRect.top, ClientRect.Width(), ClientRect.Height() + extra_height);
+	MoveWindow(WindowRect.left, WindowRect.top, ClientRect.Width(), ClientRect.Height());
+	if (isfirst)
+	{
+		GetWindowRect(WindowRect);
+
+		//
+		// Store the states of tool bar, and status bar.
+		//
+		isToolBarVisible = m_wndToolBar.IsWindowVisible();
+		isStatusBarVisible = m_wndStatusBar.IsWindowVisible();
+		//
+		// Make menu, tool bar, and status invisible.
+		//
+		m_wndToolBar.ShowWindow(SW_HIDE);
+		m_wndStatusBar.ShowWindow(SW_HIDE);
+		ModifyStyle(WS_DLGFRAME, 0);
+		SetMenu(NULL);
+		isfirst = false;
+		ShowWindow(SW_NORMAL);
+		game_framework::CDDraw::SetFullScreen(false);
+		//
+		// Recover menu, tool bar, and status bar
+		//
+		/*
+		SetMenu(pMenu);
+		if (isToolBarVisible)
+		m_wndToolBar.ShowWindow(SW_NORMAL);
+		if (isStatusBarVisible)
+		m_wndStatusBar.ShowWindow(SW_NORMAL);
+		*/
+		ModifyStyle(0, WS_DLGFRAME);
+
+		//
+		// Restore window position
+		//
+		MoveWindow(WindowRect);
+	}
+
 }
 
 void CMainFrame::OnButtonFullscreen() 
