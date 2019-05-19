@@ -134,7 +134,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		ModifyStyle(WS_DLGFRAME, 0);
 		SetMenu(NULL);
 	}
-
+    ModifyStyle(WS_DLGFRAME, WS_DLGFRAME);
+    m_wndToolBar.ShowWindow(SW_HIDE);
+    m_wndStatusBar.ShowWindow(SW_HIDE);
+    SetMenu(NULL);
 	return 0;
 }
 
@@ -261,25 +264,22 @@ void CMainFrame::OnPaint()
 	CRect WindowRect;
 	GetWindowRect(WindowRect);
 	MoveWindow(WindowRect.left, WindowRect.top, ClientRect.Width(), ClientRect.Height());
-	if (isfirst)
+	
+    if (isfirst)
 	{
 		GetWindowRect(WindowRect);
 
 		//
 		// Store the states of tool bar, and status bar.
 		//
-		isToolBarVisible = m_wndToolBar.IsWindowVisible();
-		isStatusBarVisible = m_wndStatusBar.IsWindowVisible();
 		//
 		// Make menu, tool bar, and status invisible.
 		//
-		m_wndToolBar.ShowWindow(SW_HIDE);
-		m_wndStatusBar.ShowWindow(SW_HIDE);
 		ModifyStyle(WS_DLGFRAME, 0);
-		SetMenu(NULL);
+		//SetMenu(NULL);
 		isfirst = false;
 		ShowWindow(SW_NORMAL);
-		game_framework::CDDraw::SetFullScreen(false);
+		//game_framework::CDDraw::SetFullScreen(false);
 		//
 		// Recover menu, tool bar, and status bar
 		//
@@ -290,13 +290,25 @@ void CMainFrame::OnPaint()
 		if (isStatusBarVisible)
 		m_wndStatusBar.ShowWindow(SW_NORMAL);
 		*/
+        m_wndToolBar.ShowWindow(SW_HIDE);
+        m_wndStatusBar.ShowWindow(SW_HIDE);
+        isToolBarVisible = m_wndToolBar.IsWindowVisible();
+        isStatusBarVisible = m_wndStatusBar.IsWindowVisible();
+        m_wndToolBar.ShowWindow(SW_HIDE);
+        m_wndStatusBar.ShowWindow(SW_HIDE);
 		ModifyStyle(0, WS_DLGFRAME);
+        //­«½Æ
 
+
+
+        //
 		//
 		// Restore window position
 		//
 		MoveWindow(WindowRect);
+
 	}
+
 
 }
 
