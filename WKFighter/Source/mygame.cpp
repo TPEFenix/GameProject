@@ -1336,7 +1336,7 @@ namespace game_framework
         {
             BackGround_Title.Draw(i, 1);
             Title_Bitmap.Draw(i, 3);
-            Showtext("Press [SPACE] to start the game", 100, 450, 35, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
+            Showtext("Press [SPACE] to start the game", 175, 450,20, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
         }
     }
     void CGameStateInit::OnMove()
