@@ -192,6 +192,9 @@ namespace game_framework
     bool SelectedP2 = false;
     int Charaters_Menu_X[6] = { 267, 354, 441, 267, 354, 441 };
     int Charaters_Menu_Y[6] = { 288, 288, 288, 393, 393, 393 };
+    BitmapPicture Skill_List;
+    BitmapPicture BackGround_Skill_List;
+    BitmapPicture Characters_Menu_2;
 
 
 
@@ -289,6 +292,14 @@ namespace game_framework
         P1P2Selector.AutoLoadBitmaps("Select", "P1P2Selector", 2, 0, false, TransparentColor);
         Number_Digits.AutoLoadBitmaps("Number", "number", 10, 0, false, TransparentColor);
         Number_Ten_Digits.AutoLoadBitmaps("Number", "number", 10, 0, false, TransparentColor);
+        Skill_List = BitmapPicture("Content\\Bitmaps\\Skill_List.bmp", 400, 20, true, false, false);
+        Skill_List.LoadTexture(TransparentColor);
+        BackGround_Skill_List = BitmapPicture("Content\\Bitmaps\\Whitecover.bmp", 0, 0, true, false, false);
+        BackGround_Skill_List.LoadTexture(TransparentColor);
+        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
+        LoadingBK.LoadTexture(TransparentColor);
+        Characters_Menu_2 = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 40, 25, true, false, false);
+        Characters_Menu_2.LoadTexture(TransparentColor);
 
         LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
         LoadingBK.LoadTexture(TransparentColor);
@@ -377,6 +388,8 @@ namespace game_framework
                 PlaySounds(Sounds.Choose, false);
                 if (TitleSelection == 0)
                     GameAction2_initialization();
+                else if (TitleSelection == 1)
+                    GameAction1_initialization();
                 else if (TitleSelection == 2)
                     ExitGame();
             }
@@ -442,14 +455,18 @@ namespace game_framework
     {
         if (GameAction == 1)
         {
-
+            BackGround_Skill_List.OnUpdate();
+            Skill_List.OnUpdate();
+            Characters_Menu_2.OnUpdate();
         }
     }
     void GameAction1_OnShow(int i)
     {
         if (GameAction == 1)
         {
-
+            BackGround_Skill_List.Draw(i, 1);
+            Skill_List.Draw(i, 3);
+            Characters_Menu_2.Draw(i, 2);
         }
     }
     void GameAction2_OnMove()
