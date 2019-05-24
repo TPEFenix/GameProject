@@ -2416,7 +2416,7 @@ namespace game_framework
 
             if (NormalAttack1Timer >= 50 && Step == 0)
             {
-                NormalAttack1Timer = 0;
+                NormalAttack1Timer = 0; 
                 Step = 1;
             }
             else if (NormalAttack1Timer >= 150 && Step == 1)
@@ -2445,7 +2445,7 @@ namespace game_framework
                         2, 3, Rect.X + 90, Rect.X+20, Rect.Y + 65, 0, 0,
                         200, 30, "PunchHit", Sounds.NormalHit, Camera);
                     Attacks.AttackObjects["Normal1"].HitBreak = true;
-                    Attacks.AttackObjects["Normal1"].Drawable = true;
+                    Attacks.AttackObjects["Normal1"].Drawable = false;
                 }
                 #pragma endregion
             }
