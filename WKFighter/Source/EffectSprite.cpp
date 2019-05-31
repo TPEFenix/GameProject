@@ -33,6 +33,7 @@ namespace game_framework
         InsertEffection("stun_star", 3, 4, 16, color);
         InsertEffection("HitWall", 3, 4, 16, color);
         InsertEffection("Matchstick_US", 0, 6, 16, color);
+        InsertEffection("Rina_US", 0, 6, 16, color);
         InsertEffection("OraOraFire", 4, 4, 30, color);
     }
 
