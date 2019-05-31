@@ -292,7 +292,7 @@ namespace game_framework
         P1P2Selector.AutoLoadBitmaps("Select", "P1P2Selector", 2, 0, false, TransparentColor);
         Number_Digits.AutoLoadBitmaps("Number", "number", 10, 0, false, TransparentColor);
         Number_Ten_Digits.AutoLoadBitmaps("Number", "number", 10, 0, false, TransparentColor);
-        Skill_List = BitmapPicture("Content\\Bitmaps\\Skill_List.bmp", 400, 20, true, false, false);
+        Skill_List = BitmapPicture("Content\\Bitmaps\\Skill_List\\Skill_List.bmp", 400, 20, true, false, false);
         Skill_List.LoadTexture(TransparentColor);
         BackGround_Skill_List = BitmapPicture("Content\\Bitmaps\\Whitecover.bmp", 0, 0, true, false, false);
         BackGround_Skill_List.LoadTexture(TransparentColor);
