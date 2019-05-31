@@ -161,8 +161,7 @@ namespace game_framework
         #define Rina_Skill1_Cost 4
         #define Rina_Skill1_Damage 25
         #define Rina_UltimateSkill_Cost 0
-        #define Rina_UltimateSkill_Damage1 5
-        #define Rina_UltimateSkill_Damage2 200
+        #define Rina_UltimateSkill_Damage 300
 
     public:
         Rina(int);

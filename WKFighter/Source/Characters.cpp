@@ -1412,7 +1412,6 @@ namespace game_framework
     #pragma endregion
 
     #pragma region Rina
-
     Rina::Rina(int number) :BattlePlayer()
     {
 
@@ -1486,6 +1485,8 @@ namespace game_framework
         InsertAction("上普", 5, color);
         InsertAction("空下普", 2, color);
         InsertAction("下普", 5, color);
+        InsertAction("大絕", 2, color);
+
         //LoadEffects
         Effects.AutoLoadEffections(color);
         //LoadAttacks
@@ -1501,6 +1502,7 @@ namespace game_framework
         Attacks.InsertAttacks(GetName(), "Normal2", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "Normal3", 0, 5, 16, 0, color, Camera);
         Attacks.InsertAttacks(GetName(), "flashblade", 1, 5, 8, 0, 16, color, Camera);//多一個參數是具有編號的
+        Attacks.InsertAttacks(GetName(), "Bigflashblade", 0, 5, 8, 0, color, Camera);//多一個參數是具有編號的
         Attacks.InsertAttacks(GetName(), "flashblade_H", 1, 5, 8, 0, 4, color, Camera);//多一個參數是具有編號的
         Attacks.InsertAttacks(GetName(), "Counterattact", 4, 5, 20, 0, color, Camera);
     }
@@ -2265,17 +2267,7 @@ namespace game_framework
 
     void Rina::GotoAirAttack1(GPH)
     {
-        if (SP >= Rina_AirAttack1_Cost)
-        {
-            GainSP(-Rina_AirAttack1_Cost);
-            Action = "空普1";
-            Step = 0;
-            if (Velocity_Y > 0)
-            {
-                Velocity_Y = 0;
-            }
-            NormalAttack1Timer = 0;
-        }
+
     }
     void Rina::OnAirAttack1(GPH)
     {
@@ -2288,15 +2280,7 @@ namespace game_framework
 
     void Rina::GotoAirAttack2(GPH)
     {
-        if (SP >= Rina_AirAttack2_Cost)
-        {
-            GainSP(-Rina_AirAttack2_Cost);
-            Action = "空普2";
-            Step = 0;
-            Velocity_X += Ahead(4);
-            Velocity_Y = -3.5;
-            NormalAttack1Timer = 0;
-        }
+ 
     }
     void Rina::OnAirAttack2(GPH)
     {
@@ -2391,7 +2375,7 @@ namespace game_framework
             Step = 0;
             NormalAttack1Timer = 0;
             Velocity_X = Ahead(-12);
-            Velocity_Y =-3;
+            Velocity_Y = -3;
         }
     }
     void Rina::OnDownAttack(GPH)
@@ -2406,7 +2390,7 @@ namespace game_framework
             //處理摩擦力
             if (Step == 0)
                 ProduceFriction(0.5, 0.5);
-            else if(Step == 1)
+            else if (Step == 1)
                 ProduceFriction(0.3, 0.5);
             else if (Step >= 2)
                 ProduceFriction(1, 1);
@@ -2416,7 +2400,7 @@ namespace game_framework
 
             if (NormalAttack1Timer >= 50 && Step == 0)
             {
-                NormalAttack1Timer = 0; 
+                NormalAttack1Timer = 0;
                 Step = 1;
             }
             else if (NormalAttack1Timer >= 150 && Step == 1)
@@ -2425,12 +2409,12 @@ namespace game_framework
                 Step = 2;
                 Velocity_X = Ahead(35);
             }
-            else if(NormalAttack1Timer >= 25 && Step == 2)
+            else if (NormalAttack1Timer >= 25 && Step == 2)
             {
                 NormalAttack1Timer = 0;
                 Step = 3;
             }
-            else if (NormalAttack1Timer >= 16 && Step >=3 && Step <= 4)
+            else if (NormalAttack1Timer >= 16 && Step >= 3 && Step <= 4)
             {
                 Velocity_X = Ahead(3);
                 NormalAttack1Timer = 0;
@@ -2442,7 +2426,7 @@ namespace game_framework
                     Attacks.AttackReset_Normal(
                         &(Attacks.AttackObjects["Normal1"]), this, Enemy,
                         Rina_DownAttack_Damage,
-                        2, 3, Rect.X + 90, Rect.X+20, Rect.Y + 65, 0, 0,
+                        2, 3, Rect.X + 90, Rect.X + 20, Rect.Y + 65, 0, 0,
                         200, 30, "PunchHit", Sounds.NormalHit, Camera);
                     Attacks.AttackObjects["Normal1"].HitBreak = true;
                     Attacks.AttackObjects["Normal1"].Drawable = false;
@@ -2561,15 +2545,7 @@ namespace game_framework
 
     void Rina::GotoAirUpAttack(GPH)
     {
-        if (SP >= Rina_AirUpAttack_Cost)
-        {
-            GainSP(-Rina_AirUpAttack_Cost);
-            Action = "空上普";
-            Step = 0;
-            if (Velocity_Y > 0)
-                Velocity_Y = 0;
-            NormalAttack1Timer = 0;
-        }
+
     }
     void Rina::OnAirUpAttack(GPH)
     {
@@ -2598,7 +2574,7 @@ namespace game_framework
             NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
 
             #pragma region 動作主體
-            if(NormalAttack1Timer < 150 && Step == 0)
+            if (NormalAttack1Timer < 150 && Step == 0)
             {
                 ProduceFriction(0.25, 1);
             }
@@ -2610,16 +2586,15 @@ namespace game_framework
                 NormalAttack1Timer = 0;
                 Attacks.AttackReset_Normal(
                     &(Attacks.AttackObjects["Normal3"]), this, Enemy,
-                   Rina_AirDownAttack_Damage,
-                    2.5, -18, Rect.X + 90, Rect.X, Rect.Y + 20, 0,0,
+                    Rina_AirDownAttack_Damage,
+                    2.5, -18, Rect.X + 90, Rect.X, Rect.Y + 20, 0, 0,
                     200, 30, "PunchHit", Sounds.NormalHit2, Camera);
             }
-            else if (Rect.Y<GroundPosition && Step == 1 )
+            else if (Rect.Y < GroundPosition && Step == 1)
             {
                 Attacks.AttackObjects["Normal3"].Rect.X = Rect.X + Ahead(30);
-                Attacks.AttackObjects["Normal3"].Rect.Y = Rect.Y+110;
+                Attacks.AttackObjects["Normal3"].Rect.Y = Rect.Y + 110;
                 Attacks.AttackObjects["Normal3"].AliveTimer = 0;
-                #pragma endregion
             }
             else if (Rect.Y >= GroundPosition && Step == 1)
             {
@@ -2627,22 +2602,24 @@ namespace game_framework
                 Step = 2;
             }
             #pragma endregion
-
             #pragma region 到別的動作
-            if ( NormalAttack1Timer < 100 && Step >= 2)
+            if (NormalAttack1Timer < 100 && Step >= 2)
             {
-                ProduceFriction(0.25, 0.5);
-                //到別的可能動作
+                //到別的動作
+                CanToNormalAttack1;
                 CanToSkill1;
-                CanToRush;
                 CanToJump;
+                CanToRush;
+                CanToUpSkill;
+                CanToAirUpAttack;
             }
             else if (NormalAttack1Timer >= 100 && Step >= 2)
             {
-                ProduceFriction(0.25, 0.5);
-                    GotoStandby(GPP);
+                //正常結束
+                GotoStandby(GPP);
             }
             #pragma endregion
+
         }
     }
 
@@ -2807,18 +2784,7 @@ namespace game_framework
     {
         if (SP >= Rina_RushSkill_Cost)
         {
-            GainSP(-Rina_RushSkill_Cost);
-            if (Velocity_Y > 0 && OnGround == false)
-                Velocity_Y = 0;
-            RushTimer = 0;
-            IsRushAttack = false;
-            Throughing = true;
-            Invincible = false;
-            Velocity_X = 0;
-            Acceleration_X = 0;
-            Action = "衝刺特技";
-            Step = 0;
-            NormalAttack1Timer = 0;
+
         }
     }
     void Rina::OnRushSkill(GPH)
@@ -2862,6 +2828,39 @@ namespace game_framework
         if (Action == "大絕")
         {
 
+            NormalAttack1Timer += TIMER_TICK_MILLIDECOND;
+            UltraSkillTimer1 += TIMER_TICK_MILLIDECOND;
+            #pragma region 動作主體
+            //處理摩擦力
+            ProduceFriction(1, 1);
+            if (NormalAttack1Timer >= 300 && Step == 0)
+            {
+                PlaySounds(Sounds.CutIn, false);
+                NeedCutIn = true;
+                NormalAttack1Timer = 0;
+                Step = 1;
+                Effects.BootEffect(&Effects.Content["Rina_US"], Camera, 800, 800, 0, 0, 0, false, true);
+            }
+            if (Step == 1 && NormalAttack1Timer >= 20)
+            {
+                Step = 2;
+                Attacks.AttackReset_Normal(
+                    &(Attacks.AttackObjects["Bigflashblade"]), this, Enemy,
+                    Rina_UltimateSkill_Damage,
+                    5, 20, Enemy->Rect.X-100, Enemy->Rect.X, -700, Ahead(3), 8,
+                    200, 1500, "PunchHit", Sounds.NormalHit, Camera);
+                Attacks.AttackObjects["Bigflashblade"].HitBreak = true;
+                Attacks.AttackObjects["Bigflashblade"].HitNoon = false;
+                Attacks.AttackObjects["Bigflashblade"].Drawable = true;
+                Attacks.AttackObjects["Bigflashblade"].GravityEffect = true;
+                Attacks.AttackObjects["Bigflashblade"].Acceleration_Y = 1;
+            }
+            if (UltraSkillTimer1 >= 500 && Step == 2)
+            {
+                GotoStandby(GPP);
+            }
+
+            #pragma endregion
 
 
 
