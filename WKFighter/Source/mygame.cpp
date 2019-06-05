@@ -197,7 +197,14 @@ namespace game_framework
     BitmapPicture Skill_List;
     BitmapPicture BackGround_Skill_List;
     BitmapPicture Characters_Menu_2;
-
+    BitmapAnimation Small_Selector = BitmapAnimation("Small_Selector", 39, 24, true, false, false);
+    BitmapAnimation Stick_Skill = BitmapAnimation("Stick_Skill", 400, 24, true, false, false);
+    BitmapAnimation Rina_Skill = BitmapAnimation("Rina_Skill", 400, 24, true, false, false);
+    int Charaters_Menu_2_X[6] = { 39, 126, 211, 39, 126, 211 };
+    int Charaters_Menu_2_Y[6] = { 24, 24, 24, 130, 130, 130 };
+    int SmallSelection;
+    bool SelectedSmall;
+    int page;
 
 
     #pragma endregion 
@@ -302,6 +309,9 @@ namespace game_framework
         LoadingBK.LoadTexture(TransparentColor);
         Characters_Menu_2 = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 40, 25, true, false, false);
         Characters_Menu_2.LoadTexture(TransparentColor);
+        Small_Selector.AutoLoadBitmaps("Skill_List", "Small_Selector", 2, 0, false, TransparentColor);
+        Stick_Skill.AutoLoadBitmaps("Skill_List", "Stick_Skill", 2, 0, false, TransparentColor);
+        Rina_Skill.AutoLoadBitmaps("Skill_List", "Rina_Skill", 2, 0, false, TransparentColor);
 
         LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
         LoadingBK.LoadTexture(TransparentColor);
@@ -349,12 +359,15 @@ namespace game_framework
     void GameAction1_initialization()
     {
         GameAction = 1;
+        SmallSelection = 0;
+        SelectedSmall = false;
     }
     void GameAction2_initialization()
     {
         GameAction = 2;
         P1Selection = 0;
         P2Selection = 1;
+        page = 0;
         SelectedP1 = false;
         SelectedP2 = false;
     }
@@ -458,6 +471,80 @@ namespace game_framework
     {
         if (GameAction == 1)
         {
+            if (KeyState_now.G == true && KeyState_last.G == false)
+            {
+                SelectedSmall = false;
+            }
+            if (SelectedSmall == false)
+            {
+                page = 0;
+                if (KeyState_now.F == true && KeyState_last.F == false)
+                {
+                    if (SmallSelection <= 1)
+                    {
+                        SelectedSmall = true;
+                        Small_Selector.Step = 0;
+                        PlaySounds(Sounds.Choose, false);
+                    }
+                }
+                else if (KeyState_now.D == true && KeyState_last.D == false)
+                {
+                    PlaySounds(Sounds.Beep, false);
+                    SmallSelection++;
+                    if (SmallSelection > 5)
+                    {
+                        SmallSelection = 0;
+                    }
+                }
+                else if (KeyState_now.A == true && KeyState_last.A == false)
+                {
+                    PlaySounds(Sounds.Beep, false);
+                    SmallSelection--;
+                    if (SmallSelection < 0)
+                    {
+                        SmallSelection = 5;
+                    }
+                }
+                else if (KeyState_now.W == true && KeyState_last.W == false)
+                {
+                    PlaySounds(Sounds.Beep, false);
+                    SmallSelection += 3;
+                    if (SmallSelection > 5)
+                    {
+                        SmallSelection -= 6;
+                    }
+                }
+                else if (KeyState_now.S == true && KeyState_last.S == false)
+                {
+                    PlaySounds(Sounds.Beep, false);
+                    SmallSelection -= 3;
+                    if (SmallSelection < 0)
+                    {
+                        SmallSelection += 6;
+                    }
+                }
+                Small_Selector.Rect.X = Charaters_Menu_2_X[SmallSelection];
+                Small_Selector.Rect.Y = Charaters_Menu_2_Y[SmallSelection];
+            }
+            else 
+            {
+                if (KeyState_now.D == true && KeyState_last.D == false) 
+                {
+                    page++;
+                    if (page > 1)
+                        page = 0;
+                }
+                else if (KeyState_now.A == true && KeyState_last.A == false)
+                {
+                    page--;
+                    if (page < 0)
+                        page = 1;
+                }
+            }
+            
+            Stick_Skill.OnUpdate("Skill_List", Camera);
+            Rina_Skill.OnUpdate("Skill_List", Camera);
+            Small_Selector.OnUpdate("Skill_List", Camera);
             BackGround_Skill_List.OnUpdate();
             Skill_List.OnUpdate();
             Characters_Menu_2.OnUpdate();
@@ -467,6 +554,23 @@ namespace game_framework
     {
         if (GameAction == 1)
         {
+            
+            Small_Selector.DisplayBitmap->Draw(i, 4);
+            if (!SelectedSmall)
+                Small_Selector.AutoPlay(750, true);
+            if (SelectedSmall) 
+            {
+                if (SmallSelection == 0)
+                {
+                    Stick_Skill.Step = page;
+                    Stick_Skill.DisplayBitmap->Draw(i, 4);
+                }
+                else if (SmallSelection == 1)
+                {
+                    Rina_Skill.Step = page;
+                    Rina_Skill.DisplayBitmap->Draw(i, 4);
+                }
+            }
             BackGround_Skill_List.Draw(i, 1);
             Skill_List.Draw(i, 3);
             Characters_Menu_2.Draw(i, 2);
