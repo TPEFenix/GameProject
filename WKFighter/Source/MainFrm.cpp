@@ -70,6 +70,7 @@ static bool isfirst;
 
 CMainFrame::CMainFrame()
 {
+
 	// TODO: add member initialization code here
 	isFullScreen = OPEN_AS_FULLSCREEN;	
 	isToolBarVisible = true;
@@ -83,62 +84,115 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
-		return -1;
+    if (OPEN_AS_FULLSCREEN == true)
+    {
+        if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
+            return -1;
+
+        if (!m_wndToolBar.Create(this) ||
+            !m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
+        {
+            TRACE0("Failed to create toolbar\n");
+            return -1;      // fail to create
+        }
+
+        if (!m_wndStatusBar.Create(this) ||
+            !m_wndStatusBar.SetIndicators(indicators,
+                sizeof(indicators) / sizeof(UINT)))
+        {
+            TRACE0("Failed to create status bar\n");
+            return -1;      // fail to create
+        }
+
+        // TODO: Remove this if you don't want tool tips or a resizeable toolbar
+        m_wndToolBar.SetBarStyle(m_wndToolBar.GetBarStyle() |
+            CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
+
+        // TODO: Delete these three lines if you don't want the toolbar to
+        //  be dockable
+
+        //
+        // 確定ToolBar的位置為固定的，以便計算window size
+        //
+        // m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+        // EnableDocking(CBRS_ALIGN_ANY);
+        // DockControlBar(&m_wndToolBar);
+
+        //
+        // 儲存Menu的pointer
+        //
+        pMenu = GetMenu();
+        //
+        // 如果是Full Screen的話，隱藏ToolBar, StatusBar, Menu
+        //
+        if (isFullScreen) {
+            m_wndToolBar.ShowWindow(SW_HIDE);
+            m_wndStatusBar.ShowWindow(SW_HIDE);
+            ModifyStyle(WS_DLGFRAME, 0);
+            SetMenu(NULL);
+        }
+        return 0;
+    }
+    else
+    {
+        if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
+            return -1;
+
+        if (!m_wndToolBar.Create(this) ||
+            !m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
+        {
+            TRACE0("Failed to create toolbar\n");
+            return -1;      // fail to create
+        }
+
+        if (!m_wndStatusBar.Create(this) ||
+            !m_wndStatusBar.SetIndicators(indicators,
+                sizeof(indicators) / sizeof(UINT)))
+        {
+            TRACE0("Failed to create status bar\n");
+            return -1;      // fail to create
+        }
+
+        // TODO: Remove this if you don't want tool tips or a resizeable toolbar
+        m_wndToolBar.SetBarStyle(m_wndToolBar.GetBarStyle() |
+            CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
+
+        // TODO: Delete these three lines if you don't want the toolbar to
+        //  be dockable
+
+        //
+        // 確定ToolBar的位置為固定的，以便計算window size
+        //
+        // m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+        // EnableDocking(CBRS_ALIGN_ANY);
+        // DockControlBar(&m_wndToolBar);
+
+        //
+        // 儲存Menu的pointer
+        //
+        //pMenu = GetMenu();
+        //
+        // 如果是Full Screen的話，隱藏ToolBar, StatusBar, Menu
+        //
+
+        pMenu = NULL;
+        m_wndToolBar.ShowWindow(SW_HIDE);
+        m_wndStatusBar.ShowWindow(SW_HIDE);
+        ShowWindow(SW_NORMAL);
+        ModifyStyle(0, WS_DLGFRAME);
+        if (isFullScreen) {
+            m_wndToolBar.ShowWindow(SW_HIDE);
+            m_wndStatusBar.ShowWindow(SW_HIDE);
+            ModifyStyle(WS_DLGFRAME, 0);
+            SetMenu(NULL);
+        }
+        ModifyStyle(WS_DLGFRAME, WS_DLGFRAME);
+        m_wndToolBar.ShowWindow(SW_HIDE);
+        m_wndStatusBar.ShowWindow(SW_HIDE);
+        SetMenu(NULL);
+        return 0;
+    }
 	
-	if (!m_wndToolBar.Create(this) ||
-		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
-	{
-		TRACE0("Failed to create toolbar\n");
-		return -1;      // fail to create
-	}
-
-	if (!m_wndStatusBar.Create(this) ||
-		!m_wndStatusBar.SetIndicators(indicators,
-		  sizeof(indicators)/sizeof(UINT)))
-	{
-		TRACE0("Failed to create status bar\n");
-		return -1;      // fail to create
-	}
-
-	// TODO: Remove this if you don't want tool tips or a resizeable toolbar
-	m_wndToolBar.SetBarStyle(m_wndToolBar.GetBarStyle() |
-		CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
-
-	// TODO: Delete these three lines if you don't want the toolbar to
-	//  be dockable
-
-	//
-	// 確定ToolBar的位置為固定的，以便計算window size
-	//
-	// m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
-	// EnableDocking(CBRS_ALIGN_ANY);
-	// DockControlBar(&m_wndToolBar);
-
-	//
-	// 儲存Menu的pointer
-	//
-	//pMenu = GetMenu();
-	//
-	// 如果是Full Screen的話，隱藏ToolBar, StatusBar, Menu
-	//
-
-	pMenu = NULL;
-	m_wndToolBar.ShowWindow(SW_HIDE);
-	m_wndStatusBar.ShowWindow(SW_HIDE);
-	ShowWindow(SW_NORMAL);
-	ModifyStyle(0, WS_DLGFRAME);
-	if (isFullScreen) {
-		m_wndToolBar.ShowWindow(SW_HIDE);
-		m_wndStatusBar.ShowWindow(SW_HIDE);
-		ModifyStyle(WS_DLGFRAME, 0);
-		SetMenu(NULL);
-	}
-    ModifyStyle(WS_DLGFRAME, WS_DLGFRAME);
-    m_wndToolBar.ShowWindow(SW_HIDE);
-    m_wndStatusBar.ShowWindow(SW_HIDE);
-    SetMenu(NULL);
-	return 0;
 }
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
@@ -306,7 +360,7 @@ void CMainFrame::OnPaint()
 		// Restore window position
 		//
 		MoveWindow(WindowRect);
-
+        
 	}
 
 

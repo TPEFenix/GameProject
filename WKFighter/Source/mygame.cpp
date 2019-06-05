@@ -68,6 +68,7 @@
 #include "audio.h"
 #include "gamelib.h"
 #include "mygame.h"
+#include "MainFrm.h"
 #include "Keycode.h"
 #include "KeyBoardState.h"
 #include "WKBitmap.h"
@@ -122,6 +123,7 @@ namespace game_framework
     BitmapPicture WhiteCover;//戰鬥白幕
     BitmapPicture ReadyBmp;//ReadyBitmap
     BitmapPicture KoBmp;//ReadyBitmap
+    int 密技 = 0;
 
     double BlackCoverfactor;//戰鬥黑幕大小
     Bar Bar_HP1;//玩家1血量
@@ -342,6 +344,7 @@ namespace game_framework
         GameAction = 0;
         TitleSelection = 0;
         PlaySounds(Sounds.Title, true);
+       
     }
     void GameAction1_initialization()
     {
@@ -1197,7 +1200,15 @@ namespace game_framework
             StopSounds(Sounds.DoubleHelixXi);
             GameAction2_initialization();
         }
-
+        if (KeyState_now.Space&&KeyState_last.Space == false)
+        {
+            密技++;
+        }
+        if (密技 > 15)
+        {
+            Battle_Timer = 1;
+            密技 = 0;
+        }
 
     }
     //戰鬥OnShow
@@ -1353,7 +1364,8 @@ namespace game_framework
         {
             BackGround_Title.Draw(i, 1);
             Title_Bitmap.Draw(i, 3);
-            Showtext("Press [SPACE] to start the game", 175, 450,20, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
+            Showtext("Press [SPACE] to start the game", 175, 450, 20, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
+            Showtext("Cheat:you can press [SPACE] 16 times on the battle to achieve that", 65, 500,15, RGB(0, 0, 0), RGB(255, 0, 0), i, 3);
         }
     }
     void CGameStateInit::OnMove()

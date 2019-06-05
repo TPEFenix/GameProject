@@ -28,6 +28,7 @@
 
 class CMainFrame : public CFrameWnd
 {
+    friend class mygame;
 protected: // create from serialization only
 	CMainFrame();
 	DECLARE_DYNCREATE(CMainFrame)
@@ -66,12 +67,12 @@ protected:  // control bar embedded members
 	CToolBar    m_wndToolBar;
 
 // Generated message map functions
-protected:
+public:
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnToggleFullscreen();
 	afx_msg void OnPaint();
-	afx_msg void OnButtonFullscreen();
+    afx_msg void OnButtonFullscreen();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
