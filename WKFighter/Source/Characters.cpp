@@ -52,7 +52,15 @@ namespace game_framework
 
     Matchstick::Matchstick(int number) :BattlePlayer()
     {
+        Restvalues(number);
+    }
+    Matchstick::~Matchstick()
+    {
 
+    }
+
+    void Matchstick::Restvalues(int number)
+    {
         //跑计
         HP_Max = Matchstick_HP_Max;//程ネ㏑
         SP_Max = Matchstick_SP_Max;//程
@@ -90,12 +98,6 @@ namespace game_framework
         HitFly = false;
         BreakPoint = 0;
         Acceleration_gravity = 0.5;
-
-
-    }
-    Matchstick::~Matchstick()
-    {
-
     }
 
     //弄郎
@@ -1415,6 +1417,17 @@ namespace game_framework
     Rina::Rina(int number) :BattlePlayer()
     {
 
+        Restvalues(number);
+
+
+    }
+    Rina::~Rina()
+    {
+
+    }
+
+    void Rina::Restvalues(int number)
+    {
         //跑计
         HP_Max = Rina_HP_Max;//程ネ㏑
         SP_Max = Rina_SP_Max;//程
@@ -1452,11 +1465,6 @@ namespace game_framework
         HitFly = false;
         BreakPoint = 0;
         Acceleration_gravity = 0.5;
-
-
-    }
-    Rina::~Rina()
-    {
 
     }
 
@@ -2280,7 +2288,7 @@ namespace game_framework
 
     void Rina::GotoAirAttack2(GPH)
     {
- 
+
     }
     void Rina::OnAirAttack2(GPH)
     {
@@ -2847,7 +2855,7 @@ namespace game_framework
                 Attacks.AttackReset_Normal(
                     &(Attacks.AttackObjects["Bigflashblade"]), this, Enemy,
                     Rina_UltimateSkill_Damage,
-                    5, 20, Enemy->Rect.X-100, Enemy->Rect.X, -700, Ahead(3), 8,
+                    5, 20, Enemy->Rect.X - 100, Enemy->Rect.X, -700, Ahead(3), 8,
                     200, 1500, "PunchHit", Sounds.NormalHit, Camera);
                 Attacks.AttackObjects["Bigflashblade"].HitBreak = true;
                 Attacks.AttackObjects["Bigflashblade"].HitNoon = false;

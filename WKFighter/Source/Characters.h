@@ -63,6 +63,9 @@ namespace game_framework
     public:
         Matchstick(int);
         ~Matchstick();
+
+        void Restvalues(int number);
+
         virtual void AutoLoadBitmaps(GPH);//依照各自角色讀檔
         virtual void AutoLoadAttacks(GPH);
         virtual void OnUpdate(GPH);//更新函式，且隨著視角移動
@@ -166,6 +169,9 @@ namespace game_framework
     public:
         Rina(int);
         ~Rina();
+
+        void Restvalues(int number);
+
         virtual void AutoLoadBitmaps(GPH);//依照各自角色讀檔
         virtual void AutoLoadAttacks(GPH);
         virtual void OnUpdate(GPH);//更新函式，且隨著視角移動

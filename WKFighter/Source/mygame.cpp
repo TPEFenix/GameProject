@@ -110,6 +110,12 @@ namespace game_framework
     const int left = 1;
     const int right = 2;
 
+    //各腳色預載圖
+    Matchstick Matchstick_1 = Matchstick(1);
+    Matchstick Matchstick_2 = Matchstick(2);
+    Rina Rina_1 = Rina(1);
+    Rina Rina_2 = Rina(2);
+
 
     //戰鬥
     #pragma region 戰鬥畫面變數
@@ -249,14 +255,27 @@ namespace game_framework
     //決定使用角色
     BattlePlayer *DecideCharacter(int PlayerIndex, int Decide)
     {
+        Matchstick_1.Restvalues(1);
+        Matchstick_2.Restvalues(2);
+        Rina_1.Restvalues(1);
+        Rina_2.Restvalues(2);
+
         BattlePlayer *Player;
         if (Decide == 0)//選擇火柴人
         {
-            Player = new Matchstick(PlayerIndex);
+            if (PlayerIndex == 1)
+                Player = &Matchstick_1;
+            else if (PlayerIndex == 2)
+                Player = &Matchstick_2;
+            
         }
         if (Decide == 1)//選擇火柴人
         {
-            Player = new Rina(PlayerIndex);
+            if (PlayerIndex == 1)
+                Player = &Rina_1;
+            else if (PlayerIndex == 2)
+                Player = &Rina_2;
+            
         }
         return Player;
     }
@@ -354,7 +373,7 @@ namespace game_framework
         GameAction = 0;
         TitleSelection = 0;
         PlaySounds(Sounds.Title, true);
-       
+
     }
     void GameAction1_initialization()
     {
@@ -394,6 +413,7 @@ namespace game_framework
     {
         GameAction = 7;
     }
+
     void GameAction0_OnMove()
     {
         if (GameAction == 0)
@@ -526,9 +546,9 @@ namespace game_framework
                 Small_Selector.Rect.X = Charaters_Menu_2_X[SmallSelection];
                 Small_Selector.Rect.Y = Charaters_Menu_2_Y[SmallSelection];
             }
-            else 
+            else
             {
-                if (KeyState_now.D == true && KeyState_last.D == false) 
+                if (KeyState_now.D == true && KeyState_last.D == false)
                 {
                     page++;
                     if (page > 1)
@@ -541,7 +561,7 @@ namespace game_framework
                         page = 1;
                 }
             }
-            
+
             Stick_Skill.OnUpdate("Skill_List", Camera);
             Rina_Skill.OnUpdate("Skill_List", Camera);
             Small_Selector.OnUpdate("Skill_List", Camera);
@@ -554,11 +574,11 @@ namespace game_framework
     {
         if (GameAction == 1)
         {
-            
+
             Small_Selector.DisplayBitmap->Draw(i, 4);
             if (!SelectedSmall)
                 Small_Selector.AutoPlay(750, true);
-            if (SelectedSmall) 
+            if (SelectedSmall)
             {
                 if (SmallSelection == 0)
                 {
@@ -771,6 +791,7 @@ namespace game_framework
 
         }
     }
+
     //戰鬥畫面
     #pragma region 戰鬥環境
     //大絕招Cover
@@ -951,15 +972,16 @@ namespace game_framework
             #pragma endregion
 
             #pragma region 建置玩家變數
-            delete Player1;
-            delete Player2;
+
             Player1 = DecideCharacter(1, Player1Character);
             Player2 = DecideCharacter(2, Player2Character);
             #pragma endregion
 
             #pragma region 讀取玩家圖檔與設定初始參數
+
             Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
+
             Player1->Rect.X = 230;
             Player1->Rect.Y = GroundPosition;
             Player2->Rect.X = 400;
@@ -1427,8 +1449,7 @@ namespace game_framework
     }
     CGameStateInit::~CGameStateInit()
     {
-        delete Player1;
-        delete Player2;
+
     }
     void CGameStateInit::OnBeginState()
     {
@@ -1469,7 +1490,7 @@ namespace game_framework
             BackGround_Title.Draw(i, 1);
             Title_Bitmap.Draw(i, 3);
             Showtext("Press [SPACE] to start the game", 175, 450, 20, RGB(0, 0, 0), RGB(255, 255, 255), i, 3);
-            Showtext("Cheat:you can press [SPACE] 16 times on the battle to achieve that", 65, 500,15, RGB(0, 0, 0), RGB(255, 0, 0), i, 3);
+            Showtext("Cheat:you can press [SPACE] 16 times on the battle to achieve that", 65, 500, 15, RGB(0, 0, 0), RGB(255, 0, 0), i, 3);
         }
     }
     void CGameStateInit::OnMove()
