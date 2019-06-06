@@ -7,6 +7,7 @@ namespace game_framework {
     public:
         Keycode();
         ~Keycode();
+        void testing();
         const char ESC = 27;
         const char Backspace = 8;
         const char Tab = 9;

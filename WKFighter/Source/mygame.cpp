@@ -109,13 +109,11 @@ namespace game_framework
     const COLORREF TransparentColor = RGB(100, 120, 0);//透明色設定
     const int left = 1;
     const int right = 2;
-
     //各腳色預載圖
     Matchstick Matchstick_1 = Matchstick(1);
     Matchstick Matchstick_2 = Matchstick(2);
     Rina Rina_1 = Rina(1);
     Rina Rina_2 = Rina(2);
-
 
     //戰鬥
     #pragma region 戰鬥畫面變數
@@ -177,6 +175,9 @@ namespace game_framework
     BitmapPicture Title_SkillTable;
     BitmapPicture Title_Exit;
     BitmapPicture Title_Cursor;
+
+    BitmapPicture Title_About;
+
     BitmapPicture BackGround_Select;
     #pragma endregion 
     //主選單變數
@@ -212,6 +213,13 @@ namespace game_framework
     bool SelectedSmall;
     int page;
 
+    BitmapPicture Big_Selector;
+    int Skill_Menu_X[10] = { 428, 585, 428, 585, 428, 584, 428, 584, 428, 584 };
+    int Skill_Menu_Y[10] = { 58, 57, 163, 162, 270, 269, 374, 373, 479, 478 };
+    int BigSelection;
+    BitmapPicture About;
+    int Title_Menu_X[4] = { 225, 225, 225, 605 };
+    int Title_Menu_Y[4] = { 300, 400, 500, 550 };
 
     #pragma endregion 
 
@@ -252,6 +260,7 @@ namespace game_framework
             CDDraw::ReleaseBackCDC();					// 放掉 Back Plain 的 CDC
         }
     }
+    //決定使用角色
     //決定使用角色
     BattlePlayer *DecideCharacter(int PlayerIndex, int Decide)
     {
@@ -303,7 +312,9 @@ namespace game_framework
         Title_Exit.LoadTexture(TransparentColor);
         Title_Cursor = BitmapPicture("Content\\Bitmaps\\游標.bmp", 225, 300, true, false, false);
         Title_Cursor.LoadTexture(TransparentColor);
-        BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, false);
+        Title_About = BitmapPicture("Content\\Bitmaps\\Title_About.bmp", 640, 550, true, false, false);
+        Title_About.LoadTexture(TransparentColor);
+        BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Select.bmp", -400, 0, true, false, false);
         BackGround_Select.LoadTexture(TransparentColor);
         Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 265, 300, true, false, false);
         Characters_Menu.LoadTexture(TransparentColor);
@@ -324,7 +335,7 @@ namespace game_framework
         Skill_List.LoadTexture(TransparentColor);
         BackGround_Skill_List = BitmapPicture("Content\\Bitmaps\\Whitecover.bmp", 0, 0, true, false, false);
         BackGround_Skill_List.LoadTexture(TransparentColor);
-        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, false);
+        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
         LoadingBK.LoadTexture(TransparentColor);
         Characters_Menu_2 = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 40, 25, true, false, false);
         Characters_Menu_2.LoadTexture(TransparentColor);
@@ -332,6 +343,13 @@ namespace game_framework
         Stick_Skill.AutoLoadBitmaps("Skill_List", "Stick_Skill", 2, 0, false, TransparentColor);
         Rina_Skill.AutoLoadBitmaps("Skill_List", "Rina_Skill", 2, 0, false, TransparentColor);
 
+        Big_Selector = BitmapPicture("Content\\Bitmaps\\Skill_List\\Big_Selector.bmp", 428, 53, true, false, false);
+        Big_Selector.LoadTexture(TransparentColor);
+        About = BitmapPicture("Content\\Bitmaps\\AboutScreen.bmp", 0, 0, true, false, false);
+        About.LoadTexture(TransparentColor);
+
+        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
+        LoadingBK.LoadTexture(TransparentColor);
 
         ShowInitProgress(50);
         //讀取所有音效--Begin
@@ -371,12 +389,14 @@ namespace game_framework
         GameAction = 0;
         TitleSelection = 0;
         PlaySounds(Sounds.Title, true);
-
+        Title_Cursor.Rect.Y = 300;
+        Title_Cursor.Rect.X = 225;
     }
     void GameAction1_initialization()
     {
         GameAction = 1;
         SmallSelection = 0;
+        BigSelection = 0;
         SelectedSmall = false;
     }
     void GameAction2_initialization()
@@ -411,7 +431,6 @@ namespace game_framework
     {
         GameAction = 7;
     }
-
     void GameAction0_OnMove()
     {
         if (GameAction == 0)
@@ -426,51 +445,33 @@ namespace game_framework
                     GameAction1_initialization();
                 else if (TitleSelection == 2)
                     ExitGame();
+                else if (TitleSelection == 3)
+                    GameAction3_initialization();
             }
             else if ((KeyState_now.Up == true && KeyState_last.Up == false) || (KeyState_now.W == true && KeyState_last.W == false))
             {
                 PlaySounds(Sounds.Beep, false);
-                if (TitleSelection == 0)
-                {
-                    Title_Cursor.Rect.Y = 500;
-                    TitleSelection = 2;
-                }
-                else if (TitleSelection == 1)
-                {
-                    Title_Cursor.Rect.Y = 300;
-                    TitleSelection = 0;
-                }
-                else if (TitleSelection == 2)
-                {
-                    Title_Cursor.Rect.Y = 400;
-                    TitleSelection = 1;
-                }
+                TitleSelection--;
+                if (TitleSelection < 0)
+                    TitleSelection += 4;
             }
             else if ((KeyState_now.Down == true && KeyState_last.Down == false) || (KeyState_now.S == true && KeyState_last.S == false))
             {
                 PlaySounds(Sounds.Beep, false);
-                if (TitleSelection == 0)
-                {
-                    Title_Cursor.Rect.Y = 400;
-                    TitleSelection = 1;
-                }
-                else if (TitleSelection == 1)
-                {
-                    Title_Cursor.Rect.Y = 500;
-                    TitleSelection = 2;
-                }
-                else if (TitleSelection == 2)
-                {
-                    Title_Cursor.Rect.Y = 300;
-                    TitleSelection = 0;
-                }
+                TitleSelection++;
+                if (TitleSelection > 3)
+                    TitleSelection -= 4;
             }
+            Title_Cursor.Rect.X = Title_Menu_X[TitleSelection];
+            Title_Cursor.Rect.Y = Title_Menu_Y[TitleSelection];
+
             BackGround_Title.OnUpdate();
             Title_Bitmap.OnUpdate();
             Title_Start.OnUpdate();
             Title_SkillTable.OnUpdate();
             Title_Exit.OnUpdate();
             Title_Cursor.OnUpdate();
+            Title_About.OnUpdate();
         }
     }
     void GameAction0_OnShow(int i)
@@ -483,12 +484,17 @@ namespace game_framework
             Title_SkillTable.Draw(i, 3);
             Title_Exit.Draw(i, 3);
             Title_Cursor.Draw(i, 3);
+            Title_About.Draw(i, 3);
         }
     }
     void GameAction1_OnMove()
     {
         if (GameAction == 1)
         {
+            if (KeyState_now.ESC == true && KeyState_last.ESC == false)
+            {
+                GameAction0_initialization();
+            }
             if (KeyState_now.G == true && KeyState_last.G == false)
             {
                 SelectedSmall = false;
@@ -548,16 +554,42 @@ namespace game_framework
             {
                 if (KeyState_now.D == true && KeyState_last.D == false)
                 {
+                    //if (BigSelection % 2 == 1)
+                    //{
                     page++;
                     if (page > 1)
                         page = 0;
+                    BigSelection--;
+                    //}
+                    //else
+                    BigSelection++;
                 }
                 else if (KeyState_now.A == true && KeyState_last.A == false)
                 {
+                    //if (BigSelection % 2 == 0)
+                    //{
                     page--;
                     if (page < 0)
                         page = 1;
+                    BigSelection++;
+                    //}
+                    //else
+                    BigSelection--;
                 }
+                else if (KeyState_now.W == true && KeyState_last.W == false)
+                {
+                    BigSelection -= 2;
+                    if (BigSelection < 0)
+                        BigSelection += 10;
+                }
+                else if (KeyState_now.S == true && KeyState_last.S == false)
+                {
+                    BigSelection += 2;
+                    if (BigSelection > 9)
+                        BigSelection -= 10;
+                }
+                Big_Selector.Rect.X = Skill_Menu_X[BigSelection];
+                Big_Selector.Rect.Y = Skill_Menu_Y[BigSelection];
             }
 
             Stick_Skill.OnUpdate("Skill_List", Camera);
@@ -566,6 +598,7 @@ namespace game_framework
             BackGround_Skill_List.OnUpdate();
             Skill_List.OnUpdate();
             Characters_Menu_2.OnUpdate();
+            Big_Selector.OnUpdate();
         }
     }
     void GameAction1_OnShow(int i)
@@ -588,6 +621,7 @@ namespace game_framework
                     Rina_Skill.Step = page;
                     Rina_Skill.DisplayBitmap->Draw(i, 4);
                 }
+                //Big_Selector.Draw(i, 4);
             }
             BackGround_Skill_List.Draw(i, 1);
             Skill_List.Draw(i, 3);
@@ -765,14 +799,17 @@ namespace game_framework
     {
         if (GameAction == 3)
         {
-
+            if (KeyState_now.ESC == true && KeyState_last.ESC == false)
+            {
+                GameAction0_initialization();
+            }
         }
     }
     void GameAction3_OnShow(int i)
     {
         if (GameAction == 3)
         {
-
+            About.Draw(i, 1);
         }
     }
     void GameAction4_OnMove()
@@ -789,7 +826,6 @@ namespace game_framework
 
         }
     }
-
     //戰鬥畫面
     #pragma region 戰鬥環境
     //大絕招Cover
@@ -957,7 +993,7 @@ namespace game_framework
             Camera = CameraPosition();
 
             #pragma region 戰鬥背景
-            BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
+            BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight2.bmp", -400, 0, true, false, true);
             BK.LoadTexture(TransparentColor);
             BlackCover = BitmapPicture("Content\\Bitmaps\\Blackcover.bmp", 0, 0, false, false, false);
             BlackCover.LoadTexture(TransparentColor);
@@ -976,10 +1012,8 @@ namespace game_framework
             #pragma endregion
 
             #pragma region 讀取玩家圖檔與設定初始參數
-
             Player1->AutoLoadBitmaps(Player2, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
             Player2->AutoLoadBitmaps(Player1, Camera, KeyState_now, KeyState_last, Sounds, TransparentColor);
-
             Player1->Rect.X = 230;
             Player1->Rect.Y = GroundPosition;
             Player2->Rect.X = 400;
