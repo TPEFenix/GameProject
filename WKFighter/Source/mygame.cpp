@@ -267,7 +267,7 @@ namespace game_framework
                 Player = &Matchstick_1;
             else if (PlayerIndex == 2)
                 Player = &Matchstick_2;
-            
+
         }
         if (Decide == 1)//選擇火柴人
         {
@@ -275,7 +275,7 @@ namespace game_framework
                 Player = &Rina_1;
             else if (PlayerIndex == 2)
                 Player = &Rina_2;
-            
+
         }
         return Player;
     }
@@ -303,7 +303,7 @@ namespace game_framework
         Title_Exit.LoadTexture(TransparentColor);
         Title_Cursor = BitmapPicture("Content\\Bitmaps\\游標.bmp", 225, 300, true, false, false);
         Title_Cursor.LoadTexture(TransparentColor);
-        BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Select.bmp", -400, 0, true, false, false);
+        BackGround_Select = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, false);
         BackGround_Select.LoadTexture(TransparentColor);
         Characters_Menu = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 265, 300, true, false, false);
         Characters_Menu.LoadTexture(TransparentColor);
@@ -324,7 +324,7 @@ namespace game_framework
         Skill_List.LoadTexture(TransparentColor);
         BackGround_Skill_List = BitmapPicture("Content\\Bitmaps\\Whitecover.bmp", 0, 0, true, false, false);
         BackGround_Skill_List.LoadTexture(TransparentColor);
-        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
+        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, false);
         LoadingBK.LoadTexture(TransparentColor);
         Characters_Menu_2 = BitmapPicture("Content\\Bitmaps\\Select\\Characters_Menu.bmp", 40, 25, true, false, false);
         Characters_Menu_2.LoadTexture(TransparentColor);
@@ -332,8 +332,6 @@ namespace game_framework
         Stick_Skill.AutoLoadBitmaps("Skill_List", "Stick_Skill", 2, 0, false, TransparentColor);
         Rina_Skill.AutoLoadBitmaps("Skill_List", "Rina_Skill", 2, 0, false, TransparentColor);
 
-        LoadingBK = BitmapPicture("Content\\Bitmaps\\BackGround_Loading.bmp", -400, 0, true, false, false);
-        LoadingBK.LoadTexture(TransparentColor);
 
         ShowInitProgress(50);
         //讀取所有音效--Begin
@@ -959,7 +957,7 @@ namespace game_framework
             Camera = CameraPosition();
 
             #pragma region 戰鬥背景
-            BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight2.bmp", -400, 0, true, false, true);
+            BK = BitmapPicture("Content\\Bitmaps\\BackGround_Fight1.bmp", -400, 0, true, false, true);
             BK.LoadTexture(TransparentColor);
             BlackCover = BitmapPicture("Content\\Bitmaps\\Blackcover.bmp", 0, 0, false, false, false);
             BlackCover.LoadTexture(TransparentColor);
