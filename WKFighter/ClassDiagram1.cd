@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CAboutDlg" Collapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAABAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\game.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameApp" Collapsed="true">
+    <Position X="13.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAwAQAAAABAAAAAAA=</HashCode>
+      <FileName>Source\game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameDoc" Collapsed="true">
+    <Position X="15.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAACAAAgAAAACAgAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\gameDoc.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CGameView" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAHAAAAAGABAgABAgBIAABAIAAoMAAAQgQA=</HashCode>
+      <FileName>Source\gameView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMainFrame" Collapsed="true">
+    <Position X="13.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABCACgAAAAgAAAAASAAAiECAgCAAAgAAAAAQAEAAABA=</HashCode>
+      <FileName>Source\MainFrm.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CSpecialEffect" Collapsed="true">
+    <Position X="15.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAACAAgAAAAAAAAACAIAAIAAAAAAAAIAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CDDraw" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAIkAAQABkEB1ICAAEAATQAAAACEAQABBKCACaJQA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CMovingBitmap" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAABACAAAAAEYCAAAIIAAACAAAAACAAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::BitmapPicture" Collapsed="true">
+    <Position X="2.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAABAAAAQAgAAAAAAAAAAAGAggAQAAAAAAAkAQAA=</HashCode>
+      <FileName>Source\WKBitmap.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CAnimation" Collapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABAAABBIAAAiAAUAIAAAIAAAIOABgAAEEgAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CInteger" Collapsed="true">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAACAAJBAAAAAAEQAAAABAAAAEABgAACIAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGame" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACgBACEQAgBAABAwADAABpAgAQAQAIgAAAwAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGameStateInit" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABICAAAAAAAAAAAAAAAIAAgQAAAAABAAEAAA=</HashCode>
+      <FileName>Source\mygame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGameStateRun" Collapsed="true">
+    <Position X="4" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAAACAAAAAAAAQAABAABIAAgQAAAAAAAAUAAA=</HashCode>
+      <FileName>Source\mygame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGameStateOver" Collapsed="true">
+    <Position X="7.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAABAAgQAAAAAAAAEAAA=</HashCode>
+      <FileName>Source\mygame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CGameState" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAgAAECAAAAAAABAAABAABIAAgQIAAAAAAIUAEA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::CAudio" Collapsed="true">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgoAAAAAAQIAAQIAAAAAQRAAACAIAA4AIAAAiAAAA=</HashCode>
+      <FileName>Source\audio.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::KeyBoardState" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIICOJGgkAoBAioACAEAAAQgBQOQQAAGICAvv//aYc=</HashCode>
+      <FileName>Source\KeyBoardState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::Keycode" Collapsed="true">
+    <Position X="13.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIKCOJGgEAoBAioACAEAAAQABQGQQAAGICAvv//bYc=</HashCode>
+      <FileName>Source\Keycode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::BitmapAnimation" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAiAAAAAAQAAaAIAAAAQAAQAACgggEAKIAAQQAkAxAA=</HashCode>
+      <FileName>Source\WKBitmap.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::Bar" Collapsed="true">
+    <Position X="5.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAgAAgAAAAAAAAAAEAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Source\Bar.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::BattlePlayer" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GQmIQBZGoUDAb0KRAB4dTmALdKITkERAJ4GIUH0e1XU=</HashCode>
+      <FileName>Source\BattlePlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::EffectSprite" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIIAAgAAAAAAAAAAAAAACAAAAAAAAKAQAAIAAAA=</HashCode>
+      <FileName>Source\EffectSprite.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::SelectionBitmap" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAACAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Source\SelectionBitmap.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::Matchstick" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIAAIGLAAARUARAAIESCBAJCAYEAAABQCIECEa1AA=</HashCode>
+      <FileName>Source\Characters.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::Rina" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIAAIGJUAIZUARAEIFSDBAJiAYEAAIBQCIMCEa1SA=</HashCode>
+      <FileName>Source\Characters.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::AttackObj" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IRAgACCEIAQAAAAAACbAASAQBABAAAQAgQAEABGuAQA=</HashCode>
+      <FileName>Source\AttackObj.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="game_framework::AttackManager" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAABAACAAAAIQAAAAAAAIAAEABAAAAAAAAAQAA=</HashCode>
+      <FileName>Source\AttackObj.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="game_framework::BitMapRectangle" Collapsed="true">
+    <Position X="13.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAEAAAAAAAAACAAAAAQAAYAA=</HashCode>
+      <FileName>Source\WKBitmap.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_framework::CameraPosition" Collapsed="true">
+    <Position X="15.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAQAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>Source\WKBitmap.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="game_framework::BattleInput" Collapsed="true">
+    <Position X="11.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAEAFAhgAIAAAAAAAAAAGAAAAAA=</HashCode>
+      <FileName>Source\BattlePlayer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WKAudio_namespace::Audio_ID" Collapsed="true">
+    <Position X="10" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgkBAAEAAAgGAAAASAAIAQAAAEAAgACRCAAA=</HashCode>
+      <FileName>Source\WKAudio.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="GAME_STATES" Collapsed="true">
+    <Position X="10" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAEAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Source\gamelib.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft JhengHei UI" Size="9" />
+</ClassDiagram>
